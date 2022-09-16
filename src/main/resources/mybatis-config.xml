@@ -7,7 +7,7 @@
 		<setting name="jdbcTypeForNull" value="NULL" />
 	</settings>
 	<typeAliases>
-		<typeAlias type="com.kh.itcom.member.domain.Admin"
+		<typeAlias type="com.kh.itcom.admin.domain.Admin"
 			alias="Admin" />
 		<typeAlias type="com.kh.itcom.consult.domain.ConsultBoard"
 			alias="ConsultBoard" />
@@ -19,16 +19,6 @@
 			alias="Notice" />
 		<typeAlias type="com.kh.itcom.point.domain.PointHistory"
 			alias="PointHistory" />
-		<typeAlias type="com.kh.itcom.user.domain.User"
-			alias="User" />
+		<typeAlias type="com.kh.itcom.user.domain.User" alias="User" />
 	</typeAliases>
-	<mappers>
-		<mapper resource="mappers/admin-mapper.xml" />
-		<mapper resource="mappers/consult-mapper.xml" />
-		<mapper resource="mappers/finish-mapper.xml" />
-		<mapper resource="mappers/lecture-mapper.xml" />
-		<mapper resource="mappers/notice-mapper.xml" />
-		<mapper resource="mappers/pointhistory-mapper.xml" />
-		<mapper resource="mappers/user-mapper.xml" />
-	</mappers>
 </configuration>
