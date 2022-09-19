@@ -21,4 +21,8 @@
 			alias="PointHistory" />
 		<typeAlias type="com.kh.itcom.user.domain.User" alias="User" />
 	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mappers/finish-mapper.xml"/>
+	</mappers>
 </configuration>
