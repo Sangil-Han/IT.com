@@ -2,3 +2,28 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserMapper">
+ 	<resultMap type="User" id="userResultMap">
+		<id property="userId"				column="USER_ID" />
+		<result property="userPw"			column="USER_PW" />
+		<result property="userEmail"		column="USER_EMAIL" />
+		<result property="newEmail"			column="NEW_EMAIL" />
+		<result property="authentication"	column="AUTHENTICATION" />
+		<result property="userLevel"		column="USER_LEVEL" />
+		<result property="userPoint"		column="USER_POINT" />
+		<result property="joinDate"			column="JOIN_DATE" />
+		<result property="withdrawal"		column="WITHDRAWAL" />
+		<result property="withdrawDate"		column="WITHDRAW_DATE" />
+	</resultMap>
+	<insert id="insertUser">
+		INSERT INTO USER_TBL VALUES(#{userId}, #{userPw}, #{userEmail},
+		DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+	</insert>
+	<update id="deleteUser">
+		UPDATE USER_TBL SET WITHDRAWAL = 'Y' WHERE USER_ID = #{userId} AND USER_PW = #{userPw}
+	</update>
+	<select id="selectLoginUser" resultMap="userResultMap">
+		SELECT USER_ID, USER_LEVEL, USER_POINT FROM USER_TBL
+		WHERE USER_ID = #{userId} AND USER_PW = #{userPw} AND WITHDRAWAL = 'N'
+	</select>
+</mapper>
