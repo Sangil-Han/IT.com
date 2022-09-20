@@ -16,10 +16,11 @@
 		</div>
 		<form class="form-area" action="" method="post">
 			<div class="search-area">
-				<input class="search" type="text" placeholder="검색어 입력">
-				<input type="button" class="img_btn">
+				<input class="search" type="text" placeholder="검색어 입력"> <input
+					type="button" class="img_btn">
 			</div>
 		</form>
+		<c:if test="${empty sessionScope.loginUser }">
 			<div class="login-area">
 				<table align="right">
 					<tr>
@@ -30,12 +31,28 @@
 					</tr>
 				</table>
 			</div>
+		</c:if>
+		<c:if test="${not empty sessionScope.loginUser }">
+			<table>
+				<tr>
+					<td>
+						<a href="/user/myPageView.do">${sessionScope.loginUser.userId }</a>님 환영합니다
+					</td>
+				</tr>
+				<tr>
+					<td><a href="/user/logout.do">로그아웃</a></td>
+				</tr>
+			</table>
+		</c:if>
 	</div>
 	<div class="nav-area">
 		<div class="menu" onclick="">HRD수강평</div>
-		<div class="menu" onclick="location.href='/cBoard/consultList.do'">상담후기 게시판</div>
-		<div class="menu" onclick="location.href='/lectureBoard/list.do'">수강후기 게시판</div>
-		<div class="menu" onclick="location.href='/finish/listView.do'">수료후기 게시판</div>
+		<div class="menu" onclick="location.href='/cBoard/consultList.do'">상담후기
+			게시판</div>
+		<div class="menu" onclick="location.href='/lectureBoard/list.do'">수강후기
+			게시판</div>
+		<div class="menu" onclick="location.href='/finish/listView.do'">수료후기
+			게시판</div>
 		<div class="menu" onclick="">공지사항</div>
 	</div>
 </body>
