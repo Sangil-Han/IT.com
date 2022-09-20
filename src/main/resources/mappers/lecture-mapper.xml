@@ -2,3 +2,28 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LectureMapper">
+	<resultMap type="LectureBoard" id="lectureResultMap">
+		<id property="lBoardNo" 				column="L_BOARD_NO"/>
+		<result property="userId"				column="USER_ID"/>
+		<result property="lBoardTitle" 			column="L_BOARD_TITLE"/>
+		<result property="lBoardLocalName" 		column="L_BOARD_LOCAL_NAME"/>
+		<result property="lBoardCenterName" 	column="L_BOARD_CENTER_NAME"/>
+		<result property="lBoardCourseName" 	column="L_BOARD_COURSE_NAME"/>
+		<result property="lBoardContents" 		column="L_BOARD_CONTENTS_NAME"/>
+		<result property="lBoardFileName" 		column="L_BOARD_FILE_NAME"/>
+		<result property="lBoardFileRename" 	column="L_BOARD_FILE_RENAME"/>
+		<result property="lBoardFilePath" 		column="L_BOARD_FILE_PATH"/>
+		<result property="lBoardCreateDate" 	column="L_BOARD_CREATE_DATE"/>
+		<result property="lBoardCount" 			column="L_BOARD_COUNT"/>
+		<result property="lBoardUpCount" 		column="L_BOARD_UP_COUNT"/>
+		<result property="lBoardDownCount" 		column="L_BOARD_DOWN_COUNT"/>
+	</resultMap>
+	<insert id="insertLecture">
+		INSERT INTO LECTURE_BOARD_TBL 
+		VALUES(SEQ_LBOARDNO.NEXTVAL,#{userId},#{lBoardTitle},#{lBoardLocalName},#{lBoardCenterName},#{lBoardCourseName},#{lBoardContents},#{lBoardFileName},#{lBoardFileRename},#{lBoardFilePath}, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+	</insert>
+	<select id="selectAllLectureBoard" resultMap="lectureResultMap">
+		SELECT L_BOARD_TITLE, L_BOARD_CREATE_DATE, L_BOARD_COUNT, L_BOARD_UP_COUNT FROM LECTURE_BOARD_TBL
+	</select>
+</mapper>

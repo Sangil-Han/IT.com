@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+.header {
+	display: flex;
+}
+
+.form-area {
+	margin: auto;
+}
+
+.search-area {
+	display: inline-block;
+	margin-top: 20px;
+	width: 700px;
+	height: 55px;
+}
+
+.search {
+	outline: none;
+	float: right;
+	width: 85%;
+	border: 1px solid #bbb;
+	padding: 10px 12px;
+	font-size: 14px
+	
+}
+
+.img_btn {
+	width: 40px;
+	float: right;
+	background: url("/resources/images/search.png") no-repeat;
+	border: none;
+	cursor: pointer;
+	height: 45px;
+	background-size: contain;
+}
+
+#search-1 {
+	width: 40px;
+}

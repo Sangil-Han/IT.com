@@ -24,7 +24,8 @@
 	</typeAliases>
 	<mappers>
 		<mapper resource="mappers/user-mapper.xml" />
-		<mapper resource="mappers/finish-mapper.xml"/>
 		<mapper resource="mappers/consult-mapper.xml"/>
+		<mapper resource="mappers/lecture-mapper.xml"/>
+		<mapper resource="mappers/finish-mapper.xml"/>
 	</mappers>
 </configuration>
