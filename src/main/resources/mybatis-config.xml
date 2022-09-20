@@ -24,5 +24,6 @@
 	</typeAliases>
 	<mappers>
 		<mapper resource="mappers/user-mapper.xml" />
+		<mapper resource="mappers/finish-mapper.xml"/>
 	</mappers>
 </configuration>

@@ -2,3 +2,101 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="FinishBoardMapper">
+	<resultMap type="FinishBoard" id="finishBoardResultMap">
+		<id property="fBoardNo" column="F_BOARD_NO"></id>
+		<result property="fBoardUserId" column="USER_ID" />
+		<result property="fBoardTitle" column="F_BOARD_TITLE" />
+		<result property="fBoardLocalName" column="F_BOARD_LOCAL_NAME" />
+		<result property="fBoardCenterName"
+			column="F_BOARD_CENTER_NAME" />
+		<result property="fBoardCourseName"
+			column="F_BOARD_COURSE_NAME" />
+		<result property="fBoardFinishYear"
+			column="F_BOARD_FINISH_YEAR" />
+		<result property="fBoardJobYn" column="F_BOARD_JOB_YN" />
+		<result property="fBoardJobName" column="F_BOARD_JOB_NAME" />
+		<result property="fBoardSalary" column="F_BOARD_SALARY" />
+		<result property="fBoardCompany" column="F_BOARD_COMPANY" />
+		<result property="fBoardContents" column="F_BOARD_CONTENTS" />
+		<result property="fBoardFileName" column="F_BOARD_FILE_NAME" />
+		<result property="fBoardFileRename"
+			column="F_BOARD_FILE_RENAME" />
+		<result property="fBoardFilePath" column="F_BOARD_FILE_PATH" />
+		<result property="fBoardCreateDate"
+			column="F_BOARD_CREATE_DATE" />
+		<result property="fBoardUpCount" column="F_BOARD_UP_COUNT" />
+		<result property="fBoardDownCount" column="F_BOARD_DOWN_COUNT" />
+		<result property="fBoardCount" column="F_BOARD_COUNT" />
+	</resultMap>
+
+
+	<!-- 게시글 등록 mapper, id/file 설정 미완료 -->
+	<insert id="insertBoard">
+		INSERT INTO FINISH_BOARD_TBL
+		VALUES(SEQ_FBOARD_NO.NEXTVAL, 'itcomuser01', #{fBoardTitle},
+		#{fBoardLocalName}, #{fBoardCenterName}, #{fBoardCourseName},
+		#{fBoardFinishYear}, #{fBoardJobYn}, #{fBoardJobName},
+		#{fBoardSalary}, #{fBoardCompany}, #{fBoardContents}, NULL, NULL,
+		NULL, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+	</insert>
+
+	<select id="selectTotalCount" resultType="_int">
+		SELECT COUNT(*) FROM FINISH_BOARD_TBL
+		<where>
+			<if test="searchOption.toString()=='title'">
+				F_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchOption.toString()=='contents'">
+				F_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchOption.toString()=='local'">
+				F_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchOption.toString()=='center'">
+				F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchOption.toString()=='all'">
+				F_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
+				OR
+				F_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+				OR 
+				F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+				OR 
+				F_BOARD_LOCAL_NAME LIKE '%||#{searchValue}||'%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 모든 게시글 SELECT -->
+	<select id="selectAllBoard" resultMap="finishBoardResultMap">
+		SELECT * FROM FINISH_BOARD_TBL ORDER BY F_BOARD_NO DESC
+	</select>
+	
+	<!-- 검색 조건에 의한 게시글 SELECT -->
+	<select id="selectAllByValue" resultMap="finishBoardResultMap">
+		SELECT * FROM FINISH_BOARD_TBL
+		<where>
+			<if test="searchOption.toString()=='title'">
+				F_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchOption.toString()=='contents'">
+				F_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchOption.toString()=='center'">
+				F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchOption.toString()=='local'">
+				F_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchOption.toString()=='all'">
+				F_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
+				OR
+				F_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+				OR F_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%' OR 
+				F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+			</if>
+		</where>
+	</select>
+</mapper>
