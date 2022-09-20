@@ -25,5 +25,6 @@
 	<mappers>
 		<mapper resource="mappers/user-mapper.xml" />
 		<mapper resource="mappers/finish-mapper.xml"/>
+		<mapper resource="mappers/consult-mapper.xml"/>
 	</mappers>
 </configuration>
