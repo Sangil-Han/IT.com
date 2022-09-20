@@ -10,8 +10,6 @@
 </head>
 <body>
 	<h1>메인 페이지</h1>
-	<button onclick="location.href='/cBoard/consultWriteFormView.do'">글쓰기</button>
-	<button onclick="location.href='/cBoard/consultList.do'">글목록</button>
 	<div class="header">
 		<div class="Logo-area">
 			<img src="/resources/images/Logo.png">
@@ -26,7 +24,8 @@
 				<table align="right">
 					<tr>
 						<td rowspan="2">
-							<input type="submit" value="로그인">
+							<button onclick="location.href='/user/loginView.do'">로그인</button>
+							<button onclick="location.href='/user/joinView.do'">회원가입</button>
 						</td>
 					</tr>
 				</table>
@@ -34,9 +33,9 @@
 	</div>
 	<div class="nav-area">
 		<div class="menu" onclick="">HRD수강평</div>
-		<div class="menu" onclick="">상담후기 게시판</div>
+		<div class="menu" onclick="location.href='/cBoard/consultList.do'">상담후기 게시판</div>
 		<div class="menu" onclick="location.href='/lectureBoard/list.do'">수강후기 게시판</div>
-		<div class="menu" onclick="">수료후기 게시판</div>
+		<div class="menu" onclick="location.href='/finish/listView.do'">수료후기 게시판</div>
 		<div class="menu" onclick="">공지사항</div>
 	</div>
 </body>

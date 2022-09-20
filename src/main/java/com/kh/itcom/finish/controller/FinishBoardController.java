@@ -53,7 +53,6 @@ public class FinishBoardController {
 		}
 
 		List<FinishBoard> fList = fService.printAllBoard(currentPage, boardLimit);
-		System.out.println(fList.get(0).toString());
 		if (!fList.isEmpty()) {
 			mv.addObject("urlVal", "listView");
 			mv.addObject("startNavi", startNavi);
