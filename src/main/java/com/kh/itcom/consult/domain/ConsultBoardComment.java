@@ -7,7 +7,7 @@ public class ConsultBoardComment {
 	private int cBoardNo;
 	private String userId;
 	private String commentContents;
-	private Date commentRegtime;
+	private String commentRegtime;
 	private int commentUp;
 	private int commentDown;
 	
@@ -35,10 +35,10 @@ public class ConsultBoardComment {
 	public void setCommentContents(String commentContents) {
 		this.commentContents = commentContents;
 	}
-	public Date getCommentRegtime() {
+	public String getCommentRegtime() {
 		return commentRegtime;
 	}
-	public void setCommentRegtime(Date commentRegtime) {
+	public void setCommentRegtime(String commentRegtime) {
 		this.commentRegtime = commentRegtime;
 	}
 	public int getCommentUp() {
@@ -59,5 +59,7 @@ public class ConsultBoardComment {
 				+ ", commentContents=" + commentContents + ", commentRegtime=" + commentRegtime + ", commentUp="
 				+ commentUp + ", commentDown=" + commentDown + "]";
 	}
+	
+	
 	
 }

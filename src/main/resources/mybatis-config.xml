@@ -11,6 +11,14 @@
 			alias="Admin" />
 		<typeAlias type="com.kh.itcom.consult.domain.ConsultBoard"
 			alias="ConsultBoard" />
+		<typeAlias type="com.kh.itcom.consult.domain.ConsultBoardComment"
+			alias="CosultBoardComment" />
+		<typeAlias type="com.kh.itcom.consult.domain.ConsultUpCount"
+			alias="ConsultUpCount" />
+		<typeAlias type="com.kh.itcom.consult.domain.ConsultDownCount"
+			alias="ConsultDownCount" />
+		<typeAlias type="com.kh.itcom.consult.domain.ConsultViewCount"
+			alias="ConsultViewCount" />
 		<typeAlias type="com.kh.itcom.finish.domain.FinishBoard"
 			alias="FinishBoard" />
 		<typeAlias type="com.kh.itcom.lecture.domain.LectureBoard"

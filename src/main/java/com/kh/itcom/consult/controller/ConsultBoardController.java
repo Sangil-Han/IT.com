@@ -6,7 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,22 +21,29 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.itcom.consult.domain.ConsultBoard;
+import com.kh.itcom.consult.domain.ConsultBoardComment;
+import com.kh.itcom.consult.domain.ConsultDownCount;
+import com.kh.itcom.consult.domain.ConsultUpCount;
+import com.kh.itcom.consult.domain.ConsultViewCount;
 import com.kh.itcom.consult.service.ConsultBoardService;
+import com.kh.itcom.user.domain.User;
 
 @Controller
 public class ConsultBoardController {
 	@Autowired
 	private ConsultBoardService cService;
 	
-	@RequestMapping(value="/cBoard/consultWriteFormView.do", method=RequestMethod.GET)
+	@RequestMapping(value="/consult/consultWriteFormView.do", method=RequestMethod.GET)
 	public String showBoardWriteForm() {
-		return "cBoard/boardWriteForm";
+		return "consult/boardWriteForm";
 	}
 	
-	@RequestMapping(value="/cBoard/consultList.do", method=RequestMethod.GET)
+	@RequestMapping(value="/consult/consultList.do", method=RequestMethod.GET)
 	public ModelAndView boardListView(
 			ModelAndView mv
-			, @RequestParam(value="page", required=false) Integer page) {
+			, @ModelAttribute ConsultViewCount viewCount
+			, @RequestParam(value="page", required=false) Integer page
+			, HttpSession session) {
 		int currentPage = (page != null) ? page : 1;
 		int totalCount = cService.getTotalCount("","");
 		int boardLimit = 10;
@@ -49,6 +59,17 @@ public class ConsultBoardController {
 			endNavi = maxPage;
 		}
 		List<ConsultBoard> cList = cService.printAllBoard(currentPage, boardLimit);
+		try {
+			User loginUser = (User)session.getAttribute("loginUser");
+			String userId = loginUser.getUserId();
+			int totalViewCount = cService.printTotalViewCount(viewCount);
+			System.out.println(totalViewCount);
+			mv.addObject("totalViewCount", totalViewCount);
+			mv.addObject("userId", userId);
+		} catch (Exception e) {
+			mv.addObject("msg", e.getMessage());
+			mv.setViewName("common/errorPage");
+		}
 		if(!cList.isEmpty()) {
 			mv.addObject("urlVal", "consultList");
 			mv.addObject("currentPage", currentPage);
@@ -56,28 +77,50 @@ public class ConsultBoardController {
 			mv.addObject("startNavi", startNavi);
 			mv.addObject("endNavi", endNavi);
 			mv.addObject("cList",cList);
-			mv.setViewName("cBoard/consultListView");
+			mv.setViewName("consult/consultListView");
 		}
 		return mv;
 	}
-	@RequestMapping(value="/cBoard/consultDetailView.do", method=RequestMethod.GET)
+	@RequestMapping(value="/consult/consultDetailView.do", method=RequestMethod.GET)
 	public ModelAndView boardDetailView(
 			ModelAndView mv
+			, @ModelAttribute ConsultViewCount viewCount
 			, @RequestParam("cBoardNo") Integer cBoardNo
-			, @RequestParam("page") Integer page) {
+			, @RequestParam("page") Integer page
+			, HttpSession session
+			, HttpServletRequest request
+			, HttpServletResponse response) {
 		try {
+			User loginUser = (User)session.getAttribute("loginUser");
+			String loginUserId = loginUser.getUserId();
 			ConsultBoard cBoard = cService.printOneByNo(cBoardNo);
+			viewCount.setUserId(loginUserId);
+			List<ConsultBoardComment> cList = cService.printAllComment(cBoardNo);
+			int viewCountCheck = cService.printViewCountCheck(viewCount);
+			int totalViewCount = cService.printTotalViewCount(viewCount);
+			if(viewCountCheck == 0) {
+				int registViewCount = cService.registBoardViewCount(viewCount);
+			}
+			int totalUp = cService.printTotalUpCount(cBoardNo);
+			int totalDown = cService.printTotalDownCount(cBoardNo);
+			session.setAttribute("cBoardNo", cBoardNo);
+			mv.addObject("totalViewCount", totalViewCount);
+			mv.addObject("totalUp", totalUp);
+			mv.addObject("totalDown", totalDown);
+			mv.addObject("loginUserId", loginUserId);
+			mv.addObject("cList", cList);
+			mv.addObject("loginUser", loginUser);
 			mv.addObject("cBoard", cBoard);
 			mv.addObject("page", page);
-			mv.setViewName("cBoard/detailView");
-		} catch (Exception e) {
-			mv.addObject("msg", e.getMessage());
-			mv.setViewName("common/errorPage");
+			mv.setViewName("consult/detailView");
+		   } catch (Exception e) {
+				mv.addObject("msg", e.getMessage());
+				mv.setViewName("common/errorPage");
 		}
 		return mv;
 	}
 	
-	@RequestMapping(value="/cBoard/consultSearch.do", method=RequestMethod.GET)
+	@RequestMapping(value="/consult/consultSearch.do", method=RequestMethod.GET)
 	public ModelAndView boardSerachList(
 			ModelAndView mv
 			, @RequestParam("searchCondition") String searchCondition
@@ -111,15 +154,15 @@ public class ConsultBoardController {
 			mv.addObject("maxPage", maxPage);
 			mv.addObject("startNavi", startNavi);
 			mv.addObject("endNavi", endNavi);
-			mv.setViewName("cBoard/consultListView");
+			mv.setViewName("consult/consultListView");
 		} catch (Exception e) {
 			mv.addObject("msg", e.toString()).setViewName("common/errorPage");
 		}
 		return mv;
 	}
 
-	@RequestMapping(value="/cBoard/consultRegister.do", method=RequestMethod.POST)
-	public ModelAndView registBoard(
+	@RequestMapping(value="/consult/consultRegister.do", method=RequestMethod.POST)
+	public ModelAndView boardRegist(
 			ModelAndView mv
 			, @ModelAttribute ConsultBoard cBoard
 			, @RequestParam(value="uploadFile", required=false) MultipartFile uploadFile
@@ -145,11 +188,144 @@ public class ConsultBoardController {
 				cBoard.setcBoardFilePath(cBoardFilePath);
 			}
 			int result = cService.registerBoard(cBoard);
-			mv.setViewName("redirect:/cBoard/consultList.do");
+			mv.setViewName("redirect:/consult/consultList.do");
 		} catch (Exception e) {
 			mv.addObject("msg", e.getMessage());
 			mv.setViewName("common/errorPage");
 		}
+		return mv;
+	}
+	
+	@RequestMapping(value="/consult/consultModifyView.do", method=RequestMethod.GET)
+	public ModelAndView boardModifyView(
+			ModelAndView mv
+			, @RequestParam("cBoardNo") Integer cBoardNo
+			, @RequestParam("page") int page) {
+		try {
+			ConsultBoard cBoard = cService.printOneByNo(cBoardNo);
+			mv.addObject("cBoard", cBoard);
+			mv.addObject("page",page);
+			mv.setViewName("consult/modifyForm");
+		} catch (Exception e) {
+			mv.addObject("msg", e.getMessage());
+			mv.setViewName("common/errorPage");
+		}
+		return mv;
+	}
+	@RequestMapping(value="/consult/consultModify.do", method=RequestMethod.POST)
+	public ModelAndView boardModify(
+			ModelAndView mv
+			, @ModelAttribute ConsultBoard cBoard
+			, @RequestParam(value="reloadFile", required=false) MultipartFile reloadFile
+			, @RequestParam("page") Integer page
+			, @RequestParam("cBoardNo") Integer cBoardNo
+			, HttpServletRequest request) {
+		try {
+			String cBoardFileName = reloadFile.getOriginalFilename();
+			if(reloadFile != null && !cBoardFileName.equals("")) {
+				String root = request.getSession().getServletContext().getRealPath("resources");
+				String savedPath = root + "\\cBoardUploadFile";
+				File file = new File(savedPath + "\\"+cBoard.getcBoardFileRename());
+				if(file.exists()) {
+					file.delete();
+				}
+				SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
+				String cBoardFileRename = sdf.format(new Date(System.currentTimeMillis()))
+						+"." + cBoardFileName.substring(cBoardFileName.lastIndexOf(".")+1);
+				String cBoardFilePath = savedPath + "\\" + cBoardFileRename;
+				reloadFile.transferTo(new File(cBoardFilePath));
+				cBoard.setcBoardFileName(cBoardFileName);
+				cBoard.setcBoardFileRename(cBoardFileRename);
+				cBoard.setcBoardFilePath(cBoardFilePath);
+			}
+			int result = cService.modifyBoard(cBoard);
+			mv.setViewName("redirect:/consult/consultDetailView.do?cBoardNo="+cBoardNo+"&page="+page);
+		} catch (Exception e) {
+			mv.addObject("msg", e.getMessage()).setViewName("common/errorPage");
+		}
+		return mv;
+	}
+	
+	@RequestMapping(value="/consult/boardUpCount.do", method=RequestMethod.POST)
+	public ModelAndView boardUpCount(
+			ModelAndView mv
+			, @ModelAttribute ConsultUpCount upCount
+			, @RequestParam("page") int page
+			, HttpSession session) {
+		User user = (User)session.getAttribute("loginUser");
+		String userId = user.getUserId();
+		upCount.setUserId(userId);
+		int cBoardNo = upCount.getcBoardNo();
+		int upCountCheck = cService.upCountCheck(upCount);
+		//int totalUp = cService.printTotalUpCount();
+		if(upCountCheck == 0) {
+			int insertUpCount = cService.registerUpCount(upCount);
+		}else if(upCountCheck == 1) {
+			int deleteUpCount = cService.removeUpCount(upCount);
+		}
+		//mv.addObject("totalUp", totalUp);
+		mv.setViewName("redirect:/consult/consultDetailView.do?cBoardNo="+cBoardNo+"&page="+page);
+		return mv;
+	}
+
+	@RequestMapping(value="/consult/boardDownCount.do", method=RequestMethod.POST)
+	public ModelAndView boardDownCount(
+			ModelAndView mv
+			, @ModelAttribute ConsultDownCount downCount
+			, @RequestParam("page") int page
+			, HttpSession session) {
+		User user = (User)session.getAttribute("loginUser");
+		String userId = user.getUserId();
+		downCount.setUserId(userId);
+		int cBoardNo = downCount.getcBoardNo();
+		int downCountCheck = cService.downCountCheck(downCount);
+//		int totalDown = cService.printTotalDownCount();
+		if(downCountCheck == 0) {
+			int insertUpCount = cService.registerDownCount(downCount);
+		}else if(downCountCheck == 1) {
+			int deleteUpCount = cService.removeDownCount(downCount);
+		}
+//		mv.addObject("totalDown", totalDown);
+		mv.setViewName("redirect:/consult/consultDetailView.do?cBoardNo="+cBoardNo+"&page="+page);
+		return mv;
+	}
+
+	@RequestMapping(value="/consult/consultAddComment.do", method=RequestMethod.POST)
+	public ModelAndView addComment(
+			ModelAndView mv
+			, @ModelAttribute ConsultBoardComment comment
+			, @RequestParam("page") int page
+			, HttpSession session) {
+		User user = (User)session.getAttribute("loginUser");
+		String userId = user.getUserId();
+		comment.setUserId(userId);
+		int cBoardNo = comment.getcBoardNo();
+		int result = cService.registerComment(comment);
+		if(result > 0) {
+			mv.setViewName("redirect:/consult/consultDetailView.do?cBoardNo="+cBoardNo+"&page="+page);
+		}
+		return mv;
+	}
+	@RequestMapping(value="/consult/removeComment.do", method=RequestMethod.GET)
+	public ModelAndView removeComment(
+			ModelAndView mv
+			, @RequestParam("commentNo") Integer commentNo
+			, @RequestParam("page") Integer page
+			, @RequestParam("cBoardNo") int cBoardNo) {
+		int result = cService.deleteComment(commentNo);
+		if(result > 0) {
+			mv.setViewName("redirect:/consult/consultDetailView.do?cBoardNo="+cBoardNo+"&page="+page);
+		}
+		return mv;
+	}
+	@RequestMapping(value="/consult/modifyComment.do", method=RequestMethod.POST)
+	public ModelAndView modifyComment(
+			@ModelAttribute ConsultBoardComment comment
+			, ModelAndView mv
+			, @RequestParam("page") int page
+			, @RequestParam("cBoardNo") int cBoardNo) {
+		int result = cService.modifyComment(comment);
+		mv.setViewName("redirect:/consult/consultDetailView.do?cBoardNo="+cBoardNo+"&page="+page);
 		return mv;
 	}
 }
