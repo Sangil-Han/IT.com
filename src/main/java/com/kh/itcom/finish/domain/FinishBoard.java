@@ -10,7 +10,7 @@ public class FinishBoard {
 	private String fBoardCenterName;
 	private String fBoardCourseName;
 	private String fBoardFinishYear;
-	private char fBoardJobYn;
+	private String fBoardJobYn;
 	private String fBoardJobName;
 	private int fBoardSalary;
 	private String fBoardCompany;
@@ -64,10 +64,10 @@ public class FinishBoard {
 	public void setfBoardFinishYear(String fBoardFinishYear) {
 		this.fBoardFinishYear = fBoardFinishYear;
 	}
-	public char getfBoardJobYn() {
+	public String getfBoardJobYn() {
 		return fBoardJobYn;
 	}
-	public void setfBoardJobYn(char fBoardJobYn) {
+	public void setfBoardJobYn(String fBoardJobYn) {
 		this.fBoardJobYn = fBoardJobYn;
 	}
 	public String getfBoardJobName() {
@@ -136,6 +136,9 @@ public class FinishBoard {
 	public void setfBoardCount(int fBoardCount) {
 		this.fBoardCount = fBoardCount;
 	}
+	
+	
+	
 	@Override
 	public String toString() {
 		return "FinishBoard [fBoardNo=" + fBoardNo + ", fBoardUserId=" + fBoardUserId + ", fBoardTitle=" + fBoardTitle

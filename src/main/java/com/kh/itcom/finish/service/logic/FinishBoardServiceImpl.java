@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.itcom.finish.domain.FinishBoard;
+import com.kh.itcom.finish.domain.FinishComment;
 import com.kh.itcom.finish.service.FinishBoardService;
 import com.kh.itcom.finish.store.FinishBoardStore;
 
@@ -41,6 +42,32 @@ public class FinishBoardServiceImpl implements FinishBoardService{
 	public List<FinishBoard> printAllByValue(String searchOption, String searchValue, int currentPage, int boardLimit) {
 		List<FinishBoard> fList=fStore.selectAllByValue(session, searchOption, searchValue, currentPage, boardLimit);
 		return fList;
+	}
+
+	@Override
+	public FinishBoard printOneByNo(int fBoardNo) {
+		FinishBoard fBoard=fStore.selectOneByNo(session, fBoardNo);
+		if(fBoard!=null) {
+			fStore.updateBoardCount(session, fBoardNo);
+		}
+		return fBoard;
+	}
+
+	@Override
+	public int modifyBoard(FinishBoard fBoard) {
+		int result=fStore.updateBoard(session, fBoard);
+		return result;
+	}
+
+	@Override
+	public int registerComment(FinishComment fComment) {
+		int result=fStore.insertComment(session, fComment);
+		return result;
+	}
+
+	@Override
+	public void usePoint(String userId, String point) {
+		fStore.updateUserPoint(session, userId, point);
 	}
 
 }

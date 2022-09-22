@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.itcom.finish.domain.FinishBoard;
+import com.kh.itcom.finish.domain.FinishComment;
 import com.kh.itcom.finish.store.FinishBoardStore;
 
 @Repository
@@ -51,5 +52,39 @@ public class FinishBoardStoreLogic implements FinishBoardStore {
 		List<FinishBoard> fList=session.selectList("FinishBoardMapper.selectAllByValue", paramMap, rowBounds);
 		return fList;
 	}
+
+	@Override
+	public FinishBoard selectOneByNo(SqlSessionTemplate session, int fBoardNo) {
+		FinishBoard fBoard=session.selectOne("FinishBoardMapper.selectOneByNo",fBoardNo);
+		return fBoard;
+	}
+
+	@Override
+	public void updateBoardCount(SqlSessionTemplate session, int fBoardNo) {
+		session.update("FinishBoardMapper.updateBoardCount", fBoardNo);
+	}
+
+	@Override
+	public int updateBoard(SqlSessionTemplate session, FinishBoard fBoard) {
+		int result=session.update("FinishBoardMapper.updateBoard", fBoard);
+		return result;
+	}
+
+	@Override
+	public int insertComment(SqlSessionTemplate session, FinishComment fComment) {
+		int result=session.insert("FinishBoardMapper.insertComment", fComment);
+		return result;
+	}
+
+	@Override
+	public int updateUserPoint(SqlSessionTemplate session, String userId, String point) {
+		HashMap<String, String> paramMap=new HashMap<String, String>();
+		paramMap.put("userId", userId);
+		paramMap.put("point", point);
+		int result=session.insert("FinishBoardMapper.updateUserPoint", paramMap);
+		return result;
+	}
+	
+	
 
 }
