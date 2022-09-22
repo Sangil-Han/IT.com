@@ -15,11 +15,11 @@
       <form action="/user/login.do" method="post">
         <div class="join-input">
           <label for="user-id">아이디</label>
-          <input type="text" id="user-id" name="userId" autocomplete="off" required />
+          <input type="text" id="login-id" name="loginId" autocomplete="off" required />
         </div>
         <div class="join-input">
           <label for="user-pw">비밀번호</label>
-          <input type="password" id="user-pw" name="userPw" autocomplete="off" required />
+          <input type="password" id="login-pw" name="loginPw" autocomplete="off" required />
         </div>
         <div class="btn-area">
           <button>로그인</button>

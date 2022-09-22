@@ -1,11 +1,15 @@
 package com.kh.itcom.user.store.logic;
 
 import java.util.HashMap;
+import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.itcom.admin.domain.Admin;
+import com.kh.itcom.point.domain.PointHistory;
 import com.kh.itcom.user.domain.User;
 import com.kh.itcom.user.store.UserStore;
 

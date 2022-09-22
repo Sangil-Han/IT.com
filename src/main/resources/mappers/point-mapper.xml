@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PointMapper">
+	<resultMap type="PointHistory" id="pointHistoryResultMap">
+		<id property="pointHistoryNo" column="POINT_HISTORY_NO" />
+		<result property="pointDate" column="POINT_DATE" />
+		<result property="pointName" column="POINT_NAME" />
+		<result property="pointAmount" column="POINT_AMOUNT" />
+	</resultMap>
+	<select id="selectCountAllPoint" resultType="_int">
+		SELECT COUNT(*) FROM POINT_HISTORY_TBL WHERE USER_ID = #{userId}
+	</select>
+	<select id="selectPointHistory" resultMap="pointHistoryResultMap">
+		SELECT POINT_HISTORY_NO, POINT_DATE, POINT_NAME, POINT_AMOUNT
+		FROM POINT_HISTORY_TBL H, POINT_MASTER_TBL M
+		WHERE H.USER_ID = #{userId} AND H.POINT_NO = M.POINT_NO
+		ORDER BY POINT_HISTORY_NO DESC
+	</select>
+</mapper>

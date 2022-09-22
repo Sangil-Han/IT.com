@@ -1,5 +1,7 @@
 package com.kh.itcom.notice.service.logic;
 
-public class NoticeServiceImpl {
+import com.kh.itcom.notice.service.NoticeService;
 
+public class NoticeServiceImpl implements NoticeService {
+	
 }

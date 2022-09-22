@@ -10,6 +10,7 @@ public class User {
 	private String authentication;
 	private String userLevel;
 	private int userPoint;
+	private String viewable;
 	private Date joinDate;
 	private String withdrawal;
 	private Date withdrawDate;
@@ -19,6 +20,7 @@ public class User {
 
 	/**
 	 * 로그인
+	 * 
 	 * @param userId
 	 * @param userPw
 	 */
@@ -30,6 +32,7 @@ public class User {
 
 	/**
 	 * 회원가입
+	 * 
 	 * @param userId
 	 * @param userPw
 	 * @param userEmail
@@ -97,6 +100,14 @@ public class User {
 		this.userPoint = userPoint;
 	}
 
+	public String getViewable() {
+		return viewable;
+	}
+
+	public void setViewable(String viewable) {
+		this.viewable = viewable;
+	}
+
 	public Date getJoinDate() {
 		return joinDate;
 	}
@@ -125,7 +136,10 @@ public class User {
 	public String toString() {
 		return "User [userId=" + userId + ", userPw=" + userPw + ", userEmail=" + userEmail + ", newEmail=" + newEmail
 				+ ", authentication=" + authentication + ", userLevel=" + userLevel + ", userPoint=" + userPoint
-				+ ", joinDate=" + joinDate + ", withdrawal=" + withdrawal + ", withdrawDate=" + withdrawDate + "]";
+				+ ", viewable=" + viewable + ", joinDate=" + joinDate + ", withdrawal=" + withdrawal + ", withdrawDate="
+				+ withdrawDate + "]";
 	}
+
+	
 
 }

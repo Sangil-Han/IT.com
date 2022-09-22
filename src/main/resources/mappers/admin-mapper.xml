@@ -1,4 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper></mapper>
+<mapper namespace="AdminMapper">
+	<resultMap type="Admin" id="adminResultMap">
+		<id property="adminId" column="ADMIN_ID" />
+		<result property="adminPw" column="ADMIN_PW" />
+	</resultMap>
+	<resultMap type="User" id="userResultMap">
+		<id property="userId"				column="USER_ID" />
+		<result property="userPw"			column="USER_PW" />
+		<result property="userEmail"		column="USER_EMAIL" />
+		<result property="newEmail"			column="NEW_EMAIL" />
+		<result property="authentication"	column="AUTHENTICATION" />
+		<result property="userLevel"		column="USER_LEVEL" />
+		<result property="userPoint"		column="USER_POINT" />
+		<result property="viewable"			column="VIEWABLE"/>
+		<result property="joinDate"			column="JOIN_DATE" />
+		<result property="withdrawal"		column="WITHDRAWAL" />
+		<result property="withdrawDate"		column="WITHDRAW_DATE" />
+	</resultMap>
+	<select id="selecCountAdminById" resultType="_int">
+		SELECT COUNT(*) FROM ADMIN_TBL
+		WHERE ADMIN_ID = #{id}
+	</select>
+	<select id="selectLoginAdmin" resultMap="adminResultMap">
+		SELECT ADMIN_ID FROM ADMIN_TBL
+		WHERE ADMIN_ID = #{adminId} AND ADMIN_PW = #{adminPw}
+	</select>
+	<select id="selectCountAllUser" resultType="_int">
+		SELECT COUNT(*) FROM USER_TBL
+	</select>
+	<select id="selectUserList" resultMap="userResultMap">
+		SELECT USER_ID, USER_EMAIL, USER_LEVEL, USER_POINT, JOIN_DATE, WITHDRAWAL, WITHDRAW_DATE
+		FROM USER_TBL
+	</select>
+</mapper>

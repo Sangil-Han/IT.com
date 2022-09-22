@@ -15,17 +15,21 @@
 			alias="FinishBoard" />
 		<typeAlias type="com.kh.itcom.lecture.domain.LectureBoard"
 			alias="LectureBoard" />
+		<typeAlias type="com.kh.itcom.level.domain.LevelUp"
+			alias="LevelUp" />
 		<typeAlias type="com.kh.itcom.notice.domain.Notice"
 			alias="Notice" />
 		<typeAlias type="com.kh.itcom.point.domain.PointHistory"
 			alias="PointHistory" />
-		<typeAlias type="com.kh.itcom.user.domain.User"
-			alias="User" />
+		<typeAlias type="com.kh.itcom.user.domain.User" alias="User" />
 	</typeAliases>
 	<mappers>
+		<mapper resource="mappers/admin-mapper.xml" />
+		<mapper resource="mappers/consult-mapper.xml" />
+		<mapper resource="mappers/lecture-mapper.xml" />
+		<mapper resource="mappers/level-mapper.xml" />
+		<mapper resource="mappers/finish-mapper.xml" />
+		<mapper resource="mappers/point-mapper.xml" />
 		<mapper resource="mappers/user-mapper.xml" />
-		<mapper resource="mappers/consult-mapper.xml"/>
-		<mapper resource="mappers/lecture-mapper.xml"/>
-		<mapper resource="mappers/finish-mapper.xml"/>
 	</mappers>
 </configuration>

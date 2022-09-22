@@ -1,5 +1,7 @@
 package com.kh.itcom.notice.store.logic;
 
-public class NoticeStoreLogic {
+import com.kh.itcom.notice.store.NoticeStore;
 
+public class NoticeStoreLogic implements NoticeStore {
+	
 }
