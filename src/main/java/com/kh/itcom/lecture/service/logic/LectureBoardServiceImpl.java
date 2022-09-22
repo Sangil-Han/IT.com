@@ -23,8 +23,32 @@ public class LectureBoardServiceImpl implements LectureBoardService {
 		return result;
 	}
 	@Override
-	public List<LectureBoard> printAllLectureBoard() {
-		List<LectureBoard> lbList = lbStore.selectAllLectureBoard(session);
+	public List<LectureBoard> printAllLectureBoard(int currentPage, int lboardLimit) {
+		List<LectureBoard> lbList = lbStore.selectAllLectureBoard(session, currentPage, lboardLimit);
 		return lbList;
+	}
+	@Override
+	public LectureBoard printOneByNo(Integer lBoardNo) {
+		LectureBoard lectureboard = lbStore.selectOneByNo(session, lBoardNo);
+		int result = 0;
+		if(lectureboard != null) {
+			result = lbStore.updateLectureCount(session, lBoardNo);
+		}
+		return lectureboard;
+	}
+	@Override
+	public int getTotalCount(String searchCondition, String searchValue) {
+		int totalCount = lbStore.selectTotalCount(session, searchCondition, searchValue);
+		return totalCount;
+	}
+	@Override
+	public List<LectureBoard> printAllByValue(String searchCondition, String searchValue, int currentPage, int lboardLimit) {
+		List<LectureBoard> lbList = lbStore.selectAllByValue(session, searchCondition, searchValue, currentPage, lboardLimit);
+		return lbList;
+	}
+	@Override
+	public int modifyLecture(LectureBoard lectureboard) {
+		int result = lbStore.updateLectureBoard(session, lectureboard);
+		return result;
 	}
 }
