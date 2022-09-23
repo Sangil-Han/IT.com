@@ -1,15 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>게시글 상세보기</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IT.com : 상담후기 상세 조회</title>
 <script src="/resources/js/jquery-3.6.1.min.js"></script>
 </head>
 <body>
-	<h1 align="center">${cBoard.cBoardNo }번 게시물</h1>
+	<div id="wrap">
+		<jsp:include page="../common/header.jsp"></jsp:include>
+		<h1 align="center">상담후기 게시판</h1>
 		<table align="center" border="2">
 			<tr>
 				<td>제목</td>
@@ -41,24 +46,25 @@
 			<tr height="100">
 				<td>첨부파일</td>
 				<td>
-					<img alt="본문이미지" 
-					src="/resources/cBoardUploadFile/${cBoard.cBoardFileRename }"
-					width="300" height="300">
+					<img alt="본문이미지" src="/resources/cBoardUploadFile/${cBoard.cBoardFileRename }" width="300" height="300">
 				</td>
 			</tr>
 			<tr>
-				<form action="/consult/boardUpCount.do" method="POST">
-					<input type="hidden" name="page" value="${page }">
-					<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
-					<input type="submit" value="추천">${totalUp}
-				</form>
-				<form action="/consult/boardDownCount.do" method="POST">
-					<input type="hidden" name="page" value="${page }">
-					<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
-					<input type="submit" value="비추천">${totalDown}
-				</form>
+				<td>
+					<form action="/consult/boardUpCount.do" method="POST">
+						<input type="hidden" name="page" value="${page }">
+						<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
+						<input type="submit" value="추천">${totalUp}
+					</form>
+				</td>
+				<td>
+					<form action="/consult/boardDownCount.do" method="POST">
+						<input type="hidden" name="page" value="${page }">
+						<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
+						<input type="submit" value="비추천">${totalDown}
+					</form>
+				</td>
 			</tr>
-				
 		</table>
 		<table align="center" width="500" border="1">
 			<c:forEach items="${cList }" var="comment">
@@ -73,21 +79,18 @@
 					</c:if>
 				</tr>
 			</c:forEach>
-			<form action="/consult/consultAddComment.do" method="post">
-				<input type="hidden" name="page" value="${page }">
-				<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
-				<table align="center" width="500" border="1">
-					<tr>
-						<td>
-							<textarea rows="3" cols="55" name="commentContents"></textarea>
-						</td>
-						<td>
-							<input type="submit" value="등록하기">
-						</td>
-					</tr>
-			</form>
 		</table>
-		<table  align="center">
+		<form action="/consult/consultAddComment.do" method="post">
+			<input type="hidden" name="page" value="${page }">
+			<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
+			<table align="center" width="500" border="1">
+				<tr>
+					<td><textarea rows="3" cols="55" name="commentContents"></textarea></td>
+					<td><input type="submit" value="등록하기"></td>
+				</tr>
+			</table>
+		</form>
+		<table align="center">
 			<tr>
 				<td>
 					<button onclick="location.href='/consult/consultModifyView.do?cBoardNo=${cBoard.cBoardNo }&page=${page}'">수정</button>
@@ -95,34 +98,35 @@
 				</td>
 			</tr>
 		</table>
-<script>
-	function removeComment(commentNo, cBoardNo, page) {
-		event.preventDefault();
-		if(confirm("댓글을 삭제하시겠습니까?")) {
-			location.href="/consult/removeComment.do?cBoardNo="+cBoardNo+"&page="+page+"&commentNo="+commentNo;
+	</div>
+	<script>
+		function removeComment(commentNo, cBoardNo, page) {
+			event.preventDefault();
+			if(confirm("댓글을 삭제하시겠습니까?")) {
+				location.href="/consult/removeComment.do?cBoardNo="+cBoardNo+"&page="+page+"&commentNo="+commentNo;
+			}
 		}
-	}
-	function commentModifyView(obj, commentContents, commentNo,cBoardNo,page) {
-		event.preventDefault();
-		var $tr = $("<tr>");
-		$tr.append("<td colspan='3'><input type='text' size='50' value='"+commentContents+"'");
-		$tr.append("<td><button onclick='modifyComment(this, "+commentNo+","+cBoardNo+","+page+");'>수정</button></td>");
-		$(obj).parent().parent().after($tr);
-	}
-	function modifyComment(obj, commentNo ,cBoardNo, page) {
-		var inputTag = $(obj).parent().siblings().eq(0).children();
-		var commentContents = inputTag.val();
-		var $form = $("<form>");
-		$form.attr("action", "/consult/modifyComment.do");
-		$form.attr("method", "post");
-		$form.append("<input type='hidden' value='"+cBoardNo+"' name='cBoardNo'>");
-		$form.append("<input type='hidden' value='"+page+"' name='page'>");
-		$form.append("<input type='hidden' value='"+commentContents+"' name='commentContents'>");
-		$form.append("<input type='hidden' value='"+commentNo+"' name='commentNo'>");
-		console.log($form[0]);
-		$form.appendTo("body");
-		$form.submit();
-	}
+		function commentModifyView(obj, commentContents, commentNo,cBoardNo,page) {
+			event.preventDefault();
+			var $tr = $("<tr>");
+			$tr.append("<td colspan='3'><input type='text' size='50' value='"+commentContents+"'");
+			$tr.append("<td><button onclick='modifyComment(this, "+commentNo+","+cBoardNo+","+page+");'>수정</button></td>");
+			$(obj).parent().parent().after($tr);
+		}
+		function modifyComment(obj, commentNo ,cBoardNo, page) {
+			var inputTag = $(obj).parent().siblings().eq(0).children();
+			var commentContents = inputTag.val();
+			var $form = $("<form>");
+			$form.attr("action", "/consult/modifyComment.do");
+			$form.attr("method", "post");
+			$form.append("<input type='hidden' value='"+cBoardNo+"' name='cBoardNo'>");
+			$form.append("<input type='hidden' value='"+page+"' name='page'>");
+			$form.append("<input type='hidden' value='"+commentContents+"' name='commentContents'>");
+			$form.append("<input type='hidden' value='"+commentNo+"' name='commentNo'>");
+			console.log($form[0]);
+			$form.appendTo("body");
+			$form.submit();
+		}
 </script>
 </body>
 </html>

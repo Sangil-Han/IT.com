@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/resources/css/user.css" />
   </head>
   <body>
-    <div id="wrap">
+    <div id="wrapper">
       <h1><a href="/home.do">IT.com</a></h1>
       <form action="/user/join.do" method="post">
         <div class="join-input">

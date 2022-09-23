@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>에러메세지</title>
+<title>IT.com : 오류</title>
 </head>
 <body>
 	<h1>에러메세지</h1>

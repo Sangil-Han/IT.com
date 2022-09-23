@@ -14,12 +14,12 @@
 <body>
 	<div class="header">
 		<div class="Logo-area">
-			<img src="/resources/images/Logo.png">
+			<a href="/home.do"><img alt="IT.com" src="/resources/img/logo.png" width="60">IT.com</a>
 		</div>
 		<form class="form-area" action="" method="post">
 			<div class="search-area">
-				<input class="search" type="text" placeholder="검색어 입력"> <input
-					type="button" class="img_btn">
+				<input class="search" type="text" placeholder="검색어 입력">
+				<input type="button" class="img_btn">
 			</div>
 		</form>
 		<c:if test="${empty sessionScope.loginUser && empty sessionScope.loginAdmin }">
@@ -61,9 +61,9 @@
 	</div>
 	<div class="nav-area">
 		<div class="menu" onclick="">HRD수강평</div>
-		<div class="menu" onclick="location.href='/cBoard/consultList.do'">상담후기
+		<div class="menu" onclick="location.href='/consult/consultList.do'">상담후기
 			게시판</div>
-		<div class="menu" onclick="location.href='/lectureBoard/list.do'">수강후기
+		<div class="menu" onclick="location.href='/lecture/list.do'">수강후기
 			게시판</div>
 		<div class="menu" onclick="location.href='/finish/listView.do'">수료후기
 			게시판</div>
