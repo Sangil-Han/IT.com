@@ -10,7 +10,7 @@
 		<result property="lBoardLocalName" 		column="L_BOARD_LOCAL_NAME"/>
 		<result property="lBoardCenterName" 	column="L_BOARD_CENTER_NAME"/>
 		<result property="lBoardCourseName" 	column="L_BOARD_COURSE_NAME"/>
-		<result property="lBoardContents" 		column="L_BOARD_CONTENTS_NAME"/>
+		<result property="lBoardContents" 		column="L_BOARD_CONTENTS"/>
 		<result property="lBoardFileName" 		column="L_BOARD_FILE_NAME"/>
 		<result property="lBoardFileRename" 	column="L_BOARD_FILE_RENAME"/>
 		<result property="lBoardFilePath" 		column="L_BOARD_FILE_PATH"/>
@@ -23,7 +23,50 @@
 		INSERT INTO LECTURE_BOARD_TBL 
 		VALUES(SEQ_LBOARDNO.NEXTVAL,#{userId},#{lBoardTitle},#{lBoardLocalName},#{lBoardCenterName},#{lBoardCourseName},#{lBoardContents},#{lBoardFileName},#{lBoardFileRename},#{lBoardFilePath}, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 	</insert>
+	<update id="updateLectureBoard">
+		UPDATE LECTURE_BOARD_TBL SET L_BOARD_TITLE = #{lBoardTitle}, L_BOARD_LOCAL_NAME = #{lBoardLocalName}, L_BOARD_CENTER_NAME = #{lBoardCenterName}, L_BOARD_COURSE_NAME = #{lBoardCourseName}, L_BOARD_CONTENTS = #{lBoardContents}
+		, L_BOARD_FILE_NAME = #{lBoardFileName}, L_BOARD_FILE_RENAME = #{lBoardFileRename}, L_BOARD_FILE_PATH = #{lBoardFilePath}, L_BOARD_CREATE_DATE = DEFAULT WHERE L_BOARD_NO = #{lBoardNo}
+	</update>
+	<update id="updateLectureCount">
+		UPDATE LECTURE_BOARD_TBL SET L_BOARD_COUNT = L_BOARD_COUNT + 1 WHERE L_BOARD_NO = #{lBoardNo}	
+	</update>
 	<select id="selectAllLectureBoard" resultMap="lectureResultMap">
-		SELECT L_BOARD_TITLE, L_BOARD_CREATE_DATE, L_BOARD_COUNT, L_BOARD_UP_COUNT FROM LECTURE_BOARD_TBL
+		SELECT * FROM LECTURE_BOARD_TBL ORDER BY L_BOARD_NO DESC
 	</select>
+	<select id="selectTotalCount" resultType="_int">
+		SELECT Count (*) FROM LECTURE_BOARD_TBL	
+		<where>
+			<if test="searchCondition.toString() == 'title'">
+				L_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchCondition.toString() == 'contents'">
+				L_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchCondition.toString() == 'all'">
+				L_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
+				OR L_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+			</if>
+		</where>
+	</select>
+	<select id="selectOneByNo" resultMap="lectureResultMap">
+		SELECT * FROM LECTURE_BOARD_TBL WHERE L_BOARD_NO = #{lBoardNo}
+	</select>
+		
+	<select id="selectAllByValue" resultMap="lectureResultMap">
+		SELECT * FROM LECTURE_BOARD_TBL 
+		<where>
+			<if test="searchCondition.toString() == 'title'">
+				L_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchCondition.toString() == 'contents'">
+				L_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchCondition.toString() == 'all'">
+				L_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
+				OR L_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+			</if>
+			ORDER BY L_BOARD_NO DESC
+		</where> 
+	</select>
+	
 </mapper>

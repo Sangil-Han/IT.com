@@ -9,7 +9,7 @@
 <body>
 <h1 align="center">게시글 등록 페이지</h1>
 	<br><br>
-	<form action="/lectureBoard/register.do" method="post" enctype="multipart/form-data">
+	<form action="/lecture/register.do" method="post" enctype="multipart/form-data">
 		<table align="center" border="1">
 			<tr>
 				<td>제목</td>
@@ -39,10 +39,10 @@
 				<td>과정명</td>
 				<td><input type="text" name="lBoardCourseName"></td>
 			</tr>
-			<!-- <tr>
+			<tr>
 				<td>첨부파일</td>
-				<td><input type="file" name="lBoardFileName"></td>
-			</tr> -->
+				<td><input type="file" name="uploadFile"></td>
+			</tr>
 			<tr>
 				<td>내용</td>
 				<td><textarea cols="50" rows="10" name="lBoardContents"></textarea></td>

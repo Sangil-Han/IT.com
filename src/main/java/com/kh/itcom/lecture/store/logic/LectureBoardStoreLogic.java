@@ -1,7 +1,9 @@
 package com.kh.itcom.lecture.store.logic;
 
+import java.util.HashMap;
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -19,8 +21,50 @@ public class LectureBoardStoreLogic implements LectureBoardStore {
 	}
 
 	@Override
-	public List<LectureBoard> selectAllLectureBoard(SqlSession session) {
-		List<LectureBoard> lbList = session.selectList("LectureMapper.selectAllLectureBoard");
+	public List<LectureBoard> selectAllLectureBoard(SqlSession session, int currentPage, int lboardLimit) {
+		int offset = (currentPage-1)*lboardLimit;
+		RowBounds rowBounds = new RowBounds(offset, lboardLimit);
+		List<LectureBoard> lbList = session.selectList("LectureMapper.selectAllLectureBoard", null, rowBounds);
 		return lbList;
+	}
+
+	@Override
+	public LectureBoard selectOneByNo(SqlSession session, Integer lBoardNo) {
+		LectureBoard lectureboard = session.selectOne("LectureMapper.selectOneByNo", lBoardNo);
+		return lectureboard;
+	}
+
+	@Override
+	public int selectTotalCount(SqlSession session, String searchCondition, String searchValue) {
+		HashMap<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("searchCondition", searchCondition);
+		paramMap.put("searchValue", searchValue);
+		int totalCount = session.selectOne("LectureMapper.selectTotalCount", paramMap);
+		return totalCount;
+	}
+
+	@Override
+	public List<LectureBoard> selectAllByValue(SqlSession session, String searchCondition, String searchValue, int currentPage, int lboardLimit) {
+		int offset = (currentPage-1)*lboardLimit;
+		RowBounds rowBounds 
+		= new RowBounds(offset, lboardLimit);
+		HashMap<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("searchCondition", searchCondition);
+		paramMap.put("searchValue", searchValue);
+		List<LectureBoard> lbList 
+		= session.selectList("LectureMapper.selectAllByValue", paramMap, rowBounds);
+		return lbList;
+	}
+
+	@Override
+	public int updateLectureBoard(SqlSession session, LectureBoard lectureboard) {
+		int result = session.update("LectureMapper.updateLectureBoard", lectureboard);
+		return result;
+	}
+
+	@Override
+	public int updateLectureCount(SqlSession session, int lBoardNo) {
+		int result = session.update("LectureMapper.updateLectureCount", lBoardNo);
+		return result;
 	}
 }
