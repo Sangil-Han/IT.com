@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.itcom.consult.domain.ConsultBoard;
+import com.kh.itcom.consult.domain.ConsultBoardComment;
+import com.kh.itcom.consult.domain.ConsultDownCount;
+import com.kh.itcom.consult.domain.ConsultUpCount;
+import com.kh.itcom.consult.domain.ConsultViewCount;
 import com.kh.itcom.consult.service.ConsultBoardService;
 import com.kh.itcom.consult.store.ConsultBoardStore;
 
@@ -20,6 +24,12 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	@Override
 	public int registerBoard(ConsultBoard cBoard) {
 		int result = cStore.insertBoard(session, cBoard);
+		return result;
+	}
+
+	@Override
+	public int modifyBoard(ConsultBoard cBoard) {
+		int result = cStore.updateBoard(session, cBoard);
 		return result;
 	}
 
@@ -45,6 +55,102 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	@Override
 	public ConsultBoard printOneByNo(Integer cBoardNo) {
 		ConsultBoard cBoard = cStore.selectOneByNo(session, cBoardNo);
+		int result= 0;
+		if(cBoard != null) {
+			result = cStore.boardCount(session, cBoardNo);
+		}
 		return cBoard;
 	}
+
+	@Override
+	public int registerComment(ConsultBoardComment comment) {
+		int result = cStore.insertComment(session, comment);
+		return result;
+	}
+
+	@Override
+	public List<ConsultBoardComment> printAllComment(Integer cBoardNo) {
+		List<ConsultBoardComment> cList = cStore.selectAllComment(session, cBoardNo);
+		return cList;
+	}
+
+	@Override
+	public int deleteComment(Integer commentNo) {
+		int result = cStore.deleteComment(session, commentNo);
+		return result;
+	}
+
+	@Override
+	public int upCountCheck(ConsultUpCount upCount) {
+		int result = cStore.selectUpCount(session, upCount);
+		return result;
+	}
+
+	@Override
+	public int registerUpCount(ConsultUpCount upCount) {
+		int result = cStore.insertUpCount(session, upCount);
+		return result;
+	}
+
+	@Override
+	public int removeUpCount(ConsultUpCount upCount) {
+		int result = cStore.deleteUpCount(session, upCount);
+		return result;
+	}
+
+	@Override
+	public int printTotalUpCount(Integer cBoardNo) {
+		int result = cStore.selectTotalUpCount(session, cBoardNo);
+		return result;
+	}
+
+	@Override
+	public int downCountCheck(ConsultDownCount downCount) {
+		int result = cStore.selectDownCount(session, downCount);
+		return result;
+	}
+
+	@Override
+	public int registerDownCount(ConsultDownCount downCount) {
+		int result = cStore.insertDownCount(session, downCount);
+		return result;
+	}
+
+	@Override
+	public int removeDownCount(ConsultDownCount downCount) {
+		int result = cStore.deleteDownCount(session, downCount);
+		return result;
+	}
+
+	@Override
+	public int printTotalDownCount(Integer cBoardNo) {
+		int result = cStore.selectTotalDownCount(session,cBoardNo);
+		return result;
+	}
+
+	@Override
+	public int modifyComment(ConsultBoardComment comment) {
+		int result = cStore.updateComment(session, comment);
+		return result;
+	}
+
+	@Override
+	public int registBoardViewCount(ConsultViewCount viewCount) {
+		int result = cStore.insertViewCount(session, viewCount);
+		return result;
+	}
+
+	@Override
+	public int printViewCountCheck(ConsultViewCount viewCount) {
+		int result = cStore.selectViewCountCheck(session, viewCount);
+		return result;
+	}
+
+	@Override
+	public int printTotalViewCount(ConsultViewCount viewCount) {
+		int result = cStore.selectTotalViewCount(session, viewCount);
+		return result;
+	}
+
+
 }

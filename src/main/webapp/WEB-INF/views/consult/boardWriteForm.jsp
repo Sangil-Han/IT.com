@@ -9,15 +9,11 @@
 <body>
 	<h1 align="center">게시글 등록 페이지</h1>
 	<br><br>
-	<form action="/cBoard/consultRegister.do" method="post" enctype="multipart/form-data">
+	<form action="/consult/consultRegister.do" method="post" enctype="multipart/form-data">
 		<table align="center" border="1">
 			<tr>
 				<td>제목</td>
 				<td><input type="text" name="cBoardTitle"></td>
-			</tr>
-			<tr>
-				<td>작성자</td>
-				<td><input type="text" name="userId"></td>
 			</tr>
 			<tr>
 				<td>지역구명</td>
