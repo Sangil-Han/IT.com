@@ -35,13 +35,28 @@
 	<!-- 게시글 등록 mapper, id/file 설정 미완료 -->
 	<insert id="insertBoard">
 		INSERT INTO FINISH_BOARD_TBL
-		VALUES(SEQ_FBOARD_NO.NEXTVAL, 'itcomuser01', #{fBoardTitle},
+		VALUES(SEQ_FBOARD_NO.NEXTVAL, #{fBoardUserId}, #{fBoardTitle},
 		#{fBoardLocalName}, #{fBoardCenterName}, #{fBoardCourseName},
 		#{fBoardFinishYear}, #{fBoardJobYn}, #{fBoardJobName},
 		#{fBoardSalary}, #{fBoardCompany}, #{fBoardContents}, NULL, NULL,
 		NULL, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 	</insert>
 
+	<!-- 조회수 증가 -->
+	<update id="updateBoardCount">
+		UPDATE FINISH_BOARD_TBL SET F_BOARD_COUNT=F_BOARD_COUNT+1 WHERE F_BOARD_NO=#{fBoardNo}
+	</update>
+	
+	<!-- 게시글 수정 -->
+	<update id="updateBoard">
+		UPDATE FINISH_BOARD_TBL SET F_BOARD_TITLE=#{fBoardTitle}, F_BOARD_LOCAL_NAME=#{fBoardLocalName}, F_BOARD_CENTER_NAME=#{fBoardCenterName}, F_BOARD_COURSE_NAME=#{fBoardCourseName}, F_BOARD_FINISH_YEAR=#{fBoardFinishYear}, F_BOARD_JOB_YN=#{fBoardJobYn}, F_BOARD_JOB_NAME=#{fBoardJobName}, F_BOARD_SALARY=#{fBoardSalary}, F_BOARD_COMPANY=#{fBoardCompany}, F_BOARD_CONTENTS=#{fBoardContents}, F_BOARD_FILE_NAME=#{fBoardFileName}, F_BOARD_FILE_RENAME=#{fBoardFileRename}, F_BOARD_FILE_PATH=#{fBoardFilePath} WHERE F_BOARD_NO=#{fBoardNo} 
+	</update>
+	
+	<update id="updateUserPoint">
+		UPDATE USER_TBL SET USER_POINT=USER_POINT+#{point} WHERE USER_ID=#{userId}
+	</update>
+	
+	<!-- 수료게시판 게시글 수 return -->
 	<select id="selectTotalCount" resultType="_int">
 		SELECT COUNT(*) FROM FINISH_BOARD_TBL
 		<where>
@@ -64,7 +79,7 @@
 				OR 
 				F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
 				OR 
-				F_BOARD_LOCAL_NAME LIKE '%||#{searchValue}||'%'
+				F_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%'
 			</if>
 		</where>
 	</select>
@@ -78,25 +93,43 @@
 	<select id="selectAllByValue" resultMap="finishBoardResultMap">
 		SELECT * FROM FINISH_BOARD_TBL
 		<where>
-			<if test="searchOption.toString()=='title'">
-				F_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
-			</if>
-			<if test="searchOption.toString()=='contents'">
-				F_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
-			</if>
 			<if test="searchOption.toString()=='center'">
 				F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
 			</if>
 			<if test="searchOption.toString()=='local'">
 				F_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%'
 			</if>
-			<if test="searchOption.toString()=='all'">
+			<if test="searchOption.toString()=='title'">
 				F_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
-				OR
+			</if>
+			<if test="searchOption.toString()=='contents'">
 				F_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
-				OR F_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%' OR 
-				F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchOption.toString()=='all'">
+				F_BOARD_TITLE LIKE '%'||#{searchValue}||'%' OR F_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%' OR F_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%' OR F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
 			</if>
 		</where>
 	</select>
+	
+	<!-- boardNo로 하나의 board를 가져오는 select -->
+	<select id="selectOneByNo" resultMap="finishBoardResultMap">
+		SELECT * FROM FINISH_BOARD_TBL WHERE F_BOARD_NO=#{fBoardNo} 
+	</select>
+	
+	
+	
+	<!-- 댓글 관리 -->
+	<resultMap type="FinishComment" id="commentResultMap">
+		<id property="fCommentNo" column="F_COMMENT_NO"/>
+		<result property="fBoardNo" column="F_BOARD_NO"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="fCommentContents" column="F_COMMENT_CONTENTS"/>
+		<result property="fCommentRegtime" column="F_COMMENT_REGTIME"/>
+	</resultMap>
+	
+	<insert id="insertComment">
+		INSERT INTO FINISH_COMMENT_TBL VALUES(SEQ_FCOMMENT_NO.NEXTVAL, #{fBoardNo}, #{userId}, #{fCommentContents}, #{fCommentRegtime})
+	</insert>
+	
 </mapper>
+

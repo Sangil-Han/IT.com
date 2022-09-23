@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 
 import com.kh.itcom.finish.domain.FinishBoard;
+import com.kh.itcom.finish.domain.FinishComment;
 
 public interface FinishBoardStore {
 
@@ -17,4 +18,14 @@ public interface FinishBoardStore {
 
 	List<FinishBoard> selectAllByValue(SqlSessionTemplate session, String searchOption, String searchValue,
 			int currentPage, int boardLimit);
+
+	FinishBoard selectOneByNo(SqlSessionTemplate session, int fBoardNo);
+
+	void updateBoardCount(SqlSessionTemplate session, int fBoardNo);
+
+	int updateBoard(SqlSessionTemplate session, FinishBoard fBoard);
+
+	int insertComment(SqlSessionTemplate session, FinishComment fComment);
+	
+	int updateUserPoint(SqlSessionTemplate session, String userId, String point);
 }
