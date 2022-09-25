@@ -26,11 +26,14 @@
 					<tr>
 						<%-- 			<td><a href="/consult/consultDetailView.do?cBoardNo=${cBoard.cBoardNo }&page=${currentPage}">${cBoard.cBoardTitle }</a></td> --%>
 						<td>
-							<a href="#" onclick="detailView('${userId}', ${cBoard.cBoardNo },${currentPage });">${cBoard.cBoardTitle }</a>
+							<a href="#" onclick="detailView('${userId}','${loginAdmin.adminId }', ${cBoard.cBoardNo },${currentPage },'${loginUser.userLevel }',${loginUser.userPoint },'${loginUser.viewable }');">${cBoard.cBoardTitle }</a>
 						</td>
 						<td>${cBoard.cBoardCreateDate }</td>
-						<td>${totalViewCount }</td>
+						<td>${cBoard.cBoardCount }</td>
 						<td>${cBoard.cBoardUpCount }</td>
+						<c:if test="${not empty sessionScope.loginAdmin }">
+							<td>삭제</td>
+						</c:if>
 					</tr>
 				</c:forEach>
 				<tr align="center" height="20">
@@ -82,21 +85,42 @@
 					</form>
 				</td>
 				<td>
-					<button onclick="location.href='/consult/consultWriteFormView.do'">글쓰기</button>
+					<button href="#" onclick="writeForm('${userId}');">글쓰기</button>
 				</td>
 			</tr>
 		</table>
 	</div>
 	<script>
-		function detailView(userId, cBoardNo, currentPage ) {
-			if(userId == "") {
+		function detailView(userId, adminId, cBoardNo, currentPage, userLevel, userPoint, viewable) {
+			event.preventDefault();
+			var level = '일반회원';
+			var viewableNo = 'N';
+			if(userId == "" && adminId == "") {
 				if(confirm("로그인이 필요한 서비스입니다. 로그인하시겠습니까?")){
 					location.href='/user/loginView.do';
 				}
-			}else{
-				location.href='/consult/consultDetailView.do?cBoardNo='+cBoardNo+'&page='+currentPage;
-			}
+ 			}
+			if(userLevel == level && viewable == viewableNo) {
+ 				if(confirm("100포인트를 사용하여 열람하시겠습니까?")) {
+ 					if(userPoint >= 100){
+	 					location.href='/consult/consultDetailView.do?cBoardNo='+cBoardNo+'&page='+currentPage;
+ 					}else if(userPoint < 100){
+ 						alert("포인트가 부족합니다");
+ 					}
+ 				}
+ 			}else{
+ 				location.href='/consult/consultDetailView.do?cBoardNo='+cBoardNo+'&page='+currentPage;
+ 			}
 		}
+		function writeForm(userId) {
+			if(userId == ""){
+				if(confirm("로그인이 필요한 서비스입니다 로그인하시겠습니까?")){
+					location.href='/user/loginView.do';
+				}
+			}else {
+				location.href='/consult/consultWriteFormView.do';
+		}
+	}
 	</script>
 </body>
 </html>

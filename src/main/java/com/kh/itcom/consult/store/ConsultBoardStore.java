@@ -10,6 +10,7 @@ import com.kh.itcom.consult.domain.ConsultBoardComment;
 import com.kh.itcom.consult.domain.ConsultDownCount;
 import com.kh.itcom.consult.domain.ConsultUpCount;
 import com.kh.itcom.consult.domain.ConsultViewCount;
+import com.kh.itcom.user.domain.User;
 
 public interface ConsultBoardStore {
 	
@@ -33,7 +34,7 @@ public interface ConsultBoardStore {
 
 	public int deleteComment(SqlSessionTemplate session, Integer commentNo);
 
-	public int boardCount(SqlSessionTemplate session, Integer cBoardNo);
+//	public int boardCount(SqlSessionTemplate session, Integer cBoardNo);
 
 	public int insertUpCount(SqlSessionTemplate session, ConsultUpCount upCount);
 
@@ -58,5 +59,17 @@ public interface ConsultBoardStore {
 	public int selectViewCountCheck(SqlSessionTemplate session, ConsultViewCount viewCount);
 
 	public int selectTotalViewCount(SqlSessionTemplate session, ConsultViewCount viewCount);
+
+	public int updateBoardViewCount(SqlSessionTemplate session, Integer cBoardNo);
+
+	public int updateBoardUp(SqlSessionTemplate session, int consultBoardNo);
+
+	public int deleteBoard(SqlSessionTemplate session, int cBoardNo);
+
+	public int updatePoint(SqlSessionTemplate session, User loginUser);
+
+	public void updateViewable(SqlSessionTemplate session, User loginUser);
+
+//	public int updatePoint(SqlSessionTemplate session, String loginUserId, String point);
 
 }

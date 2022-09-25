@@ -15,6 +15,7 @@ import com.kh.itcom.consult.domain.ConsultDownCount;
 import com.kh.itcom.consult.domain.ConsultUpCount;
 import com.kh.itcom.consult.domain.ConsultViewCount;
 import com.kh.itcom.consult.store.ConsultBoardStore;
+import com.kh.itcom.user.domain.User;
 
 @Repository
 public class ConsultBoardStoreLogic implements ConsultBoardStore {
@@ -84,11 +85,11 @@ public class ConsultBoardStoreLogic implements ConsultBoardStore {
 		return result;
 	}
 
-	@Override
-	public int boardCount(SqlSessionTemplate session, Integer cBoardNo) {
-		int result = session.update("CBoardMapper.updateCount",cBoardNo);
-		return result;
-	}
+//	@Override
+//	public int boardCount(SqlSessionTemplate session, Integer cBoardNo) {
+//		int result = session.update("CBoardMapper.updateCount",cBoardNo);
+//		return result;
+//	}
 
 	@Override
 	public int insertUpCount(SqlSessionTemplate session, ConsultUpCount upCount) {
@@ -161,5 +162,34 @@ public class ConsultBoardStoreLogic implements ConsultBoardStore {
 		int result = session.selectOne("CBoardMapper.selectTotalViewCount", viewCount);
 		return result;
 	}
-	
+
+	@Override
+	public int updateBoardViewCount(SqlSessionTemplate session, Integer cBoardNo) {
+		int result = session.update("CBoardMapper.updateBoardViewCount", cBoardNo);
+		return result;
+	}
+
+	@Override
+	public int updateBoardUp(SqlSessionTemplate session, int consultBoardNo) {
+		int result = session.update("CBoardMapper.updateBoardUp", consultBoardNo);
+		return result;
+	}
+
+	@Override
+	public int deleteBoard(SqlSessionTemplate session, int cBoardNo) {
+		int result = session.delete("CBoardMapper.deleteBoard", cBoardNo);
+		return result;
+	}
+
+	@Override
+	public int updatePoint(SqlSessionTemplate session, User loginUser) {
+		int result = session.update("CBoardMapper.updatePoint", loginUser);
+		return result;
+	}
+
+	@Override
+	public void updateViewable(SqlSessionTemplate session, User loginUser) {
+		session.update("CBoardMapper.updateViewable", loginUser);
+	}
+
 }
