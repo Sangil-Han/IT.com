@@ -25,7 +25,7 @@
 				<c:forEach items="${lbList }" var="lectureBoard" varStatus="i">
 					<tr>
 						<td>
-							<a href="/lecture/detail.do?lBoardNo=${lectureBoard.lBoardNo}&page=${currentPage}">${lectureBoard.lBoardTitle }</a>
+							<a href="#" onclick="lectureDetailView('${userId}', ${lectureBoard.lBoardNo }, ${currentPage });">${lectureBoard.lBoardTitle }</a>
 						</td>
 						<td>${lectureBoard.lBoardCreateDate }</td>
 						<td>${lectureBoard.lBoardCount }</td>
@@ -86,5 +86,16 @@
 			</tr>
 		</table>
 	</div>
+	<script>
+		function lectureDetailView(userId, lBoardNo, currentPage) {
+			if(userId == "") {
+				if(confirm("로그인이 필요한 서비스입니다. 로그인하시겠습니까?")){
+					location.href='/user/loginView.do';
+				}
+			}else{
+				location.href='/lecture/detail.do?lBoardNo='+lBoardNo+'&page='+currentPage;
+			}
+		}
+	</script>
 </body>
 </html>

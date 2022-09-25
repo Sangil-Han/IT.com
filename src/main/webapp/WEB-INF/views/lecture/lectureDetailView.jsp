@@ -5,11 +5,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script>
+
+</script>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 수강후기 상세 조회</title>
-<script src="/resources/js/jquery-3.6.1.min.js"></script>
 </head>
 <body>
 	<div id="wrap">
@@ -53,56 +55,77 @@
 				<td colspan="2" align="center"><a href="/lecture/modifyView.do?lBoardNo=${lectureBoard.lBoardNo}&page=${page}">수정 페이지로 이동</a></td>
 			</tr>
 		</table>
-	</div>
-	<%-- <!-- 	댓글 등록 -->
-	<form action="/board/addReply.kh" method="post">
-		<input type="hidden" name="page" value="${page }">
-		<input type="hidden" name="refBoardNo" value="${board.boardNo }">
+	
+	<!-- 댓글 등록 -->
+	<form action="/lecture/lectureAddComment.do" method="post">
+			<input type="hidden" name="lBoardNo" value="${lectureBoard.lBoardNo }">
+			<input type="hidden" name="page" value=${page }>
+			<table align="center" width="500" border="1">
+				<tr>
+					<td><textarea rows="3" cols="55" name="lCommentContents"></textarea></td>
+					<td>
+						<button>등록하기</button>
+					</td>
+				</tr>
+			</table>
+		</form>
+
+	
+		<!-- 댓글 목록 -->
 		<table align="center" width="500" border="1">
-			<tr>
-				<td>
-					<textarea rows="3" cols="55" name="replyContents"></textarea>
-				</td>
-				<td>
-					<input type="submit" value="등록하기">
-				</td>
-			</tr>
+			<c:forEach items="${lcList }" var="lbComment">
+				<tr>
+					<td>${lbComment.lCommentContents }</td>
+					<td>${lbComment.lCommentRegtime }</td>
+					<%-- <c:if test="${loginUserId eq lbComment.userId }"> --%>
+						<td>
+							<a href="#" onclick="modifyView(this,'${lbComment.lCommentContents }',${lbComment.lCommentNo},${lBoardNo },${page });">수정</a>
+							<button onclick="removeComment(${lbComment.lCommentNo},${lectureBoard.lBoardNo }, ${page });">삭제</button>
+						</td>
+					<%-- </c:if> --%>
+				</tr>
+			<%-- 	<tr> 
+ 					<td colspan="3"><input type="text" size="50" value="${lbComment.lCommentContents }"></td>
+ 				</tr>  --%>
+			</c:forEach>
 		</table>
-	</form>
-	<!-- 	댓글 목록 -->
-	<table align="center" width="500" border="1">
-		<c:forEach items="${rList }" var="reply">
+		<%-- <table align="center">
 			<tr>
-				<td width="100">${reply.replyWriter }</td>
-				<td>${reply.replyContents }</td>
-				<td>${reply.rUpdateDate }</td>
 				<td>
-					<a href="#" onclick="modifyView(this,'${reply.replyContents }', ${reply.replyNo });">수정</a> 
+					<<button onclick="location.href='/lecture/modifyComment.do?lBoardNo=${lectureBoard.lBoardNo }&page=${page}'">수정</button> 
+					<button onclick="location.href='/lecture/list.do?page=${page}'">목록</button>
 				</td>
 			</tr>
-		</c:forEach>
-	</table> --%>
+		</table> --%>
+	</div>
 	<script>
-		/* 	function modifyView(obj, replyContents, replyNo) {
-				event.preventDefault();
-				var $tr = $("<tr>");
-				$tr.append("<td colspan='3'><input type='text' size='50' value='"+replyContents+"'></td>");
-				$tr.append("<td><button onclick='modifyReply(this, "+replyNo+");'>수정</button></td>");
-				$(obj).parent().parent().after($tr);
-			} 
-			function modifyReply(obj, rNo) {
-				var inputTag = $(obj).parent().prev().children();
-				console.log(inputTag.val());
-				var replyContents = inputTag.val();
-				var $form = $("<form>");
-				$form.attr("action", "/board/modifyReply.kh");
-				$form.attr("method", "post");
-				$form.append("<input type='hidden' value='"+replyContents+"' name='replyContents'>");
-				$form.append("<input type='hidden' value='"+rNo+"' name='replyNo'>");
-				console.log($form[0]);
-				$form.appendTo("body");
-				$form.submit();
-			}  */
-	</script>
+		function removeComment(lCommentNo, lBoardNo, page) {
+			event.preventDefault();
+			if(confirm("댓글을 삭제하시겠습니까?")) {
+				location.href="/lecture/removeComment.do?lBoardNo="+lBoardNo+"&page="+page+"&lCommentNo="+lCommentNo;
+			}
+		}
+		function modifyView(obj, lCommentContents, lCommentNo,lBoardNo,page) {
+			event.preventDefault();
+			var $tr = $("<tr>");
+			$tr.append("<td colspan='3'><input type='text' size='50' value='"+lCommentContents+"'></td>");
+			$tr.append("<td><button onclick='modifyComment(this, "+lCommentNo+","+lBoardNo+","+page+");'>수정</button></td>");
+			$(obj).parent().parent().after($tr);
+		}
+		function modifyComment(obj, lCommentNo ,lBoardNo, page) {
+			var inputTag = $(obj).parent().siblings().eq(0).children();
+			var lCommentContents = inputTag.val();
+			var $form = $("<form>");
+			$form.attr("action", "/lecture/modifyComment.do");
+			$form.attr("method", "post");
+			$form.append("<input type='hidden' value='"+lBoardNo+"' name='lBoardNo'>");
+			$form.append("<input type='hidden' value='"+page+"' name='page'>");
+			$form.append("<input type='hidden' value='"+lCommentContents+"' name='lCommentContents'>");
+			$form.append("<input type='hidden' value='"+lCommentNo+"' name='lCommentNo'>");
+			console.log($form[0]);
+			$form.appendTo("body");
+			$form.submit();
+		}
+</script>
 </body>
 </html>

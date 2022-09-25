@@ -21,11 +21,16 @@
 	</resultMap>
 	<insert id="insertLecture">
 		INSERT INTO LECTURE_BOARD_TBL 
-		VALUES(SEQ_LBOARDNO.NEXTVAL,#{userId},#{lBoardTitle},#{lBoardLocalName},#{lBoardCenterName},#{lBoardCourseName},#{lBoardContents},#{lBoardFileName},#{lBoardFileRename},#{lBoardFilePath}, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+		VALUES(SEQ_LBOARDNO.NEXTVAL,#{userId},#{lBoardTitle},#{lBoardLocalName},#{lBoardCenterName}
+		,#{lBoardCourseName},#{lBoardContents},#{lBoardFileName},#{lBoardFileRename},#{lBoardFilePath}
+		, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 	</insert>
 	<update id="updateLectureBoard">
-		UPDATE LECTURE_BOARD_TBL SET L_BOARD_TITLE = #{lBoardTitle}, L_BOARD_LOCAL_NAME = #{lBoardLocalName}, L_BOARD_CENTER_NAME = #{lBoardCenterName}, L_BOARD_COURSE_NAME = #{lBoardCourseName}, L_BOARD_CONTENTS = #{lBoardContents}
-		, L_BOARD_FILE_NAME = #{lBoardFileName}, L_BOARD_FILE_RENAME = #{lBoardFileRename}, L_BOARD_FILE_PATH = #{lBoardFilePath}, L_BOARD_CREATE_DATE = DEFAULT WHERE L_BOARD_NO = #{lBoardNo}
+		UPDATE LECTURE_BOARD_TBL
+		SET L_BOARD_TITLE = #{lBoardTitle}, L_BOARD_LOCAL_NAME = #{lBoardLocalName}, L_BOARD_CENTER_NAME = #{lBoardCenterName}
+			, L_BOARD_COURSE_NAME = #{lBoardCourseName}, L_BOARD_CONTENTS = #{lBoardContents}, L_BOARD_FILE_NAME = #{lBoardFileName}
+			, L_BOARD_FILE_RENAME = #{lBoardFileRename}, L_BOARD_FILE_PATH = #{lBoardFilePath}, L_BOARD_CREATE_DATE = DEFAULT 
+		WHERE L_BOARD_NO = #{lBoardNo}
 	</update>
 	<update id="updateLectureCount">
 		UPDATE LECTURE_BOARD_TBL SET L_BOARD_COUNT = L_BOARD_COUNT + 1 WHERE L_BOARD_NO = #{lBoardNo}	
@@ -42,9 +47,17 @@
 			<if test="searchCondition.toString() == 'contents'">
 				L_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
 			</if>
+			<if test="searchCondition.toString() == 'center'">
+				L_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchCondition.toString() == 'local'">
+				L_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%'
+			</if>
 			<if test="searchCondition.toString() == 'all'">
 				L_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
 				OR L_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+				OR L_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+				OR L_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%'
 			</if>
 		</where>
 	</select>
@@ -61,12 +74,42 @@
 			<if test="searchCondition.toString() == 'contents'">
 				L_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
 			</if>
+			<if test="searchCondition.toString() == 'center'">
+				L_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="searchCondition.toString() == 'loacl'">
+				L_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%'
+			</if>
 			<if test="searchCondition.toString() == 'all'">
 				L_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
 				OR L_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+				OR L_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+				OR L_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%'
 			</if>
 			ORDER BY L_BOARD_NO DESC
 		</where> 
 	</select>
-	
+	<!-- 댓글 관리 -->	
+	<resultMap type="LectureBoardComment"  	 id="commentResultMap">
+		<id 	property="lCommentNo" 		 column="L_COMMENT_NO" />
+		<result property="lBoardNo" 		 column="L_BOARD_NO" />
+		<result property="userId" 			 column="USER_ID" />
+		<result property="lCommentContents"	 column="L_COMMENT_CONTENTS" />
+		<result property="lCommentRegtime" 	 column="L_COMMENT_REGTIME" />
+	</resultMap>
+	<select id="selectAllComment" resultMap="commentResultMap">
+		SELECT *
+		FROM LECTURE_COMMENT_TBL WHERE L_BOARD_NO = #{lBoardNo} ORDER BY L_COMMENT_REGTIME DESC
+	</select>
+	<insert id="insertComment">
+		INSERT INTO LECTURE_COMMENT_TBL
+		VALUES(SEQ_LECTURE_COMMENT_NO.NEXTVAL, #{lBoardNo}, #{userId}, #{lCommentContents}, #{lCommentRegtime})
+	</insert>
+	<delete id="deleteComment">
+		DELETE FROM LECTURE_COMMENT_TBL WHERE L_COMMENT_NO = #{lCommentNo}
+	</delete>
+	<update id="updateComment">
+		UPDATE LECTURE_COMMENT_TBL SET L_COMMENT_CONTENTS = #{lCommentContents}
+		WHERE L_COMMENT_NO = #{lCommentNo}
+	</update>
 </mapper>

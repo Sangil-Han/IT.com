@@ -25,6 +25,8 @@
 			alias="FinishComment" />
 		<typeAlias type="com.kh.itcom.lecture.domain.LectureBoard"
 			alias="LectureBoard" />
+		<typeAlias type="com.kh.itcom.lecture.domain.LectureBoardComment"
+			alias="LectureBoardComment"/>
 		<typeAlias type="com.kh.itcom.level.domain.LevelUp"
 			alias="LevelUp" />
 		<typeAlias type="com.kh.itcom.notice.domain.Notice"

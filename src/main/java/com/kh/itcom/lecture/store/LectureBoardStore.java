@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 
 import com.kh.itcom.lecture.domain.LectureBoard;
+import com.kh.itcom.lecture.domain.LectureBoardComment;
 
 public interface LectureBoardStore {
 	public int insertLecture(SqlSession session, LectureBoard lectureboard);
@@ -20,4 +21,13 @@ public interface LectureBoardStore {
 	public int updateLectureBoard(SqlSession session, LectureBoard lectureboard);
 
 	public int updateLectureCount(SqlSession session, int lBoardNo);
+
+	// 댓글
+	public int insertComment(SqlSession session, LectureBoardComment lbComment);
+
+	public int updateComment(SqlSession session, LectureBoardComment lbComment);
+
+	public int deleteComment(SqlSession session, Integer lCommentNo);
+
+	public List<LectureBoardComment> selectAllComment(SqlSession session, Integer lBoardNo);
 }

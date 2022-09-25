@@ -7,7 +7,9 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.kh.itcom.consult.domain.ConsultBoardComment;
 import com.kh.itcom.lecture.domain.LectureBoard;
+import com.kh.itcom.lecture.domain.LectureBoardComment;
 import com.kh.itcom.lecture.store.LectureBoardStore;
 
 @Repository
@@ -66,5 +68,30 @@ public class LectureBoardStoreLogic implements LectureBoardStore {
 	public int updateLectureCount(SqlSession session, int lBoardNo) {
 		int result = session.update("LectureMapper.updateLectureCount", lBoardNo);
 		return result;
+	}
+
+	// 댓글
+	@Override
+	public int insertComment(SqlSession session, LectureBoardComment lbComment) {
+		int result = session.insert("LectureMapper.insertComment", lbComment);
+		return result;
+	}
+
+	@Override
+	public int updateComment(SqlSession session, LectureBoardComment lbComment) {
+		int result = session.update("LectureMapper.updateComment",lbComment);
+		return result;
+	}
+
+	@Override
+	public int deleteComment(SqlSession session, Integer lCommentNo) {
+		int result= session.delete("LectureMapper.deleteComment",lCommentNo);
+		return result;
+	}
+
+	@Override
+	public List<LectureBoardComment> selectAllComment(SqlSession session, Integer lBoardNo) {
+		List<LectureBoardComment> lcList = session.selectList("LectureMapper.selectAllComment", lBoardNo);
+		return lcList;
 	}
 }

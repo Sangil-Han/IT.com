@@ -6,7 +6,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.itcom.consult.domain.ConsultBoardComment;
 import com.kh.itcom.lecture.domain.LectureBoard;
+import com.kh.itcom.lecture.domain.LectureBoardComment;
 import com.kh.itcom.lecture.service.LectureBoardService;
 import com.kh.itcom.lecture.store.LectureBoardStore;
 
@@ -50,5 +52,28 @@ public class LectureBoardServiceImpl implements LectureBoardService {
 	public int modifyLecture(LectureBoard lectureboard) {
 		int result = lbStore.updateLectureBoard(session, lectureboard);
 		return result;
+	}
+	
+	// 댓글
+	@Override
+	public int registerComment(LectureBoardComment lbComment) {
+		int result = lbStore.insertComment(session, lbComment);
+		return result;
+	}
+	
+	@Override
+	public int modifyComment(LectureBoardComment lbComment) {
+		int result = lbStore.updateComment(session, lbComment);
+		return result;
+	}
+	@Override
+	public int deleteComment(Integer lCommentNo) {
+		int result = lbStore.deleteComment(session, lCommentNo);
+		return result;
+	}
+	@Override
+	public List<LectureBoardComment> printAllLectureBoardComment(Integer lBoardNo) {
+		List<LectureBoardComment> lcList = lbStore.selectAllComment(session, lBoardNo);
+		return lcList;
 	}
 }
