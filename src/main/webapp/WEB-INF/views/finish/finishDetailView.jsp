@@ -64,16 +64,34 @@
 			<tr>
 				<td colspan="2" align="center">
 					<c:if test="${fBoard.fBoardUserId eq sessionScope.loginUser.userId}">
-						<a href="/finish/modifyView.do?fBoardNo=${fBoard.fBoardNo }&page=${page}">수정 페이지로 이동</a>
+						<%-- <a href="/finish/modifyView.do?fBoardNo=${fBoard.fBoardNo }&page=${page}">수정</a> --%>
+						<button  onclick="location.href='/finish/modifyView.do?fBoardNo=${fBoard.fBoardNo }&page=${page}' ">수정</button>
+						<%-- <a href="#" onclick="boardRemove(${page});">삭제하기</a> --%>
 					</c:if>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2" align="center">
 					<a href="/finish/listView.do?page=${page }">목록으로</a>
-					<a href="javascript:history.go(-1);">이전 페이지로</a>
 				</td>
 			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<form action="/finish/addUpCount.do" method="post" style="display: inline">
+						<input type="hidden" name="userId" value="${sessionScope.loginUser.userId }"/>
+						<input type="hidden" name="fBoardNo" value="${fBoard.fBoardNo }"/>
+						<input type="hidden" name="page" value="${page }"/>
+						<button onclick="return checkCanUpDown('${isRecomm}');">추천 ${upCount }</button>
+					</form>
+					<form action="/finish/addDownCount.do" method="post" style="display: inline">
+						<input type="hidden" name="userId" value="${sessionScope.loginUser.userId }"/>
+						<input type="hidden" name="fBoardNo" value="${fBoard.fBoardNo }"/>
+						<input type="hidden" name="page" value="${page }"/>
+						<button onclick="return checkCanUpDown('${isRecomm}');">비추천 ${downCount }</button>
+					</form>
+				</td>
+			</tr>
+				
 		</table>
 
 		<!-- 댓글 등록 -->
@@ -92,13 +110,25 @@
 
 		<!-- 댓글 목록 -->
 		<table align="center" width="500" border="1">
-			<c:forEach items="${fContentsList }" var="content">
+			<c:forEach items="${cList }" var="comment">
 				<tr>
-					<td>${content.fCommentContents }</td>
-					<td>${content.fCommentRegtime }</td>
+          
+					<td id="modify-inactive">${comment.fCommentContents }</td>
+					<td id="modify-active" style="display:none">
+						<input id="fCommentNo" type="hidden" value="${comment.fCommentNo}">
+						<textarea id="modify-text" name="modifyCommentContents" >${comment.fCommentContents }</textarea>
+					</td>
+					<td>${comment.fCommentRegtime }</td>
 					<td>
-						<a href="#" onclick="modifyView(this, '${reply.replyContents }',${reply.replyNo });">수정</a>
-						<a href="#" onclick="removeReply(${reply.replyNo});">삭제</a>
+						<c:if test="${comment.userId eq sessionScope.loginUser.userId }">
+						<%-- <a href="#" onclick="modifyView(this, '${reply.replyContents }',${reply.replyNo });">수정</a>
+						<a href="#" onclick="removeReply(${reply.replyNo});">삭제</a> --%>
+            <!-- 댓글 수정 -->
+						<button id="modify-comment-btn">수정</button>
+            <!-- 댓글 삭제 -->
+						<button onclick="checkCommentRemove(${comment.fCommentNo}, ${comment.fBoardNo }, ${page });">삭제</button>
+            
+						</c:if>
 					</td>
 				</tr>
 				<%-- <tr>
@@ -108,5 +138,68 @@
 			</c:forEach>
 		</table>
 	</div>
+	<script>
+		function checkCommentRemove(commentNo, fBoardNo, page){
+			if(confirm("댓글을 삭제하시겠습니까?")){
+				location.href="/finish/removeComment.do?fCommentNo="+commentNo+"&fBoardNo="+fBoardNo+"&page="+page;
+			}
+		}
+		
+		function checkCanUpDown(isRecomm){
+			const yes='Y'
+			if(isRecomm==yes){
+				alert("이미 추천 또는 비추천한 게시글입니다.");
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
+
+  //   function checkModifyActive(){
+  //     var modifyCommentArea=document.getElementById("modify-active");
+  //     if(modifyCommentArea.style.display=="none"){
+  //       modifyCommentArea.style.display="block";
+        
+  //   }
+  // }
+		
+  var httpRequest;
+        if (document.getElementById('modify-comment-btn')==null) {
+        }
+        document.getElementById('modify-comment-btn').addEventListener('click', ()=> {
+          if (document.getElementById('modify-active').style.display == 'block') {
+            var commentText = document.getElementById('modify-text').value;
+            var fCommentNo = document.getElementById('fCommentNo').value;
+            var reqJson = new Object();
+            reqJson.commentText = commentText;
+            reqJson.fCommentNo = fCommentNo;
+
+            httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = () => {
+              if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === 200) {
+                  var result = httpRequest.response;
+                  
+                  document.getElementById('modify-active').style.display = 'none';
+                  document.getElementById('modify-inactive').innerText = result.modifiedComment;
+                  document.getElementById('modify-inactive').style.display='block'
+                } else {
+                  alert(httpRequest.status);
+                }
+              }
+            };
+            httpRequest.open('POST', '/finish/modifyComment.do', true);
+            httpRequest.responseType = 'json';
+            httpRequest.setRequestHeader('Content-Type', 'application/json');
+            httpRequest.send(JSON.stringify(reqJson));
+          } 
+          else {
+            document.getElementById('modify-inactive').style.display = 'none';
+            document.getElementById('modify-active').style.display = 'block';
+          }
+        });
+		
+	</script>
 </body>
 </html>

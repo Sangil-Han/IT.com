@@ -1,6 +1,7 @@
 package com.kh.itcom.finish.store;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -28,4 +29,18 @@ public interface FinishBoardStore {
 	int insertComment(SqlSessionTemplate session, FinishComment fComment);
 	
 	int updateUserPoint(SqlSessionTemplate session, String userId, String point);
+
+	List<FinishComment> selectAllComment(SqlSessionTemplate session, int fBoardNo);
+
+	int deleteComment(SqlSessionTemplate session, Integer fCommentNo);
+
+	int insertUpDownCount(SqlSessionTemplate session, Integer fBoardNo, String userId, String upOrDown);
+
+	int selectCountUp(SqlSessionTemplate session, int fBoardNo);
+
+	int selectCountDown(SqlSessionTemplate session, int fBoardNo);
+
+	int selectUserRecordUpDown(SqlSessionTemplate session, String userId, int fBoardNo);
+
+	void updateComment(SqlSessionTemplate session, Map<String, Object> inputMap);
 }

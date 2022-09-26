@@ -38,8 +38,8 @@
 		VALUES(SEQ_FBOARD_NO.NEXTVAL, #{fBoardUserId}, #{fBoardTitle},
 		#{fBoardLocalName}, #{fBoardCenterName}, #{fBoardCourseName},
 		#{fBoardFinishYear}, #{fBoardJobYn}, #{fBoardJobName},
-		#{fBoardSalary}, #{fBoardCompany}, #{fBoardContents}, NULL, NULL,
-		NULL, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+		#{fBoardSalary}, #{fBoardCompany}, #{fBoardContents}, #{fBoardFileName}, #{fBoardFileRename},
+		#{fBoardFilePath, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 	</insert>
 
 	<!-- 조회수 증가 -->
@@ -61,25 +61,25 @@
 		SELECT COUNT(*) FROM FINISH_BOARD_TBL
 		<where>
 			<if test="searchOption.toString()=='title'">
-				F_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
+				F_BOARD_TITLE LIKE '%'||UPPER(#{searchValue})||'%'
 			</if>
 			<if test="searchOption.toString()=='contents'">
-				F_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+				F_BOARD_CONTENTS LIKE '%'||UPPER(#{searchValue})||'%'
 			</if>
 			<if test="searchOption.toString()=='local'">
-				F_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%'
+				F_BOARD_LOCAL_NAME LIKE '%'||UPPER(#{searchValue})||'%'
 			</if>
 			<if test="searchOption.toString()=='center'">
-				F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+				F_BOARD_CENTER_NAME LIKE '%'||UPPER(#{searchValue})||'%'
 			</if>
 			<if test="searchOption.toString()=='all'">
-				F_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
+				F_BOARD_TITLE LIKE '%'||UPPER(#{searchValue})||'%'
 				OR
-				F_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+				F_BOARD_CONTENTS LIKE '%'||UPPER(#{searchValue})||'%'
 				OR 
-				F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+				F_BOARD_CENTER_NAME LIKE '%'||UPPER(#{searchValue})||'%'
 				OR 
-				F_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%'
+				F_BOARD_LOCAL_NAME LIKE '%'||UPPER(#{searchValue})||'%'
 			</if>
 		</where>
 	</select>
@@ -94,21 +94,22 @@
 		SELECT * FROM FINISH_BOARD_TBL
 		<where>
 			<if test="searchOption.toString()=='center'">
-				F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+				F_BOARD_CENTER_NAME LIKE '%'||UPPER(#{searchValue})||'%'
 			</if>
 			<if test="searchOption.toString()=='local'">
-				F_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%'
+				F_BOARD_LOCAL_NAME LIKE '%'||UPPER(#{searchValue})||'%'
 			</if>
 			<if test="searchOption.toString()=='title'">
-				F_BOARD_TITLE LIKE '%'||#{searchValue}||'%'
+				F_BOARD_TITLE LIKE '%'||UPPER(#{searchValue})||'%'
 			</if>
 			<if test="searchOption.toString()=='contents'">
-				F_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%'
+				F_BOARD_CONTENTS LIKE '%'||UPPER(#{searchValue})||'%'
 			</if>
 			<if test="searchOption.toString()=='all'">
-				F_BOARD_TITLE LIKE '%'||#{searchValue}||'%' OR F_BOARD_CONTENTS LIKE '%'||#{searchValue}||'%' OR F_BOARD_LOCAL_NAME LIKE '%'||#{searchValue}||'%' OR F_BOARD_CENTER_NAME LIKE '%'||#{searchValue}||'%'
+				F_BOARD_TITLE LIKE '%'||UPPER(#{searchValue})||'%' OR F_BOARD_CONTENTS LIKE '%'||UPPER(#{searchValue})||'%' OR F_BOARD_LOCAL_NAME LIKE '%'||UPPER(#{searchValue})||'%' OR F_BOARD_CENTER_NAME LIKE '%'||UPPER(#{searchValue})||'%'
 			</if>
 		</where>
+		ORDER BY F_BOARD_NO DESC
 	</select>
 	
 	<!-- boardNo로 하나의 board를 가져오는 select -->
@@ -130,6 +131,35 @@
 	<insert id="insertComment">
 		INSERT INTO FINISH_COMMENT_TBL VALUES(SEQ_FCOMMENT_NO.NEXTVAL, #{fBoardNo}, #{userId}, #{fCommentContents}, #{fCommentRegtime})
 	</insert>
+	
+	<update id="updateComment" parameterType="hashMap">
+		UPDATE FINISH_COMMENT_TBL SET F_COMMENT_CONTENTS=#{commentText} WHERE F_COMMENT_NO=#{fCommentNo}
+	</update>
+	<delete id="deleteComment">
+		DELETE FROM FINISH_COMMENT_TBL WHERE F_COMMENT_NO=${fCommentNo}
+	</delete>
+	
+	<select id="selectAllComment" resultMap="commentResultMap">
+		SELECT * FROM FINISH_COMMENT_TBL WHERE F_BOARD_NO=#{fBoardNo} ORDER BY F_COMMENT_NO
+	</select>
+	
+	
+	<!-- 게시글 추천/비추천 -->
+	<insert id="insertUpDownCount">
+		INSERT INTO FINISH_UPDOWN_RECORD_TBL VALUES(SEQ_UPDOWN_RECORD_NO.NEXTVAL, #{userId}, #{fBoardNo}, #{upOrDown})
+	</insert>
+	
+	<select id="selectCountUp" resultType="_int">
+		SELECT COUNT(*) FROM FINISH_UPDOWN_RECORD_TBL WHERE F_BOARD_NO=#{fBoardNo} AND UP_OR_DOWN='UP'
+	</select>
+	
+	<select id="selectCountDown" resultType="_int">
+		SELECT COUNT(*) FROM FINISH_UPDOWN_RECORD_TBL WHERE F_BOARD_NO=#{fBoardNo} AND UP_OR_DOWN='DOWN'
+	</select>
+	
+	<select id="selectUserRecordUpDown" resultType="_int">
+		SELECT COUNT(*) FROM FINISH_UPDOWN_RECORD_TBL WHERE F_BOARD_NO=#{fBoardNo} AND USER_ID=#{userId}
+	</select>
 	
 </mapper>
 

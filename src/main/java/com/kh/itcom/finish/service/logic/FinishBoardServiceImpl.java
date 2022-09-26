@@ -1,6 +1,7 @@
 package com.kh.itcom.finish.service.logic;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,4 +71,46 @@ public class FinishBoardServiceImpl implements FinishBoardService{
 		fStore.updateUserPoint(session, userId, point);
 	}
 
+	@Override
+	public List<FinishComment> printAllComment(int fBoardNo) {
+		List<FinishComment> cList=fStore.selectAllComment(session, fBoardNo);
+		return cList;
+	}
+
+	// 댓글 삭제
+	@Override
+	public int removeComment(Integer fCommentNo) {
+		int result=fStore.deleteComment(session, fCommentNo);
+		return result;
+	}
+
+	// 게시글 추천/비추천
+	@Override
+	public int addUpDownCount(Integer fBoardNo, String userId, String upOrDown) {
+		int result=fStore.insertUpDownCount(session, fBoardNo, userId, upOrDown);
+		return result;
+	}
+
+	@Override
+	public int getCountUp(int fBoardNo) {
+		int count=fStore.selectCountUp(session, fBoardNo);
+		return count;
+	}
+
+	@Override
+	public int getCountDown(int fBoardNo) {
+		int count=fStore.selectCountDown(session, fBoardNo);
+		return count;
+	}
+
+	@Override
+	public int getUserRecordUpCount(String userId, int fBoardNo) {
+		int result=fStore.selectUserRecordUpDown(session, userId, fBoardNo);
+		return result;
+	}
+
+	@Override
+	public void modifyComment(Map<String, Object> inputMap) {
+		fStore.updateComment(session, inputMap);
+	}
 }

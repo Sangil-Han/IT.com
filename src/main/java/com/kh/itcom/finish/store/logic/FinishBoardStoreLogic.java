@@ -2,6 +2,7 @@ package com.kh.itcom.finish.store.logic;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -84,7 +85,54 @@ public class FinishBoardStoreLogic implements FinishBoardStore {
 		int result=session.insert("FinishBoardMapper.updateUserPoint", paramMap);
 		return result;
 	}
-	
-	
 
+	@Override
+	public List<FinishComment> selectAllComment(SqlSessionTemplate session, int fBoardNo) {
+		List<FinishComment> cList=session.selectList("FinishBoardMapper.selectAllComment", fBoardNo);
+		return cList;
+	}
+
+	// 댓글 삭제
+	@Override
+	public int deleteComment(SqlSessionTemplate session, Integer fCommentNo) {
+		int result=session.delete("FinishBoardMapper.deleteComment", fCommentNo);
+		return result;
+	}
+
+	@Override
+	public int insertUpDownCount(SqlSessionTemplate session, Integer fBoardNo, String userId, String upOrDown) {
+		HashMap<String, String> paramMap=new HashMap<String, String>();
+		paramMap.put("fBoardNo", fBoardNo.toString());
+		paramMap.put("userId", userId);
+		paramMap.put("upOrDown", upOrDown);
+		
+		int result=session.insert("FinishBoardMapper.insertUpDownCount", paramMap);
+		return result;
+	}
+
+	@Override
+	public int selectCountUp(SqlSessionTemplate session, int fBoardNo) {
+		int count=session.selectOne("FinishBoardMapper.selectCountUp", fBoardNo);
+		return count;
+	}
+
+	@Override
+	public int selectCountDown(SqlSessionTemplate session, int fBoardNo) {
+		int count=session.selectOne("FinishBoardMapper.selectCountDown", fBoardNo);
+		return count;
+	}
+
+	@Override
+	public int selectUserRecordUpDown(SqlSessionTemplate session, String userId, int fBoardNo) {
+		HashMap<String, String> paramMap=new HashMap<String, String>();
+		paramMap.put("fBoardNo", ((Integer)fBoardNo).toString());
+		paramMap.put("userId", userId);
+		int result=session.selectOne("FinishBoardMapper.selectUserRecordUpDown", paramMap);
+		return result;
+	}
+
+	@Override
+	public void updateComment(SqlSessionTemplate session, Map<String, Object> inputMap) {
+		session.update("FinishBoardMapper.updateComment", inputMap);
+	}
 }
