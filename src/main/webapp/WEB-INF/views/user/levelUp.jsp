@@ -6,7 +6,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>IT.com : 등업 신청</title>
+<link href="/resources/css/header.css" rel="stylesheet">
 </head>
 <body>
 	<div id="wrap">

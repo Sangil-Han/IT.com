@@ -1,4 +1,4 @@
-package com.kh.itcom.point.domain;
+package com.kh.itcom.user.domain;
 
 import java.sql.Date;
 

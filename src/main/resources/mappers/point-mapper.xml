@@ -9,7 +9,7 @@
 		<result property="pointName" column="POINT_NAME" />
 		<result property="pointAmount" column="POINT_AMOUNT" />
 	</resultMap>
-	<select id="selectCountAllPoint" resultType="_int">
+	<select id="selectCountPoint" resultType="_int">
 		SELECT COUNT(*) FROM POINT_HISTORY_TBL WHERE USER_ID = #{userId}
 	</select>
 	<select id="selectPointHistory" resultMap="pointHistoryResultMap">

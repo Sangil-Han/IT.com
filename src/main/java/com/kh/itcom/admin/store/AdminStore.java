@@ -1,12 +1,12 @@
 package com.kh.itcom.admin.store;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
-import org.mybatis.spring.SqlSessionTemplate;
 
 import com.kh.itcom.admin.domain.Admin;
+import com.kh.itcom.common.domain.PageInfo;
+import com.kh.itcom.user.domain.LevelUp;
 import com.kh.itcom.user.domain.User;
 
 public interface AdminStore {
@@ -18,9 +18,14 @@ public interface AdminStore {
 	Admin selectLoginAdmin(SqlSession session, Admin admin);
 
 	// 회원 목록
-	List<User> selectUserList(SqlSession session, HashMap<String, Integer> pageInfo);
+	List<User> selectUserList(SqlSession session, PageInfo upi);
 
 	// 총 회원 수
 	int selectCountAllUser(SqlSession session);
 
+	// 회원 삭제
+	int deleteUsers(SqlSession session, List<String> idList);
+
+	// 등업 신청 목록
+	List<LevelUp> selectLevelUpList(SqlSession session, PageInfo lupi);
 }

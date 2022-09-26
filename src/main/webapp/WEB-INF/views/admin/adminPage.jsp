@@ -9,6 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 관리자 페이지</title>
+<link href="/resources/css/header.css" rel="stylesheet">
 </head>
 <body>
 	<div id="wrap">
@@ -30,8 +31,7 @@
 						<option value="all">전체</option>
 						<option value="region">지역구</option>
 						<option value="center">교육원</option>
-					</select>
-					<input type="text" />
+					</select> <input type="text" />
 					<button>검색</button>
 				</form>
 				<table width="80%">
@@ -47,61 +47,63 @@
 			</div>
 			<div id="user-control" class="tab-content" style="display: none">
 				<h4>회원 관리</h4>
-				<form action="/admin/searchUser.do" class="search-option">
+				<form action="/admin/userSearch.do" class="search-option">
 					<select name="searchOption" class="search-option">
 						<option value="">전체</option>
 						<option value="">아이디</option>
 						<option value="">이메일</option>
-					</select>
-					<input type="text" />
+					</select> <input type="text" />
 					<button>검색</button>
 				</form>
-				<form action="/admin/deleteUser.do">
+				<form action="/admin/userDeletion.do" method="post">
+					<input type="hidden" onsubmit="beforeUserDeletion();">
 					<button>삭제</button>
 					<table>
 						<tr>
+							<th>NO</th>
 							<th>아이디</th>
 							<th>이메일</th>
 							<th>등급</th>
 							<th>포인트</th>
 							<th>가입일</th>
 							<th>탈퇴일</th>
-							<th><input type="checkbox" id="user-chk-all" name="userChkAll" onclick="checkAll(this.name);" /></th>
+							<th><input type="checkbox" id="user-chk-all"
+								name="userChkAll" onclick="checkAll(this.name);" /></th>
 						</tr>
 						<c:if test="${not empty uList }">
-							<c:forEach items="${uList }" var="user">
+							<c:forEach items="${uList }" var="user" varStatus="i">
 								<tr>
-									<td>
-										<a href="/user/myPostView.do?userId=${user.userId }&page=${currentPage }">${user.userId }</a>
+									<td>${upi.rowCount - ((upi.currentPage - 1 ) * upi.rowLimit + i.index) }</td>
+									<td><a
+										href="/user/myPostView.do?userId=${user.userId }&page=${upi.currentPage }">${user.userId }</a>
 									</td>
 									<td>${user.userEmail }</td>
 									<td>${user.userLevel }</td>
 									<td>${user.userPoint }</td>
 									<td>${user.joinDate }</td>
-									<td>
-										<c:if test="${user.withdrawal eq 'N' }">-</c:if>
-										<c:if test="${user.withdrawal eq 'Y' }">${user.withdrawDate }</c:if>
+									<td><c:if test="${user.withdrawal eq 'N' }">-</c:if> <c:if
+											test="${user.withdrawal eq 'Y' }">${user.withdrawDate }</c:if>
 									</td>
-									<td><input type="checkbox" name="userChkOne" onclick="checkOnes(this.name);"></td>
+									<td><input type="checkbox" name="userChkOne"
+										value="${user.userId }" onclick="checkOnes(this.name);"></td>
 								</tr>
 							</c:forEach>
 							<tr>
-								<td colspan="7">
-									<c:if test="${startPage ne 1 }">
-										<a href="/admin/${url }.do?content=user&page=${startPage - 1 }">[이전]</a>
-									</c:if>
-									<c:forEach var="p" begin="${startPage }" end="${endPage }">
-										<c:if test="${currentPage eq p }">
+								<td colspan="7"><c:if test="${upi.startPage ne 1 }">
+										<a
+											href="/admin/${url }.do?content=user&page=${upi.startPage - 1 }">[이전]</a>
+									</c:if> <c:forEach var="p" begin="${upi.startPage }"
+										end="${upi.endPage }">
+										<c:if test="${upi.currentPage eq p }">
 											<b>${p }</b>
 										</c:if>
-										<c:if test="${currentPage ne p }">
+										<c:if test="${upi.currentPage ne p }">
 											<a href="/admin/${url }.do?content=user&page=${p }">${p }</a>
 										</c:if>
-									</c:forEach>
-									<c:if test="${endPage ne pageCount }">
-										<a href="/admin/${url }.do?content=user&page=${endPage + 1 }">[다음]</a>
-									</c:if>
-								</td>
+									</c:forEach> <c:if test="${upi.endPage ne upi.pageCount }">
+										<a
+											href="/admin/${url }.do?content=user&page=${upi.endPage + 1 }">[다음]</a>
+									</c:if></td>
 							</tr>
 						</c:if>
 						<c:if test="${empty uList }">
@@ -115,8 +117,8 @@
 			<div id="level-control" class="tab-content" style="display: none">
 				<h4>등업 관리</h4>
 				<form action="">
-					<button onclick="location.href='/admin/approveLevelUp.do'">승인</button>
-					<button onclick="location.href='/admin/denyLevelUp.do'">거절</button>
+					<button>승인</button>
+					<button>거절</button>
 					<table>
 						<tr>
 							<th>상태</th>
@@ -125,7 +127,8 @@
 							<th>신청등급</th>
 							<th>신청일</th>
 							<th>첨부파일</th>
-							<th><input type="checkbox" id="level-chk-all" name="levelChkAll" onclick="checkAll(this.name);" /></th>
+							<th><input type="checkbox" id="level-chk-all"
+								name="levelChkAll" onclick="checkAll(this.name);" /></th>
 						</tr>
 						<tr>
 							<td>{상태}</td>
@@ -134,7 +137,8 @@
 							<td>{신청등급}</td>
 							<td>{신청일}</td>
 							<td>{첨부파일}</td>
-							<td><input type="checkbox" name="levelChkOne" onclick="checkOnes(this.name);" /></td>
+							<td><input type="checkbox" name="levelChkOne"
+								onclick="checkOnes(this.name);" /></td>
 						</tr>
 					</table>
 				</form>
@@ -145,7 +149,7 @@
 		// 탭 메뉴
 		const tabMenu = document.querySelectorAll('#tab-menu li');
 		const tabContent = document.querySelectorAll('#content-area > div');
-		
+
 		tabMenu.forEach(function(item, i) {
 			item.addEventListener('click', function(e) {
 				e.preventDefault();
@@ -171,7 +175,7 @@
 			showContent(2);
 		}
 
-		// 체크박스 - 전체 선택
+		// 체크박스 - 전체 선택 to 모두 선택
 		function checkAll(name) {
 			if (name == 'userChkAll') {
 				let isChecked = document.querySelector('#user-chk-all').checked;
@@ -187,8 +191,8 @@
 				}
 			}
 		}
-		
-		// 체크박스 - 개별 선택 to 전체 선택
+
+		// 체크박스 - 모두 선택 to 전체 선택
 		function checkOnes(name) {
 			if (name == 'userChkOne') {
 				let oneChkBx = document.getElementsByName('userChkOne');
@@ -204,6 +208,7 @@
 				} else {
 					document.querySelector('#user-chk-all').checked = false;
 				}
+				selectUsers();
 			} else if (name == 'levelChkOne') {
 				let oneChkBx = document.getElementsByName('levelChkOne');
 				let chkBxCount = oneChkBx.length;
@@ -221,6 +226,19 @@
 				}
 			}
 		}
+
+		// 체크된 유저 리스트
+		function selectUsers() {
+			let checkedBoxes = document
+					.querySelectorAll('input[name=userChkOne]:checked');
+			let checkedUsers = [];
+			checkedBoxes.forEach(function(item) {
+				checkedUsers.push(item.value);
+			});
+			console.log(checkedUsers);
+			document.querySelector('input#checkedUsers').setAttribute('value',
+					checkedUsers);
+		};
 	</script>
 </body>
 </html>

@@ -10,6 +10,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 포인트 내역</title>
+<link href="/resources/css/header.css" rel="stylesheet">
 </head>
 <body>
 	<div id="wrap">
@@ -21,14 +22,14 @@
 		<table width="80%">
 			<tr>
 				<th width="10%">NO</th>
-				<th width="40%">변동일자</th>
-				<th width="50%">구분</th>
-				<th width="50%">포인트</th>
+				<th width="20%">변동일자</th>
+				<th width="35%">구분</th>
+				<th width="35%">포인트</th>
 			</tr>
 			<c:if test="${not empty phList }">
 				<c:forEach items="${phList }" var="point" varStatus="i">
 					<tr>
-						<td>${pointCount - ((currentPage - 1 ) * pointLimit + i.index) }</td>
+						<td>${phpi.rowCount - ((phpi.currentPage - 1 ) * phpi.rowLimit + i.index) }</td>
 						<td>${point.pointDate}</td>
 						<td>${point.pointName}</td>
 						<td>${point.pointAmount}P</td>
@@ -36,19 +37,19 @@
 				</c:forEach>
 				<tr>
 					<td colspan="4">
-						<c:if test="${startPage ne 1 }">
-							<a href="/point/historyView.do?page=${startPage - 1 }">[이전]</a>
+						<c:if test="${phpi.startPage ne 1 }">
+							<a href="/user/pointHistoryView.do?page=${phpi.startPage - 1 }">[이전]</a>
 						</c:if>
-						<c:forEach var="p" begin="${startPage }" end="${endPage }">
-							<c:if test="${currentPage eq p }">
+						<c:forEach var="p" begin="${phpi.startPage }" end="${phpi.endPage }">
+							<c:if test="${phpi.currentPage eq p }">
 								<b>${p }</b>
 							</c:if>
-							<c:if test="${currentPage ne p }">
-								<a href="/point/historyView.do?page=${p }">${p }</a>
+							<c:if test="${phpi.currentPage ne p }">
+								<a href="/user/pointHistoryView.do?page=${p }">${p }</a>
 							</c:if>
 						</c:forEach>
-						<c:if test="${endPage ne pageCount }">
-							<a href="/point/historyView.do?page=${endPage + 1 }">[다음]</a>
+						<c:if test="${phpi.endPage ne phpi.pageCount }">
+							<a href="/user/pointHistoryView.do?page=${phpi.endPage + 1 }">[다음]</a>
 						</c:if>
 					</td>
 				</tr>

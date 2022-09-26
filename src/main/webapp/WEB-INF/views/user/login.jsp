@@ -7,7 +7,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 로그인</title>
-<link rel="stylesheet" href="/resources/css/user.css" />
+<link href="/resources/css/header.css" rel="stylesheet">
 </head>
 <body>
 	<div id="wrapper">

@@ -1,6 +1,5 @@
 package com.kh.itcom.admin.store.logic;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.RowBounds;
@@ -9,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.itcom.admin.domain.Admin;
 import com.kh.itcom.admin.store.AdminStore;
+import com.kh.itcom.common.domain.PageInfo;
+import com.kh.itcom.user.domain.LevelUp;
 import com.kh.itcom.user.domain.User;
 
 @Repository
@@ -31,17 +32,33 @@ public class AdminStoreLogic implements AdminStore {
 	// 전체 회원 수
 	@Override
 	public int selectCountAllUser(SqlSession session) {
-		int count = session.selectOne("AdminMapper.selectCountAllUser");
+		int count = session.selectOne("UserMapper.selectCountAllUser");
 		return count;
 	}
 
 	// 회원 목록
 	@Override
-	public List<User> selectUserList(SqlSession session, HashMap<String, Integer> pageInfo) {
-		int offset = (pageInfo.get("currentPage") - 1) * pageInfo.get("userLimit");
-		RowBounds rowBounds = new RowBounds(offset, pageInfo.get("userLimit"));
-		List<User> uList = session.selectList("AdminMapper.selectUserList", null, rowBounds);
+	public List<User> selectUserList(SqlSession session, PageInfo upi) {
+		int offset = (upi.getCurrentPage() - 1) * upi.getRowLimit();
+		RowBounds rowBounds = new RowBounds(offset, upi.getRowLimit());
+		List<User> uList = session.selectList("UserMapper.selectUserList", null, rowBounds);
 		return uList;
 	}
 
+	// 회원 삭제
+	@Override
+	public int deleteUsers(SqlSession session, List<String> idList) {
+		int result = session.delete("UserMapper.deleteUsers", idList);
+		return result;
+	}
+
+	// 등업 신청 목록
+	@Override
+	public List<LevelUp> selectLevelUpList(SqlSession session, PageInfo lupi) {
+		int offset = (lupi.getCurrentPage() - 1) * lupi.getRowLimit();
+		RowBounds rowBounds = new RowBounds(offset, lupi.getRowLimit());
+		List<LevelUp> luList = session.selectList("UserMapper.selectLevelUpList", null, rowBounds);
+		return luList;
+	}
+	
 }

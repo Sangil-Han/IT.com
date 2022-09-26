@@ -63,7 +63,6 @@ public class ConsultBoardController {
 			User loginUser = (User)session.getAttribute("loginUser");
 			String userId = loginUser.getUserId();
 			int totalViewCount = cService.printTotalViewCount(viewCount);
-			System.out.println(totalViewCount);
 			mv.addObject("totalViewCount", totalViewCount);
 			mv.addObject("userId", userId);
 		} catch (Exception e) {

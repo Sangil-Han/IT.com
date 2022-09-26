@@ -2,3 +2,21 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NoticeMapper">
+	<resultMap type="Notice" id="noticeResultMap">
+		<id property="noticeNo" column="NOTICE_NO" />
+		<result property="adminId" column="USER_PW" />
+		<result property="noticeTitle" column="NOTICE_TITLE" />
+		<result property="noticeContents" column="NOTICE_CONTENTS" />
+		<result property="createDate" column="CREATE_DATE" />
+		<result property="noticeFileName" column="NOTICE_FILE_NAME" />
+		<result property="noticeFileRename" column="NOTICE_FILE_RENAME" />
+		<result property="noticeFilePath" column="NOTICE_FILE_PAHT" />
+	</resultMap>
+	<select id="selectCountNotice" resultType="_int">
+		SELECT COUNT(*) FROM NOTICE_TBL
+	</select>
+	<select id="selectNoticeList" resultMap="noticeResultMap">
+		SELECT * FROM NOTICE_TBL
+	</select>
+</mapper>

@@ -16,19 +16,69 @@
 		<result property="withdrawal" column="WITHDRAWAL" />
 		<result property="withdrawDate" column="WITHDRAW_DATE" />
 	</resultMap>
+	<resultMap type="MyPost" id="myPostResultMap">
+		<id property="boardName" column="BOARD_NAME" />
+		<result property="postTitle" column="POST_TITLE" />
+		<result property="createDate" column="CREATE_DATE" />
+	</resultMap>
 	<insert id="insertUser">
 		INSERT INTO USER_TBL VALUES(#{userId}, #{userPw}, #{userEmail},
 		DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 	</insert>
-	<insert id="insertPoint">
-		INSERT INTO POINT_HISTORY_TBL VALUES(SEQ_POINTHISTORY_NO.NEXTVAL, #{userId}, DEFAULT, 1);
-	</insert>
+	<update id="updatePw">
+		UPDATE USER_TBL SET USER_PW = #{userPw} WHERE USER_ID = #{userId}
+	</update>
 	<update id="deleteUser">
 		UPDATE USER_TBL SET WITHDRAWAL = 'Y', WITHDRAW_DATE = SYSDATE
 		WHERE USER_ID = #{userId} AND USER_PW = #{userPw}
 	</update>
+	<update id="deleteUsers" parameterType="List">
+		UPDATE USER_TBL SET WITHDRAWAL = 'Y', WITHDRAW_DATE = SYSDATE
+		WHERE USER_ID IN
+			<foreach collection="idList" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+	</update>
 	<select id="selectLoginUser" resultMap="userResultMap">
 		SELECT USER_ID, USER_LEVEL, USER_POINT, VIEWABLE FROM USER_TBL
 		WHERE USER_ID = #{userId} AND USER_PW = #{userPw} AND WITHDRAWAL = 'N'
+	</select>
+	<select id="selectCountAllUser" resultType="_int">
+		SELECT COUNT(*) FROM USER_TBL
+	</select>
+	<select id="selectUserList" resultMap="userResultMap">
+		SELECT USER_ID, USER_EMAIL, USER_LEVEL, USER_POINT, JOIN_DATE, WITHDRAWAL, WITHDRAW_DATE
+		FROM USER_TBL
+	</select>
+	<select id="selectCountUserById" resultType="_int">
+		SELECT COUNT(*) FROM USER_TBL WHERE USER_ID = #{userId}
+	</select>
+	<select id="selectCountUserByPw" resultType="_int">
+		SELECT COUNT(*) FROM USER_TBL WHERE USER_ID = #{userId} AND USER_PW = #{userPw}
+	</select>
+	<select id="selectMyPostList" resultMap="myPostResultMap">
+		(SELECT (SELECT TABLE_NAME FROM TABS WHERE TABLE_NAME = 'CONSULT_BOARD_TBL') AS BOARD_NAME,
+		C_BOARD_TITLE AS POST_TITLE, C_BOARD_CREATE_DATE AS CREATE_DATE
+		FROM CONSULT_BOARD_TBL WHERE USER_ID = #{userId}
+		UNION ALL
+		SELECT (SELECT TABLE_NAME FROM TABS WHERE TABLE_NAME = 'LECTURE_BOARD_TBL') AS BOARD_NAME,
+		L_BOARD_TITLE AS POST_TITLE, L_BOARD_CREATE_DATE AS CREATE_DATE
+		FROM LECTURE_BOARD_TBL WHERE USER_ID = #{userId}
+		UNION ALL
+		SELECT (SELECT TABLE_NAME FROM TABS WHERE TABLE_NAME = 'FINISH_BOARD_TBL') AS BOARD_NAME,
+		F_BOARD_TITLE AS POST_TITLE, F_BOARD_CREATE_DATE AS CREATE_DATE
+		FROM FINISH_BOARD_TBL WHERE USER_ID = #{userId})
+		ORDER BY CREATE_DATE DESC
+	</select>
+	<select id="selectCountMyPost" resultType="_int">
+		SELECT SUM(CNT)
+		FROM (SELECT COUNT(*) AS CNT
+			FROM CONSULT_BOARD_TBL WHERE USER_ID = #{userId}
+			UNION ALL
+			SELECT COUNT(*) AS CNT
+			FROM LECTURE_BOARD_TBL WHERE USER_ID = #{userId}
+			UNION ALL
+			SELECT COUNT(*) AS CNT
+			FROM FINISH_BOARD_TBL WHERE USER_ID = #{userId})
 	</select>
 </mapper>

@@ -10,6 +10,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 등급 변동 내역</title>
+<link href="/resources/css/header.css" rel="stylesheet">
 </head>
 <body>
 	<div id="wrap">
@@ -21,41 +22,21 @@
 		<table width="80%">
 			<tr>
 				<th width="10%">NO</th>
-				<th width="40%">변동일자</th>
-				<th width="50%">구분</th>
-				<th width="50%">포인트</th>
+				<th width="40%">변동일</th>
+				<th width="50%">등급</th>
 			</tr>
-			<c:if test="${not empty phList }">
-				<c:forEach items="${phList }" var="point" varStatus="i">
+			<c:if test="${not empty lhList }">
+				<c:forEach items="${lhList }" var="level" varStatus="i">
 					<tr>
-						<td>${pointCount - ((currentPage - 1 ) * pointLimit + i.index) }</td>
-						<td>${point.pointDate}</td>
-						<td>${point.pointName}</td>
-						<td>${point.pointAmount}P</td>
+						<td>${fn:length(lhList) - i.index }</td>
+						<td>${level.lvChangeDate }</td>
+						<td>${level.applicationLv }</td>
 					</tr>
 				</c:forEach>
-				<tr>
-					<td colspan="4">
-						<c:if test="${startPage ne 1 }">
-							<a href="/point/historyView.do?page=${startPage - 1 }">[이전]</a>
-						</c:if>
-						<c:forEach var="p" begin="${startPage }" end="${endPage }">
-							<c:if test="${currentPage eq p }">
-								<b>${p }</b>
-							</c:if>
-							<c:if test="${currentPage ne p }">
-								<a href="/point/historyView.do?page=${p }">${p }</a>
-							</c:if>
-						</c:forEach>
-						<c:if test="${endPage ne pageCount }">
-							<a href="/point/historyView.do?page=${endPage + 1 }">[다음]</a>
-						</c:if>
-					</td>
-				</tr>
 			</c:if>
-			<c:if test="${empty phList }">
+			<c:if test="${empty lhList }">
 				<tr>
-					<td colspan="4">포인트 내역이 존재하지 않습니다.</td>
+					<td colspan="4">등급 변동 내역이 존재하지 않습니다.</td>
 				</tr>
 			</c:if>
 		</table>

@@ -1,6 +1,5 @@
 package com.kh.itcom.admin.service.logic;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -10,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.kh.itcom.admin.domain.Admin;
 import com.kh.itcom.admin.service.AdminService;
 import com.kh.itcom.admin.store.AdminStore;
+import com.kh.itcom.common.domain.PageInfo;
+import com.kh.itcom.user.domain.LevelUp;
 import com.kh.itcom.user.domain.User;
 
 @Service
@@ -22,7 +23,7 @@ public class AdminServiceImpl implements AdminService {
 
 	// 관리자 아이디 판별
 	@Override
-	public int checkId(String id) {
+	public int checkAdminId(String id) {
 		int check = aStore.selectCountAdminById(session, id);
 		return check;
 	}
@@ -43,9 +44,23 @@ public class AdminServiceImpl implements AdminService {
 
 	// 회원 목록
 	@Override
-	public List<User> printUserList(HashMap<String, Integer> pageInfo) {
-		List<User> uList = aStore.selectUserList(session, pageInfo);
+	public List<User> printUserList(PageInfo upi) {
+		List<User> uList = aStore.selectUserList(session, upi);
 		return uList;
+	}
+
+	// 회원 삭제
+	@Override
+	public int removeUsers(List<String> idList) {
+		int result = aStore.deleteUsers(session, idList);
+		return result;
+	}
+
+	// 등업 신청 목록
+	@Override
+	public List<LevelUp> printLevelUpList(PageInfo lupi) {
+		List<LevelUp> luList = aStore.selectLevelUpList(session, lupi);
+		return luList;
 	}
 
 }

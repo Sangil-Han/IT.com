@@ -3,10 +3,25 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="LevelMapper">
+	<resultMap type="LevelUp" id="levelUpResultMap">
+		<id property="applicationNo" column="APPLICATION_NO" />
+		<result property="userId" column="USER_ID" />
+		<result property="applicationLv" column="APPLICATION_LV" />
+		<result property="certFileName" column="CERT_FILE_NAME" />
+		<result property="certFileRename" column="CERT_FILE_RENAME" />
+		<result property="certFilePath" column="CERT_FILE_PATH" />
+		<result property="applicationStatus" column="APPLICATION_STATUS" />
+		<result property="applicationDate" column="APPLICATION_DATE" />
+		<result property="lvChangeDate" column="LV_CHANGE_DATE" />
+	</resultMap>
 	<insert id="insertLevelUp">
 		INSERT INTO LEVEL_UP_TBL
 		VALUES(SEQ_APPLICATION_NO.NEXTVAL, #{userId}, #{applicationLv},
 		#{certFileName}, #{certFileRename}, #{certFilePath},
 		DEFAULT, DEFAULT, DEFAULT)
 	</insert>
+	<select id="selectLevelHistory" resultMap="levelUpResultMap">
+		SELECT APPLICATION_LV, LV_CHANGE_DATE FROM LEVEL_UP_TBL
+		WHERE USER_ID = #{userId} AND APPLICATION_STATUS = 'Y'
+	</select>
 </mapper>

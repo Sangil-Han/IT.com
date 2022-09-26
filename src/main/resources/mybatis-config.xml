@@ -7,40 +7,29 @@
 		<setting name="jdbcTypeForNull" value="NULL" />
 	</settings>
 	<typeAliases>
-		<typeAlias type="com.kh.itcom.admin.domain.Admin"
-			alias="Admin" />
-		<typeAlias type="com.kh.itcom.consult.domain.ConsultBoard"
-			alias="ConsultBoard" />
-		<typeAlias type="com.kh.itcom.consult.domain.ConsultBoardComment"
-			alias="CosultBoardComment" />
-		<typeAlias type="com.kh.itcom.consult.domain.ConsultUpCount"
-			alias="ConsultUpCount" />
-		<typeAlias type="com.kh.itcom.consult.domain.ConsultDownCount"
-			alias="ConsultDownCount" />
-		<typeAlias type="com.kh.itcom.consult.domain.ConsultViewCount"
-			alias="ConsultViewCount" />
-		<typeAlias type="com.kh.itcom.finish.domain.FinishBoard"
-			alias="FinishBoard" />
-		<typeAlias type="com.kh.itcom.finish.domain.FinishComment"
-			alias="FinishComment" />
-		<typeAlias type="com.kh.itcom.lecture.domain.LectureBoard"
-			alias="LectureBoard" />
-		<typeAlias type="com.kh.itcom.level.domain.LevelUp"
-			alias="LevelUp" />
-		<typeAlias type="com.kh.itcom.notice.domain.Notice"
-			alias="Notice" />
-		<typeAlias type="com.kh.itcom.point.domain.PointHistory"
-			alias="PointHistory" />
-		<typeAlias type="com.kh.itcom.user.domain.User"
-			alias="User" />
+		<typeAlias type="com.kh.itcom.admin.domain.Admin" alias="Admin" />
+		<typeAlias type="com.kh.itcom.consult.domain.ConsultBoard" alias="ConsultBoard" />
+		<typeAlias type="com.kh.itcom.consult.domain.ConsultBoardComment" alias="CosultBoardComment" />
+		<typeAlias type="com.kh.itcom.consult.domain.ConsultUpCount" alias="ConsultUpCount" />
+		<typeAlias type="com.kh.itcom.consult.domain.ConsultDownCount" alias="ConsultDownCount" />
+		<typeAlias type="com.kh.itcom.consult.domain.ConsultViewCount" alias="ConsultViewCount" />
+		<typeAlias type="com.kh.itcom.lecture.domain.LectureBoard" alias="LectureBoard" />
+		<typeAlias type="com.kh.itcom.finish.domain.FinishBoard" alias="FinishBoard" />
+		<typeAlias type="com.kh.itcom.finish.domain.FinishComment" alias="FinishComment" />
+		<typeAlias type="com.kh.itcom.user.domain.User" alias="User" />
+		<typeAlias type="com.kh.itcom.user.domain.PointHistory" alias="PointHistory" />
+		<typeAlias type="com.kh.itcom.user.domain.LevelUp" alias="LevelUp" />
+		<typeAlias type="com.kh.itcom.user.domain.MyPost" alias="MyPost" />
+		<typeAlias type="com.kh.itcom.notice.domain.Notice" alias="Notice" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="mappers/admin-mapper.xml" />
 		<mapper resource="mappers/consult-mapper.xml" />
 		<mapper resource="mappers/lecture-mapper.xml" />
-		<mapper resource="mappers/level-mapper.xml" />
 		<mapper resource="mappers/finish-mapper.xml" />
-		<mapper resource="mappers/point-mapper.xml" />
 		<mapper resource="mappers/user-mapper.xml" />
+		<mapper resource="mappers/point-mapper.xml" />
+		<mapper resource="mappers/level-mapper.xml" />
+		<mapper resource="mappers/notice-mapper.xml" />
 	</mappers>
 </configuration>

@@ -61,13 +61,10 @@
 	</div>
 	<div class="nav-area">
 		<div class="menu" onclick="">HRD수강평</div>
-		<div class="menu" onclick="location.href='/consult/consultList.do'">상담후기
-			게시판</div>
-		<div class="menu" onclick="location.href='/lecture/list.do'">수강후기
-			게시판</div>
-		<div class="menu" onclick="location.href='/finish/listView.do'">수료후기
-			게시판</div>
-		<div class="menu" onclick="">공지사항</div>
+		<div class="menu" onclick="location.href='/consult/consultList.do'">상담후기 게시판</div>
+		<div class="menu" onclick="location.href='/lecture/list.do'">수강후기 게시판</div>
+		<div class="menu" onclick="location.href='/finish/listView.do'">수료후기 게시판</div>
+		<div class="menu" onclick="location.href='/notice/boardView.do'">공지사항</div>
 	</div>
 </body>
 </html>
