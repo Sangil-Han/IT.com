@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.itcom.lecture.domain.LectureBoard;
+import com.kh.itcom.lecture.domain.LectureBoardComment;
 import com.kh.itcom.lecture.service.LectureBoardService;
+import com.kh.itcom.user.domain.User;
 
 @Controller
 public class LectureBoardController {
@@ -64,7 +67,7 @@ public class LectureBoardController {
 			int result = lbService.registerLecture(lectureboard);
 			mv.setViewName("redirect:/lecture/list.do");
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			mv.addObject("msg", e.getMessage());
 			mv.setViewName("common/errorPage");
 		}
@@ -127,7 +130,8 @@ public class LectureBoardController {
 	@RequestMapping(value="/lecture/list.do", method=RequestMethod.GET)
 	public ModelAndView lectureBoardListView(
 			ModelAndView mv
-			,@RequestParam(value="page", required=false) Integer page) {
+			,@RequestParam(value="page", required=false) Integer page
+			, HttpSession session) {
 		int currentPage = (page != null) ? page : 1;
 		int totalCount = lbService.getTotalCount("","");
 		int lboardLimit = 10;
@@ -142,6 +146,14 @@ public class LectureBoardController {
 			endNavi = maxPage;
 		}
 		List<LectureBoard> lbList = lbService.printAllLectureBoard(currentPage, lboardLimit);
+		try {
+			User loginUser = (User)session.getAttribute("loginUser");
+			String userId = loginUser.getUserId();
+			mv.addObject("userId", userId);
+		} catch (Exception e) {
+			mv.addObject("msg", e.getMessage());
+			mv.setViewName("common/errorPage");
+		}		
 		if(!lbList.isEmpty()) {
 			mv.addObject("urlVal", "list");
 			mv.addObject("maxPage", maxPage);
@@ -149,8 +161,8 @@ public class LectureBoardController {
 			mv.addObject("startNavi", startNavi);
 			mv.addObject("endNavi", endNavi);
 			mv.addObject("lbList", lbList);
+			mv.setViewName("lecture/lecturelistView");
 		}
-		mv.setViewName("lecture/lecturelistView");
 		return mv;
 	}
 	
@@ -160,11 +172,17 @@ public class LectureBoardController {
 			ModelAndView mv
 			, @RequestParam("lBoardNo") Integer lBoardNo
 			, @RequestParam("page") Integer page
-			, HttpSession session) {
+			, HttpSession session
+			, HttpServletRequest request
+			, HttpServletResponse response) {
 		try {
-			
+			User loginUser = (User)session.getAttribute("loginUser");
+			String loginUserId = loginUser.getUserId();
 			LectureBoard lectureboard = lbService.printOneByNo(lBoardNo);
+			List<LectureBoardComment> lcList = lbService.printAllLectureBoardComment(lBoardNo);
 			session.setAttribute("lBoardNo", lectureboard.getlBoardNo());
+			mv.addObject("lcList", lcList);
+			mv.addObject("loginUserId", loginUserId);
 			mv.addObject("lectureBoard", lectureboard);
 			mv.addObject("page", page);
 			mv.setViewName("lecture/lectureDetailView");
@@ -213,6 +231,53 @@ public class LectureBoardController {
 			mv.setViewName("lecture/lecturelistView");
 		} catch (Exception e) {
 			mv.addObject("msg", e.toString()).setViewName("common/errorPage");
+		}
+		return mv;
+	}
+	
+	// 댓글 관리
+	@RequestMapping(value="/lecture/lectureAddComment.do", method=RequestMethod.POST)
+	public ModelAndView addComment(
+			ModelAndView mv
+			, @ModelAttribute LectureBoardComment lbComment
+			, @RequestParam("page") int page
+			, HttpSession session) {
+		User user = (User)session.getAttribute("loginUser");
+		String userId = user.getUserId();
+		lbComment.setUserId(userId);
+		int lBoardNo = lbComment.getlBoardNo();
+		
+		Date date = new Date();
+		SimpleDateFormat transFormat = new SimpleDateFormat("yy/MM/dd HH:mm");
+		String lCommentRegtime = transFormat.format(date);
+		lbComment.setlCommentRegtime(lCommentRegtime);
+		int result = lbService.registerComment(lbComment);
+		if(result > 0) {
+			mv.setViewName("redirect:/lecture/detail.do?lBoardNo="+lBoardNo+"&page="+page);
+		}
+		return mv;
+	}
+	
+	@RequestMapping(value="/lecture/modifyComment.do", method=RequestMethod.POST)
+	public String modifyComment(
+			@ModelAttribute LectureBoardComment lbComment
+			// , ModelAndView mv
+			, @RequestParam("lCommentContents") String lCommentContents
+			, @RequestParam("page") Integer page
+			, @RequestParam("lBoardNo") int lBoardNo) {
+		int result = lbService.modifyComment(lbComment);
+		return "redirect:/lecture/detail.do?lBoardNo=";
+	}
+	
+	@RequestMapping(value="/lecture/removeComment.do", method=RequestMethod.GET)
+	public ModelAndView removeComment(
+			ModelAndView mv
+			, @RequestParam("lCommentNo") Integer lCommentNo
+			, @RequestParam("page") Integer page
+			, @RequestParam("lBoardNo") int lBoardNo) {
+		int result = lbService.deleteComment(lCommentNo);
+		if(result > 0) {
+			mv.setViewName("redirect:/lecture/detail.do?lBoardNo="+lBoardNo+"&page="+page);
 		}
 		return mv;
 	}
