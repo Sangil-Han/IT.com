@@ -4,17 +4,23 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,7 +43,7 @@ public class FinishBoardController {
 	}
 
 	// 글쓰기
-	@RequestMapping(value = "/finish/register.do", method=RequestMethod.POST)
+	@RequestMapping(value = "/finish/register.do", method = RequestMethod.POST)
 	public ModelAndView registerBoard(ModelAndView mv, @ModelAttribute FinishBoard fBoard, HttpServletRequest request,
 			@RequestParam(value = "uploadFile", required = false) MultipartFile uploadFile) {
 		try {
@@ -61,7 +67,10 @@ public class FinishBoardController {
 				fBoard.setfBoardFilePath(boardFilepath);
 			}
 			int result = fService.registerBoard(fBoard);
-			mv.setViewName("finish/finishListView");
+			if (result > 0) {
+				mv.setViewName("redirect:/finish/listView.do");
+
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			mv.addObject("msg", e.getMessage());
@@ -70,7 +79,7 @@ public class FinishBoardController {
 		return mv;
 	}
 
-	// 게시글 목록 
+	// 게시글 목록
 	@RequestMapping(value = "/finish/listView.do", method = RequestMethod.GET)
 	public ModelAndView listView(ModelAndView mv, @RequestParam(value = "page", required = false) Integer page) {
 		// 페이징 처리
@@ -134,111 +143,170 @@ public class FinishBoardController {
 			mv.addObject("maxPage", maxPage);
 			mv.addObject("currentPage", currentPage);
 			mv.setViewName("finish/finishListView");
-		}catch(Exception e) {
+		} catch (Exception e) {
 			mv.addObject("msg", e.toString()).setViewName("common/errorPage");
 		}
 		return mv;
 	}
-	
+
 	// 게시글 상세 페이지
-	@RequestMapping(value="/finish/detailView.do", method=RequestMethod.GET)
-	public ModelAndView boardDetailView(ModelAndView mv,
-			@RequestParam("fBoardNo") int fBoardNo,
-			@RequestParam("page") Integer page,
-			@RequestParam("point") String point,
+	@RequestMapping(value = "/finish/detailView.do", method = RequestMethod.GET)
+	public ModelAndView boardDetailView(ModelAndView mv, @RequestParam("fBoardNo") int fBoardNo,
+			@RequestParam("page") Integer page, @RequestParam(value = "point") String point,
 			HttpSession session) {
 		try {
-			FinishBoard fBoard=fService.printOneByNo(fBoardNo);
-			fService.usePoint(((User)session.getAttribute("loginUser")).getUserId(), point);
-			// reply 리스트 받아오는 자리
+			FinishBoard fBoard = fService.printOneByNo(fBoardNo);
+			int upCount=fService.getCountUp(fBoardNo);
+			int downCount=fService.getCountDown(fBoardNo);
+			String userId=((User) session.getAttribute("loginUser")).getUserId();
+			String isRecomm="";
+			if(fService.getUserRecordUpCount(userId, fBoardNo)>0) {
+				isRecomm="Y";
+			}
+			else {
+				isRecomm="N";
+			}
+			List<FinishComment> cList = fService.printAllComment(fBoardNo);
+			fService.usePoint(userId, point);
 			session.setAttribute("boardNo", fBoard.getfBoardNo());
-			mv.addObject("fBoard",fBoard);
-			mv.addObject("page",page);
+			mv.addObject("fBoard", fBoard);
+			mv.addObject("cList", cList);
+			mv.addObject("page", page);
+			mv.addObject("upCount", upCount);
+			mv.addObject("downCount", downCount);
+			mv.addObject("isRecomm", isRecomm);
 			mv.setViewName("finish/finishDetailView");
-		}catch(Exception e) {
+		} catch (Exception e) {
 			mv.addObject("msg", e.toString());
 			mv.setViewName("common/errorPage");
 		}
 		return mv;
 	}
-	
+
 	// 게시글 수정 폼으로 이동
-	@RequestMapping(value="/finish/modifyView.do", method=RequestMethod.GET)
-	public ModelAndView modifyView(
-			ModelAndView mv,
-			@RequestParam("fBoardNo") Integer fBoardNo,
+	@RequestMapping(value = "/finish/modifyView.do", method = RequestMethod.GET)
+	public ModelAndView modifyView(ModelAndView mv, @RequestParam("fBoardNo") Integer fBoardNo,
 			@RequestParam("page") Integer page) {
 		try {
-			FinishBoard fBoard=fService.printOneByNo(fBoardNo);
-			mv.addObject("fBoard",fBoard);
-			mv.addObject("page",page);
+			FinishBoard fBoard = fService.printOneByNo(fBoardNo);
+			mv.addObject("fBoard", fBoard);
+			mv.addObject("page", page);
 			mv.setViewName("finish/finishModifyForm");
-		}catch(Exception e) {
+		} catch (Exception e) {
 			mv.addObject("msg", e.toString());
 			mv.setViewName("common/errorPage");
 		}
 		return mv;
 	}
-	
-	// 게시글 수정 
-	@RequestMapping(value="/finish/modify.do", method=RequestMethod.POST)
-	public ModelAndView boardModify(ModelAndView mv,
-			@ModelAttribute FinishBoard fBoard,
+
+	// 게시글 수정
+	@RequestMapping(value = "/finish/modify.do", method = RequestMethod.POST)
+	public ModelAndView boardModify(ModelAndView mv, @ModelAttribute FinishBoard fBoard,
 			@RequestParam("page") Integer page,
-			@RequestParam(value="reloadFile", required=false) MultipartFile reloadFile,
+			@RequestParam(value = "reloadFile", required = false) MultipartFile reloadFile,
 			HttpServletRequest request) {
 		try {
-			String fBoardFileName=reloadFile.getOriginalFilename();
+			String fBoardFileName = reloadFile.getOriginalFilename();
 			// 파일을 첨부했을 때
-			if (reloadFile!=null&&!fBoardFileName.equals("")) {
-				String root=request.getSession().getServletContext().getRealPath("resources");
-				String savedPath=root+"\\fuploadFiles";
+			if (reloadFile != null && !fBoardFileName.equals("")) {
+				String root = request.getSession().getServletContext().getRealPath("resources");
+				String savedPath = root + "\\fuploadFiles";
 				// 파일이 이미 존재하면 삭제
-				File file=new File(savedPath+"\\"+fBoard.getfBoardFileRename());
+				File file = new File(savedPath + "\\" + fBoard.getfBoardFileRename());
 				if (file.exists()) {
 					file.delete();
 				}
-				
-				SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
-				String fBoardFileRename=sdf.format(new Date(System.currentTimeMillis()))+"."+fBoardFileName.substring(fBoardFileName.lastIndexOf(".")+1);
-				String fBoardFilePath=savedPath+"\\"+fBoardFileRename;
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+				String fBoardFileRename = sdf.format(new Date(System.currentTimeMillis())) + "."
+						+ fBoardFileName.substring(fBoardFileName.lastIndexOf(".") + 1);
+				String fBoardFilePath = savedPath + "\\" + fBoardFileRename;
 				reloadFile.transferTo(new File(fBoardFilePath));
 				fBoard.setfBoardFileName(fBoardFileName);
 				fBoard.setfBoardFileRename(fBoardFileRename);
 				fBoard.setfBoardFilePath(fBoardFilePath);
 			}
-			int result=fService.modifyBoard(fBoard);
-			
-			if (result>0) {
-				mv.setViewName("redirect:/finish/listView.do?page="+page);
+			int result = fService.modifyBoard(fBoard);
+
+			if (result > 0) {
+				mv.setViewName("redirect:/finish/listView.do?page=" + page);
 			}
-		}catch(Exception e) {
-			mv.addObject("msg",e.toString()).setViewName("common/errorPage");
+		} catch (Exception e) {
+			mv.addObject("msg", e.toString()).setViewName("common/errorPage");
 		}
 		return mv;
 	}
-	
-	@RequestMapping(value="/finish/addComment.do", method=RequestMethod.POST)
-	public ModelAndView addComment(ModelAndView mv, @ModelAttribute FinishComment fComment, 
-			HttpSession session, @RequestParam("page") int page) {
-		
-		User user=(User)session.getAttribute("loginUser");
-		String commentUserId=user.getUserId();
-		int fBoardNo=fComment.getfBoardNo();
+
+	@RequestMapping(value = "/finish/addComment.do", method = RequestMethod.POST)
+	public ModelAndView addComment(ModelAndView mv, @ModelAttribute FinishComment fComment, HttpSession session,
+			@RequestParam("page") int page) {
+
+		User user = (User) session.getAttribute("loginUser");
+		String commentUserId = user.getUserId();
+		int fBoardNo = fComment.getfBoardNo();
 		fComment.setUserId(commentUserId);
-		
+
 		// 댓글 작성 날짜 및 시간 String으로 변환
 		Date date = new Date();
 		SimpleDateFormat transFormat = new SimpleDateFormat("yy/MM/dd HH:mm");
 		String fCommentRegtime = transFormat.format(date);
-		
+
 		fComment.setfCommentRegtime(fCommentRegtime);
-		
-		int result=fService.registerComment(fComment);
-		
-		if(result>0) {
-			mv.setViewName("redirect:/finish/detailView.do?fBoardNo="+fBoardNo+"&page="+page);
+
+		int result = fService.registerComment(fComment);
+
+		if (result > 0) {
+			mv.setViewName("redirect:/finish/detailView.do?fBoardNo=" + fBoardNo + "&page=" + page + "&point=0");
 		}
 		return mv;
+	}
+
+	@RequestMapping(value = "/finish/removeComment.do", method = RequestMethod.GET)
+	public String removeComment(@RequestParam("fCommentNo") Integer fCommentNo,
+			@RequestParam("fBoardNo") Integer fBoardNo, @RequestParam("page") Integer page) {
+		int result = fService.removeComment(fCommentNo);
+		if (result > 0) {
+			return "redirect:/finish/detailView.do?fBoardNo=" + fBoardNo + "&page=" + page + "&point=0";
+		} else {
+			return "common/errorPage";
+		}
+	}
+
+	@RequestMapping(value = "/finish/addUpCount.do", method = RequestMethod.POST)
+	public String addUpCount(@RequestParam("fBoardNo") Integer fBoardNo, @RequestParam("userId") String userId,
+			@RequestParam("page") Integer page) {
+			int result = fService.addUpDownCount(fBoardNo, userId, "UP");
+			if (result > 0) {
+				return "redirect:/finish/detailView.do?fBoardNo=" + fBoardNo+"&page="+page+"&point=0";
+			}
+			else {
+				return "common.errorPage";
+			}
+	}
+	@RequestMapping(value="/finish/addDownCount.do", method=RequestMethod.POST)
+	public String addDownCount(@RequestParam("fBoardNo") Integer fBoardNo, @RequestParam("userId") String userId,
+			@RequestParam("page") Integer page) {
+			int result = fService.addUpDownCount(fBoardNo, userId, "DOWN");
+			if (result > 0) {
+				return "redirect:/finish/detailView.do?fBoardNo=" + fBoardNo+"&page="+page+"&point=0";
+			}
+			else {
+				return "common.errorPage";
+			}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/finish/modifyComment.do", method=RequestMethod.POST)
+	public Map<String, Object> modifyComment(@RequestBody Map<String, Object> inputMap) {
+		
+		String modifiedComment=(String) inputMap.get("commentText");
+		String fBoardNo=(String) inputMap.get("fCommentNo");
+		
+		fService.modifyComment(inputMap);
+		
+		Map<String, Object> returnMap=new HashMap<>();
+		returnMap.put("modifiedComment", inputMap.get("commentText"));
+		
+		return returnMap;
 	}
 }
