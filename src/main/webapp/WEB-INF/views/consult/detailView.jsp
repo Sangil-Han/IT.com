@@ -49,22 +49,24 @@
 					<img alt="본문이미지" src="/resources/cBoardUploadFile/${cBoard.cBoardFileRename }" width="300" height="300">
 				</td>
 			</tr>
-			<tr>
-				<td>
-					<form action="/consult/boardUpCount.do" method="POST">
-						<input type="hidden" name="page" value="${page }">
-						<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
-						<input type="submit" value="추천">${totalUp}
-					</form>
-				</td>
-				<td>
-					<form action="/consult/boardDownCount.do" method="POST">
-						<input type="hidden" name="page" value="${page }">
-						<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
-						<input type="submit" value="비추천">${totalDown}
-					</form>
-				</td>
-			</tr>
+			<c:if test="${empty sessionScope.loginAdmin }">
+				<tr>
+					<td>
+						<form action="/consult/boardUpCount.do" method="POST">
+							<input type="hidden" name="page" value="${page }">
+							<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
+							<input type="submit" value="추천">${totalUp}
+						</form>
+					</td>
+					<td>
+						<form action="/consult/boardDownCount.do" method="POST">
+							<input type="hidden" name="page" value="${page }">
+							<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
+							<input type="submit" value="비추천">${totalDown}
+						</form>
+					</td>
+				</tr>
+			</c:if>
 		</table>
 		<table align="center" width="500" border="1">
 			<c:forEach items="${cList }" var="comment">
@@ -72,14 +74,22 @@
 					<td>${comment.commentContents }</td>
 					<td>${comment.commentRegtime }</td>
 					<c:if test="${loginUserId eq comment.userId }">
+						<c:if test="${empty sessionScope.loginAdmin }">
+							<td>
+								<button onclick="commentModifyView(this,'${comment.commentContents }',${comment.commentNo },${cBoardNo },${page });">수정</button>
+								<button onclick="removeComment(${comment.commentNo},${cBoard.cBoardNo }, ${page });">삭제</button>
+							</td>
+						</c:if>
+					</c:if>
+					<c:if test="${not empty sessionScope.loginAdmin }">
 						<td>
-							<button onclick="commentModifyView(this,'${comment.commentContents }',${comment.commentNo },${cBoardNo },${page });">수정</button>
 							<button onclick="removeComment(${comment.commentNo},${cBoard.cBoardNo }, ${page });">삭제</button>
 						</td>
 					</c:if>
 				</tr>
 			</c:forEach>
 		</table>
+		<c:if test="${empty sessionScope.loginAdmin }">
 		<form action="/consult/consultAddComment.do" method="post">
 			<input type="hidden" name="page" value="${page }">
 			<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
@@ -89,11 +99,17 @@
 					<td><input type="submit" value="등록하기"></td>
 				</tr>
 			</table>
+			</c:if>
 		</form>
 		<table align="center">
 			<tr>
 				<td>
-					<button onclick="location.href='/consult/consultModifyView.do?cBoardNo=${cBoard.cBoardNo }&page=${page}'">수정</button>
+					<c:if test="${empty sessionScope.loginAdmin }">
+						<button onclick="location.href='/consult/consultModifyView.do?cBoardNo=${cBoard.cBoardNo }&page=${page}'">수정</button>
+					</c:if>
+					<c:if test="${not empty sessionScope.loginAdmin }">
+						<button onclick="removeBoard(${cBoard.cBoardNo},${page });">삭제</button>
+					</c:if>
 					<button onclick="location.href='/consult/consultList.do?page=${page}'">목록</button>
 				</td>
 			</tr>
@@ -126,6 +142,11 @@
 			console.log($form[0]);
 			$form.appendTo("body");
 			$form.submit();
+		}
+		function removeBoard(cBoardNo, page) {
+			if(confirm("게시물을 삭제하시겠습니까?")){
+				location.href="/consult/consultRemove.do?cBoardNo="+cBoardNo+"&page="+page;
+			}
 		}
 </script>
 </body>

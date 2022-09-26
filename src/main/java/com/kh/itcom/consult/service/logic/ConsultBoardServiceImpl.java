@@ -13,6 +13,7 @@ import com.kh.itcom.consult.domain.ConsultUpCount;
 import com.kh.itcom.consult.domain.ConsultViewCount;
 import com.kh.itcom.consult.service.ConsultBoardService;
 import com.kh.itcom.consult.store.ConsultBoardStore;
+import com.kh.itcom.user.domain.User;
 
 @Service
 public class ConsultBoardServiceImpl implements ConsultBoardService{
@@ -55,10 +56,10 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	@Override
 	public ConsultBoard printOneByNo(Integer cBoardNo) {
 		ConsultBoard cBoard = cStore.selectOneByNo(session, cBoardNo);
-		int result= 0;
-		if(cBoard != null) {
-			result = cStore.boardCount(session, cBoardNo);
-		}
+//		int result= 0;
+//		if(cBoard != null) {
+//			result = cStore.boardCount(session, cBoardNo);
+//		}
 		return cBoard;
 	}
 
@@ -152,5 +153,33 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 		return result;
 	}
 
+	@Override
+	public int updateBoardViewCount(Integer cBoardNo) {
+		int result = cStore.updateBoardViewCount(session, cBoardNo);
+		return result;
+	}
+
+	@Override
+	public int registerBoardUp(int consultBoardNo) {
+		int result = cStore.updateBoardUp(session, consultBoardNo);
+		return result;
+	}
+
+	@Override
+	public int removeBoard(int cBoardNo) {
+		int result = cStore.deleteBoard(session, cBoardNo);
+		return result;
+	}
+
+	@Override
+	public int modifyPoint(User loginUser) {
+		int result = cStore.updatePoint(session, loginUser);
+		return result;
+	}
+
+	@Override
+	public void modifyViewable(User loginUser) {
+		cStore.updateViewable(session, loginUser);
+	}
 
 }

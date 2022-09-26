@@ -18,7 +18,6 @@
 		<result property="cBoardCreateDate" column="C_BOARD_CREATE_DATE"/>
 		<result property="cBoardCount" 		column="C_BOARD_COUNT"/>
 		<result property="cBoardUpCount" 	column="C_BOARD_UP_COUNT"/>
-		<result property="cBoardDownCount" 	column="C_BOARD_DOWN_COUNT"/>
 	</resultMap>
 	<select id="selectAllBoard" resultMap="boardResultMap">
 		SELECT * FROM CONSULT_BOARD_TBL ORDER BY C_BOARD_NO DESC
@@ -77,7 +76,7 @@
 		INSERT INTO CONSULT_BOARD_TBL
 		VALUES(SEQ_C_BOARD_NO.NEXTVAL, #{userId},#{cBoardTitle}, #{cBoardLocalName}, #{cBoardCenterName}
 		,#{cBoardCourseName},#{consultDate},#{cBoardContents},#{cBoardFileName},#{cBoardFileRename}
-		,#{cBoardFilePath},DEFAULT,NULL,NULL,NULL)
+		,#{cBoardFilePath},DEFAULT,0,0)
 	</insert>
 	<update id="updateBoard">
 		UPDATE CONSULT_BOARD_TBL 
@@ -86,9 +85,16 @@
 			, C_BOARD_FILE_NAME = #{cBoardFileName}, C_BOARD_FILE_RENAME = #{cBoardFileRename}, C_BOARD_FILE_PATH = #{cBoardFilePath}
 		WHERE C_BOARD_NO = #{cBoardNo}
 	</update>
-	<update id="updateCount">
+	<delete id="deleteBoard">
+		DELETE FROM CONSULT_BOARD_TBL WHERE C_BOARD_NO = #{cBoardNo}
+	</delete>
+	<update id="updateBoardViewCount">
 		UPDATE CONSULT_BOARD_TBL SET C_BOARD_COUNT = C_BOARD_COUNT + 1 WHERE C_BOARD_NO = #{cBoardNo}
 	</update>
+	<update id="updateBoardUp">
+		UPDATE CONSULT_BOARD_TBL SET C_BOARD_UPCOUNT = C_BOARD_UPCOUNT + 1 WHERE C_BOARD_NO = #{cBoardNo}
+	</update>
+	
 	
 	<resultMap type="CosultBoardComment" id="commentResultMap">
 		<id property="commentNo" column="COMMENT_NO"/>
@@ -172,4 +178,13 @@
 		INSERT INTO CONSULT_VIEW_COUNT_TBL 
 		VALUES(#{userId}, #{cBoardNo})
 	</insert>
+	<update id="updatePoint">
+		UPDATE USER_TBL SET USER_POINT = USER_POINT - 100 WHERE USER_ID = #{userId}
+	</update>
+	<update id="updateViewable">
+		UPDATE USER_TBL SET VIEWABLE = 'Y' WHERE USER_ID = #{userId}
+	</update>
+<!-- 	<update id="updatePoint"> -->
+<!-- 		UPDATE USER_TBL SET USER_POINT = USER_POINT + #{point} WHERE USER_ID = #{userId} -->
+<!-- 	</update> -->
 </mapper>

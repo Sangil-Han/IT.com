@@ -7,6 +7,7 @@ import com.kh.itcom.consult.domain.ConsultBoardComment;
 import com.kh.itcom.consult.domain.ConsultDownCount;
 import com.kh.itcom.consult.domain.ConsultUpCount;
 import com.kh.itcom.consult.domain.ConsultViewCount;
+import com.kh.itcom.user.domain.User;
 
 public interface ConsultBoardService {
 	
@@ -52,5 +53,15 @@ public interface ConsultBoardService {
 	public int printViewCountCheck(ConsultViewCount viewCount);
 
 	public int printTotalViewCount(ConsultViewCount viewCount);
+
+	public int updateBoardViewCount(Integer cBoardNo);
+
+	public int registerBoardUp(int consultBoardNo);
+
+	public int removeBoard(int cBoardNo);
+
+	public int modifyPoint(User loginUser);
+
+	public void modifyViewable(User loginUser);
 
 }
