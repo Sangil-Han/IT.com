@@ -63,4 +63,10 @@ public class AdminServiceImpl implements AdminService {
 		return luList;
 	}
 
+	@Override
+	public int printTotalLevelUpCount() {
+		int count = aStore.selectCountAllLevelUp(session);
+		return count;
+	}
+
 }

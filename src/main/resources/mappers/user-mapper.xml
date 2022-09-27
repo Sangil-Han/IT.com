@@ -40,7 +40,7 @@
 			</foreach>
 	</update>
 	<select id="selectLoginUser" resultMap="userResultMap">
-		SELECT USER_ID, USER_LEVEL, USER_POINT, VIEWABLE FROM USER_TBL
+		SELECT USER_ID FROM USER_TBL
 		WHERE USER_ID = #{userId} AND USER_PW = #{userPw} AND WITHDRAWAL = 'N'
 	</select>
 	<select id="selectCountAllUser" resultType="_int">

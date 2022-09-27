@@ -3,6 +3,7 @@ package com.kh.itcom.admin.store;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 
 import com.kh.itcom.admin.domain.Admin;
 import com.kh.itcom.common.domain.PageInfo;
@@ -28,4 +29,6 @@ public interface AdminStore {
 
 	// 등업 신청 목록
 	List<LevelUp> selectLevelUpList(SqlSession session, PageInfo lupi);
+
+	int selectCountAllLevelUp(SqlSession session);
 }

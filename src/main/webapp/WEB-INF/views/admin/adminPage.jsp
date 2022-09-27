@@ -13,6 +13,7 @@
 </head>
 <body>
 	<div id="wrap">
+		<jsp:include page="../common/header.jsp"></jsp:include>
 		<div id="page-title">
 			<h2>
 				<a href="/admin/adminPageView.do">Admin Page</a>
@@ -52,7 +53,8 @@
 						<option value="">전체</option>
 						<option value="">아이디</option>
 						<option value="">이메일</option>
-					</select> <input type="text" />
+					</select>
+					<input type="text" />
 					<button>검색</button>
 				</form>
 				<form action="/admin/userDeletion.do" method="post">
@@ -67,43 +69,47 @@
 							<th>포인트</th>
 							<th>가입일</th>
 							<th>탈퇴일</th>
-							<th><input type="checkbox" id="user-chk-all"
-								name="userChkAll" onclick="checkAll(this.name);" /></th>
+							<th>
+								<input type="checkbox" id="user-chk-all" name="userChkAll" onclick="checkAll(this.name);" />
+							</th>
 						</tr>
 						<c:if test="${not empty uList }">
 							<c:forEach items="${uList }" var="user" varStatus="i">
 								<tr>
 									<td>${upi.rowCount - ((upi.currentPage - 1 ) * upi.rowLimit + i.index) }</td>
-									<td><a
-										href="/user/myPostView.do?userId=${user.userId }&page=${upi.currentPage }">${user.userId }</a>
+									<td>
+										<a href="/user/myPostView.do?userId=${user.userId }&page=${upi.currentPage }">${user.userId }</a>
 									</td>
 									<td>${user.userEmail }</td>
 									<td>${user.userLevel }</td>
 									<td>${user.userPoint }</td>
 									<td>${user.joinDate }</td>
-									<td><c:if test="${user.withdrawal eq 'N' }">-</c:if> <c:if
-											test="${user.withdrawal eq 'Y' }">${user.withdrawDate }</c:if>
+									<td>
+										<c:if test="${user.withdrawal eq 'N' }">-</c:if>
+										<c:if test="${user.withdrawal eq 'Y' }">${user.withdrawDate }</c:if>
 									</td>
-									<td><input type="checkbox" name="userChkOne"
-										value="${user.userId }" onclick="checkOnes(this.name);"></td>
+									<td>
+										<input type="checkbox" name="userChkOne" value="${user.userId }" onclick="checkOnes(this.name);">
+									</td>
 								</tr>
 							</c:forEach>
 							<tr>
-								<td colspan="7"><c:if test="${upi.startPage ne 1 }">
-										<a
-											href="/admin/${url }.do?content=user&page=${upi.startPage - 1 }">[이전]</a>
-									</c:if> <c:forEach var="p" begin="${upi.startPage }"
-										end="${upi.endPage }">
+								<td colspan="7">
+									<c:if test="${upi.startPage ne 1 }">
+										<a href="/admin/${url }.do?content=user&page=${upi.startPage - 1 }">[이전]</a>
+									</c:if>
+									<c:forEach var="p" begin="${upi.startPage }" end="${upi.endPage }">
 										<c:if test="${upi.currentPage eq p }">
 											<b>${p }</b>
 										</c:if>
 										<c:if test="${upi.currentPage ne p }">
 											<a href="/admin/${url }.do?content=user&page=${p }">${p }</a>
 										</c:if>
-									</c:forEach> <c:if test="${upi.endPage ne upi.pageCount }">
-										<a
-											href="/admin/${url }.do?content=user&page=${upi.endPage + 1 }">[다음]</a>
-									</c:if></td>
+									</c:forEach>
+									<c:if test="${upi.endPage ne upi.pageCount }">
+										<a href="/admin/${url }.do?content=user&page=${upi.endPage + 1 }">[다음]</a>
+									</c:if>
+								</td>
 							</tr>
 						</c:if>
 						<c:if test="${empty uList }">
@@ -117,29 +123,66 @@
 			<div id="level-control" class="tab-content" style="display: none">
 				<h4>등업 관리</h4>
 				<form action="">
-					<button>승인</button>
-					<button>거절</button>
+					<button class="level-control">승인</button>
+					<button class="level-control">거절</button>
 					<table>
 						<tr>
+							<th>NO</th>
 							<th>상태</th>
 							<th>아이디</th>
-							<th>현재등급</th>
 							<th>신청등급</th>
 							<th>신청일</th>
 							<th>첨부파일</th>
-							<th><input type="checkbox" id="level-chk-all"
-								name="levelChkAll" onclick="checkAll(this.name);" /></th>
+							<th>
+								<input type="checkbox" id="level-chk-all" name="levelChkAll" onclick="checkAll(this.name);" />
+							</th>
 						</tr>
-						<tr>
-							<td>{상태}</td>
-							<td>{아이디}</td>
-							<td>{현재등급}</td>
-							<td>{신청등급}</td>
-							<td>{신청일}</td>
-							<td>{첨부파일}</td>
-							<td><input type="checkbox" name="levelChkOne"
-								onclick="checkOnes(this.name);" /></td>
-						</tr>
+						<c:if test="${not empty luList }">
+							<c:forEach items="${luList }" var="level" varStatus="i">
+								<tr>
+									<td>${lupi.rowCount - ((lupi.currentPage - 1 ) * lupi.rowLimit + i.index) }</td>
+									<c:if test="${level.applicationStatus eq 'Y'}">
+										<td>승인</td>
+									</c:if>
+									<c:if test="${level.applicationStatus ne 'Y' && level.applicationStatus ne 'N'}">
+										<td>대기</td>
+									</c:if>
+									<c:if test="${level.applicationStatus eq 'N'}">
+										<td>거절</td>
+									</c:if>
+									<td>${level.userId}</td>
+									<td>${level.applicationLv}</td>
+									<td>${level.applicationDate}</td>
+									<td><a><img alt="" src=""></a></td>
+									<td>
+										<input type="checkbox" name="levelChkOne" onclick="checkOnes(this.name);" />
+									</td>
+								</tr>
+							</c:forEach>
+							<tr>
+								<td colspan="7">
+									<c:if test="${lupi.startPage ne 1 }">
+										<a href="/admin/${url }.do?content=user&page=${lupi.startPage - 1 }">[이전]</a>
+									</c:if>
+									<c:forEach var="p" begin="${upi.startPage }" end="${lupi.endPage }">
+										<c:if test="${lupi.currentPage eq p }">
+											<b>${p }</b>
+										</c:if>
+										<c:if test="${lupi.currentPage ne p }">
+											<a href="/admin/${url }.do?content=user&page=${p }">${p }</a>
+										</c:if>
+									</c:forEach>
+									<c:if test="${lupi.endPage ne lupi.pageCount }">
+										<a href="/admin/${url }.do?content=user&page=${lupi.endPage + 1 }">[다음]</a>
+									</c:if>
+								</td>
+							</tr>
+						</c:if>
+						<c:if test="${empty luList }">
+							<tr>
+								<td colspan="8">등업 신청 내역이 존재하지 않습니다.</td>
+							</tr>
+						</c:if>
 					</table>
 				</form>
 			</div>

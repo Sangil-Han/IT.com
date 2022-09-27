@@ -24,4 +24,10 @@
 		SELECT APPLICATION_LV, LV_CHANGE_DATE FROM LEVEL_UP_TBL
 		WHERE USER_ID = #{userId} AND APPLICATION_STATUS = 'Y'
 	</select>
+	<select id="selectCountAllLevelUp" resultType="_int">
+		SELECT COUNT(*) FROM LEVEL_UP_TBL
+	</select>
+	<select id="selectLevelUpList" resultMap="levelUpResultMap">
+		SELECT * FROM LEVEL_UP_TBL
+	</select>
 </mapper>

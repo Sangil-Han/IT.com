@@ -17,7 +17,7 @@
 		<form action="/consult/consultRegister.do" method="post"
 			enctype="multipart/form-data">
 			<table align="center" border="1">
-				<input type="hidden" name="userId" value="${sessionScope.loginUser.userId }">
+			<input type="hidden" name="userId" value="${sessionScope.loginUser.userId }">
 				<tr>
 					<td>제목</td>
 					<td><input type="text" name="cBoardTitle"></td>

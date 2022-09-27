@@ -85,12 +85,6 @@ public class ConsultBoardStoreLogic implements ConsultBoardStore {
 		return result;
 	}
 
-//	@Override
-//	public int boardCount(SqlSessionTemplate session, Integer cBoardNo) {
-//		int result = session.update("CBoardMapper.updateCount",cBoardNo);
-//		return result;
-//	}
-
 	@Override
 	public int insertUpCount(SqlSessionTemplate session, ConsultUpCount upCount) {
 		int result = session.insert("CBoardMapper.insertUpCount", upCount);
@@ -190,6 +184,12 @@ public class ConsultBoardStoreLogic implements ConsultBoardStore {
 	@Override
 	public void updateViewable(SqlSessionTemplate session, User loginUser) {
 		session.update("CBoardMapper.updateViewable", loginUser);
+	}
+
+	@Override
+	public User selectUser(SqlSessionTemplate session, User loginUser) {
+		User selectUser = session.selectOne("CBoardMapper.selectUser", loginUser);
+		return selectUser;
 	}
 
 }

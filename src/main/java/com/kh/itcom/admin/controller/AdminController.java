@@ -71,7 +71,7 @@ public class AdminController {
 				// 등업 관리
 				PageInfo lupi = new PageInfo();
 				lupi.setCurrentPage((page != null) ? page : 1);
-				lupi.setRowCount(aService.printTotalUserCount()); // TODO: printTotalLevelUpCount
+				lupi.setRowCount(aService.printTotalLevelUpCount()); // TODO: printTotalLevelUpCount
 				lupi.setRowLimit(10);
 				lupi.setPageLimit(5);
 				lupi.setPageCount((int) ((double) lupi.getRowCount() / lupi.getRowLimit() + 0.9));
@@ -82,13 +82,13 @@ public class AdminController {
 				if (lupi.getPageCount() < lupi.getEndPage()) {
 					lupi.setEndPage(lupi.getPageCount());
 				}
-				List<LevelUp> luList; // TODO: printLevelUpList
-//				if (!luList.isEmpty()) {
-//					mv.addObject("luList", luList);
-//					mv.addObject("url", "adminPageView");
-//					mv.addObject("tabContent", tabContent);
-//					mv.addObject("lpi", lpi);
-//				}
+				List<LevelUp> luList = aService.printLevelUpList(lupi); // TODO: printLevelUpList
+				if (!luList.isEmpty()) {
+					mv.addObject("luList", luList);
+					mv.addObject("url", "adminPageView");
+					mv.addObject("tabContent", tabContent);
+					mv.addObject("lupi", lupi);
+				}
 				mv.setViewName("admin/adminPage");
 			} else {
 				mv.setViewName("redirect:/user/loginView.do");

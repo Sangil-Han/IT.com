@@ -34,7 +34,6 @@ public interface ConsultBoardStore {
 
 	public int deleteComment(SqlSessionTemplate session, Integer commentNo);
 
-//	public int boardCount(SqlSessionTemplate session, Integer cBoardNo);
 
 	public int insertUpCount(SqlSessionTemplate session, ConsultUpCount upCount);
 
@@ -70,6 +69,6 @@ public interface ConsultBoardStore {
 
 	public void updateViewable(SqlSessionTemplate session, User loginUser);
 
-//	public int updatePoint(SqlSessionTemplate session, String loginUserId, String point);
+	public User selectUser(SqlSessionTemplate session, User loginUser);
 
 }

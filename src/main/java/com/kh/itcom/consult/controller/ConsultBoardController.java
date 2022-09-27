@@ -60,12 +60,21 @@ public class ConsultBoardController {
 		}
 		List<ConsultBoard> cList = cService.printAllBoard(currentPage, boardLimit);
 		try {
-			Admin loginAdmin = (Admin)session.getAttribute("loginAdmin");
 			User loginUser = (User)session.getAttribute("loginUser");
-			String adminId = (loginAdmin!= null) ? loginAdmin.getAdminId() : "";
-			String userId = (loginUser!= null) ? loginUser.getUserId() : "";
+			String userId = loginUser != null ? loginUser.getUserId() : "";
+			Admin loginAdmin = (Admin)session.getAttribute("loginAdmin");
+			String adminId = loginAdmin != null ? loginAdmin.getAdminId() : "";
+			int totalViewCount = cService.printTotalViewCount(viewCount);
+			User user = cService.printUser(loginUser);
+			String level = user.getUserLevel();
+			int point = user.getUserPoint();
+			String viewable = user.getViewable();
+			mv.addObject("totalViewCount", totalViewCount);
 			mv.addObject("userId", userId);
 			mv.addObject("adminId", adminId);
+			mv.addObject("level", level);
+			mv.addObject("point", point);
+			mv.addObject("viewable", viewable);
 		} catch (Exception e) {
 			mv.addObject("msg", e.getMessage());
 			mv.setViewName("common/errorPage");
@@ -87,25 +96,20 @@ public class ConsultBoardController {
 			, @ModelAttribute ConsultViewCount viewCount
 			, @RequestParam("cBoardNo") Integer cBoardNo
 			, @RequestParam("page") Integer page
-			, HttpServletRequest request) {
+			, HttpSession session) {
 		try {
-			HttpSession session = request.getSession();
-			Admin loginAdmin = (Admin)session.getAttribute("loginAdmin");
 			User loginUser = (User)session.getAttribute("loginUser");
-			String loginAdminId = (loginAdmin != null) ? loginAdmin.getAdminId() : "";
-			String loginUserId = (loginUser != null) ? loginUser.getUserId() : "";
-			String userViewable = loginUser.getViewable();
+			String loginUserId = loginUser != null ? loginUser.getUserId() : "";
+			Admin loginAdmin = (Admin)session.getAttribute("loginAdmin");
+			String adminId = loginAdmin != null ? loginAdmin.getAdminId() : "";
 			ConsultBoard cBoard = cService.printOneByNo(cBoardNo);
 			viewCount.setUserId(loginUserId);
-			if(userViewable.equals("N")) {
-				int usePoint = cService.modifyPoint(loginUser);
-			}
 			List<ConsultBoardComment> cList = cService.printAllComment(cBoardNo);
 			int viewCountCheck = cService.printViewCountCheck(viewCount);
 			int totalViewCount = cService.printTotalViewCount(viewCount);
-			if(viewCountCheck == 0 && loginAdminId.isEmpty()) {
+			if(viewCountCheck == 0 && adminId.equals("")) {
 				int registViewCount = cService.registBoardViewCount(viewCount);
-				int updateViewCount = cService.updateBoardViewCount(cBoardNo);
+				int modifyViewCount = cService.updateBoardViewCount(cBoardNo);
 			}
 			int totalUp = cService.printTotalUpCount(cBoardNo);
 			int totalDown = cService.printTotalDownCount(cBoardNo);
@@ -113,10 +117,8 @@ public class ConsultBoardController {
 			mv.addObject("totalViewCount", totalViewCount);
 			mv.addObject("totalUp", totalUp);
 			mv.addObject("totalDown", totalDown);
-			mv.addObject("loginAdminId", loginAdminId);
 			mv.addObject("loginUserId", loginUserId);
 			mv.addObject("cList", cList);
-			mv.addObject("loginUser", loginUser);
 			mv.addObject("cBoard", cBoard);
 			mv.addObject("page", page);
 			mv.setViewName("consult/detailView");
@@ -169,22 +171,17 @@ public class ConsultBoardController {
 	}
 
 	@RequestMapping(value="/consult/consultRegister.do", method=RequestMethod.POST)
-	public ModelAndView boardRegist( //일반회원 viewable N 이 상담후기 작성시 Y로 업데이트
+	public ModelAndView boardRegist(
 			ModelAndView mv
 			, @ModelAttribute ConsultBoard cBoard
 			, @RequestParam(value="uploadFile", required=false) MultipartFile uploadFile
 			, HttpServletRequest request
 			, HttpSession session) {
 		try {
-			User loginUser = (User)session.getAttribute("loginUser");
-			String userViewable = loginUser.getViewable(); 
-			if(userViewable.equals("N")) {
-				cService.modifyViewable(loginUser);
-			}
 			String cBoardFileName = uploadFile.getOriginalFilename();
 			if(!cBoardFileName.equals("")) {
 				String root = request.getSession().getServletContext().getRealPath("resources");
-				String savePath = root + "\\cBoardUploadFile";
+				String savePath = root + "\\files/consult";
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 				String cBoardFileRename
 				= sdf.format(new Date(System.currentTimeMillis()))+"."
@@ -194,13 +191,16 @@ public class ConsultBoardController {
 					file.mkdir();
 				}
 				uploadFile.transferTo(new File(savePath+"\\"+cBoardFileRename));
-				// 파일을 buploadFile 경로에 저장하는 메소드
 				String cBoardFilePath = savePath+"\\"+cBoardFileRename;
 				cBoard.setcBoardFileName(cBoardFileName);
 				cBoard.setcBoardFileRename(cBoardFileRename);
 				cBoard.setcBoardFilePath(cBoardFilePath);
 			}
-			int cBoardNo = cBoard.getcBoardNo();
+			User loginUser = (User)session.getAttribute("loginUser");
+			String viewable = loginUser.getViewable();
+			if(viewable.equals("N")) {
+				cService.modifyViewable(loginUser);
+			}
 			int result = cService.registerBoard(cBoard);
 			mv.setViewName("redirect:/consult/consultList.do");
 		} catch (Exception e) {
@@ -238,7 +238,7 @@ public class ConsultBoardController {
 			String cBoardFileName = reloadFile.getOriginalFilename();
 			if(reloadFile != null && !cBoardFileName.equals("")) {
 				String root = request.getSession().getServletContext().getRealPath("resources");
-				String savedPath = root + "\\cBoardUploadFile";
+				String savedPath = root + "\\files/consult";
 				File file = new File(savedPath + "\\"+cBoard.getcBoardFileRename());
 				if(file.exists()) {
 					file.delete();
@@ -260,13 +260,17 @@ public class ConsultBoardController {
 		return mv;
 	}
 	
-	@RequestMapping(value="/consult/consultRemove.do", method=RequestMethod.GET)
+	@RequestMapping(value="/consult/consultRemoveBoard.do", method=RequestMethod.GET)
 	public ModelAndView boardRemove(
 			ModelAndView mv
 			, @RequestParam("page") int page
-			, @RequestParam("cBoardNo") int cBoardNo) {
+			, HttpSession session) {
+		int cBoardNo = (int)session.getAttribute("cBoardNo");
 		int result = cService.removeBoard(cBoardNo);
-		mv.setViewName("redirect:/consult/consultList.do?&page="+page);
+		if(result > 0) {
+			session.removeAttribute("cBoardNo");
+		}
+		mv.setViewName("redirect:/consult/consultList.do?page="+page);
 		return mv;
 	}
 	
@@ -274,18 +278,16 @@ public class ConsultBoardController {
 	public ModelAndView boardUpCount(
 			ModelAndView mv
 			, @ModelAttribute ConsultUpCount upCount
-			, @ModelAttribute ConsultBoard consultBoard
 			, @RequestParam("page") int page
 			, HttpSession session) {
 		User user = (User)session.getAttribute("loginUser");
 		String userId = user.getUserId();
 		upCount.setUserId(userId);
 		int cBoardNo = upCount.getcBoardNo();
-		int consultBoardNo = consultBoard.getcBoardNo();
 		int upCountCheck = cService.upCountCheck(upCount);
 		if(upCountCheck == 0) {
 			int insertUpCount = cService.registerUpCount(upCount);
-			int printBoardUp = cService.registerBoardUp(consultBoardNo);
+			int modifyBoardUp = cService.modifyBoardUp(cBoardNo);
 		}else if(upCountCheck == 1) {
 			int deleteUpCount = cService.removeUpCount(upCount);
 		}

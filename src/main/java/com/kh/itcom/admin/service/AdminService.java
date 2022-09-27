@@ -26,4 +26,6 @@ public interface AdminService {
 
 	// 등업 신청 목록
 	List<LevelUp> printLevelUpList(PageInfo lupi);
+
+	int printTotalLevelUpCount();
 }
