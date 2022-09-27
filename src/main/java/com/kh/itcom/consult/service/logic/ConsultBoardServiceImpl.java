@@ -56,10 +56,6 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	@Override
 	public ConsultBoard printOneByNo(Integer cBoardNo) {
 		ConsultBoard cBoard = cStore.selectOneByNo(session, cBoardNo);
-//		int result= 0;
-//		if(cBoard != null) {
-//			result = cStore.boardCount(session, cBoardNo);
-//		}
 		return cBoard;
 	}
 
@@ -160,7 +156,7 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	}
 
 	@Override
-	public int registerBoardUp(int consultBoardNo) {
+	public int modifyBoardUp(int consultBoardNo) {
 		int result = cStore.updateBoardUp(session, consultBoardNo);
 		return result;
 	}
@@ -180,6 +176,12 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	@Override
 	public void modifyViewable(User loginUser) {
 		cStore.updateViewable(session, loginUser);
+	}
+
+	@Override
+	public User printUser(User loginUser) {
+		User printUser = cStore.selectUser(session, loginUser);
+		return printUser;
 	}
 
 }

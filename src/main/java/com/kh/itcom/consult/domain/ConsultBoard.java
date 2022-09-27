@@ -18,7 +18,6 @@ public class ConsultBoard {
 	private int cBoardCount;
 	private int cBoardUpCount;
 	private int cBoardDownCount;
-	
 	public int getcBoardNo() {
 		return cBoardNo;
 	}

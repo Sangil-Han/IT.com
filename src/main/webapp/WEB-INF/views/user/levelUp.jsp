@@ -16,15 +16,14 @@
 			<a href="/user/myPageView.do">My Page</a>
 		</h2>
 		<h3>등업 신청</h3>
-		<form action="/level/up.do" method="post" enctype="multipart/form-data">
+		<form action="/user/levelUp.do" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="adminId" value="${sessionScope.loginAdmin.adminId }" />
 			<div>
 				<c:if test="${sessionScope.loginUser.userLevel eq '일반회원' }">
 					<input type="radio" id="lecture-user" name="applicationLv" value="수강회원" checked /> <label for="lecture-user">수강회원</label>
 				</c:if>
 				<input type="radio" id="finish-user" name="applicationLv" value="수료회원" <c:if test="${sessionScope.loginUser.userLevel eq '수강회원' }">checked</c:if> /> <label for="finish-user">수료회원</label>
 			</div>
-			<div class="notice"></div>
-			<div class="notice"></div>
 			<div>
 				<input type="file" name="file" />
 			</div>

@@ -57,8 +57,14 @@ public class AdminStoreLogic implements AdminStore {
 	public List<LevelUp> selectLevelUpList(SqlSession session, PageInfo lupi) {
 		int offset = (lupi.getCurrentPage() - 1) * lupi.getRowLimit();
 		RowBounds rowBounds = new RowBounds(offset, lupi.getRowLimit());
-		List<LevelUp> luList = session.selectList("UserMapper.selectLevelUpList", null, rowBounds);
+		List<LevelUp> luList = session.selectList("LevelMapper.selectLevelUpList", null, rowBounds);
 		return luList;
+	}
+
+	@Override
+	public int selectCountAllLevelUp(SqlSession session) {
+		int count = session.selectOne("LevelMapper.selectCountAllLevelUp");
+		return count;
 	}
 	
 }

@@ -16,5 +16,26 @@
 	<h2 id="page-title">
 		<a href="/notice/boardView.do">공지사항</a>
 	</h2>
+	<form action="/notice/remove.do" method="post" onsubmit="return removeConfirm();">
+		<input type="hidden" name="noticeNo" value="${notice.noticeNo }" readonly>
+		<c:if test="${sessionScope.loginAdmin ne null }">
+			<button type="button" onclick="location.href='/notice/modifyView.do?noticeNo=${notice.noticeNo }&page=${page }">수정</button><button>삭제</button>
+		</c:if>
+		<div id="notice-title">${notice.noticeTitle }</div>
+		<div id="notice-contents">${notice.noticeContents }</div>
+		<c:if test="${notice.noticeFileRename ne ''}">
+			<img alt="" src="/resources/files/notice/${notice.noticeFileRename }">
+		</c:if>
+		<button type="button" onclick="location.href='/notice/boardView.do?page=${page }'">목록</button>
+	</form>
+	<script>
+		function removeConfirm() {
+			if(confirm('정말 삭제하시겠습니까?')){
+				return true;
+			} else{
+				return false;
+			}
+		}
+	</script>
 </body>
 </html>

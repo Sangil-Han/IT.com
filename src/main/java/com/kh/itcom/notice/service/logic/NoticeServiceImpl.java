@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.itcom.common.domain.PageInfo;
+import com.kh.itcom.finish.domain.FinishBoard;
 import com.kh.itcom.notice.domain.Notice;
 import com.kh.itcom.notice.service.NoticeService;
 import com.kh.itcom.notice.store.NoticeStore;
@@ -31,7 +32,29 @@ public class NoticeServiceImpl implements NoticeService {
 		List<Notice> nList = nStore.selectNoticeList(session, npi);
 		return nList;
 	}
-	
-	
+
+	@Override
+	public int registerNotice(Notice notice) {
+		int result = nStore.insertNoice(session, notice);
+		return result;
+	}
+
+	@Override
+	public Notice printNoticeByNo(int noticeNo) {
+		Notice notice = nStore.selectNoticeByNo(session, noticeNo);
+		return notice;
+	}
+
+	@Override
+	public int removeNotice(int noticeNo) {
+		int result = nStore.deleteNotice(session, noticeNo);
+		return result;
+	}
+
+	@Override
+	public int modifyNotice(Notice notice) {
+		int result = nStore.updateNotice(session, notice);
+		return result;
+	}
 
 }

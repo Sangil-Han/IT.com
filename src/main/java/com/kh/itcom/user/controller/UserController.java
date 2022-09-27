@@ -323,11 +323,11 @@ public class UserController {
 			if (loginUser != null) {
 				String certFileName = uploadFile.getOriginalFilename();
 				if (!certFileName.equals("")) {
-					String rootPath = request.getSession().getServletContext().getRealPath("resources");
-					String savePath = rootPath + "/files/levelup";
+					String root = request.getSession().getServletContext().getRealPath("resources");
+					String savePath = root + "/files/levelup";
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-					String certFileRename = sdf.format(new Date(System.currentTimeMillis()))
-							+ certFileName.substring(certFileName.lastIndexOf("."));
+					String certFileRename = sdf.format(new Date(System.currentTimeMillis())) + "."
+							+ certFileName.substring(certFileName.lastIndexOf(".") + 1);
 					File folder = new File(savePath);
 					if (!folder.exists()) {
 						folder.mkdir();
@@ -338,7 +338,6 @@ public class UserController {
 					lvUp.setCertFileRename(certFileRename);
 					lvUp.setCertFilePath(certFilePath);
 				}
-				lvUp.setUserId(loginUser.getUserId());
 				int result = uService.applyLevelUp(lvUp);
 				if (result > 0) {
 					mv.setViewName("redirect:/user/myPageView.do");

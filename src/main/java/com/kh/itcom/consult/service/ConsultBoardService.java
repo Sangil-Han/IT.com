@@ -56,12 +56,14 @@ public interface ConsultBoardService {
 
 	public int updateBoardViewCount(Integer cBoardNo);
 
-	public int registerBoardUp(int consultBoardNo);
+	public int modifyBoardUp(int consultBoardNo);
 
 	public int removeBoard(int cBoardNo);
 
 	public int modifyPoint(User loginUser);
 
 	public void modifyViewable(User loginUser);
+
+	public User printUser(User loginUser);
 
 }
