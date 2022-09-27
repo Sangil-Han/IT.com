@@ -3,7 +3,9 @@ package com.kh.itcom.lecture.controller;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,14 +14,17 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.itcom.lecture.domain.LectureBoard;
 import com.kh.itcom.lecture.domain.LectureBoardComment;
+import com.kh.itcom.lecture.domain.LectureUpCount;
 import com.kh.itcom.lecture.service.LectureBoardService;
 import com.kh.itcom.user.domain.User;
 
@@ -258,15 +263,17 @@ public class LectureBoardController {
 		return mv;
 	}
 	
+	@ResponseBody
 	@RequestMapping(value="/lecture/modifyComment.do", method=RequestMethod.POST)
-	public String modifyComment(
-			@ModelAttribute LectureBoardComment lbComment
-			// , ModelAndView mv
-			, @RequestParam("lCommentContents") String lCommentContents
-			, @RequestParam("page") Integer page
-			, @RequestParam("lBoardNo") int lBoardNo) {
-		int result = lbService.modifyComment(lbComment);
-		return "redirect:/lecture/detail.do?lBoardNo=";
+	public Map<String, Object> modifyComment(
+			@RequestBody Map<String, Object> inputMap) {
+		String lmodifiedComment=(String) inputMap.get("lcommentText");
+		String lBoardNo=(String) inputMap.get("lCommentNo");
+		lbService.modifyComment(inputMap);
+		Map<String, Object> returnMap=new HashMap<>();
+		returnMap.put("lmodifiedComment", inputMap.get("lcommentText"));
+		
+		return returnMap;
 	}
 	
 	@RequestMapping(value="/lecture/removeComment.do", method=RequestMethod.GET)
@@ -279,6 +286,29 @@ public class LectureBoardController {
 		if(result > 0) {
 			mv.setViewName("redirect:/lecture/detail.do?lBoardNo="+lBoardNo+"&page="+page);
 		}
+		return mv;
+	}
+	
+	@RequestMapping(value="/lecture/lectureUpCount.do", method=RequestMethod.POST)
+	public ModelAndView lectureUpCount(
+			ModelAndView mv
+			, @ModelAttribute LectureUpCount lUpCount
+			, @ModelAttribute LectureBoard lectureboard
+			, @RequestParam("page") int page
+			, HttpSession session) {
+		User user = (User)session.getAttribute("loginUser");
+		String userId = user.getUserId();
+		lUpCount.setUserId(userId);
+		int lBoardNo = lUpCount.getlBoardNo();
+		int lectureBoardNo = lectureboard.getlBoardNo();
+		int upCountCheck = lbService.upCountCheck(lUpCount);
+		if(upCountCheck == 0) {
+			int insertUpCount = lbService.registerUpCount(lUpCount);
+			int printBoardUp = lbService.registerBoardUp(lectureBoardNo);
+		}else if(upCountCheck == 1) {
+			int deleteUpCount = lbService.removeUpCount(lUpCount);
+		}
+		mv.setViewName("redirect:/lecture/detail.do?lBoardNo="+lBoardNo+"&page="+page);
 		return mv;
 	}
 }

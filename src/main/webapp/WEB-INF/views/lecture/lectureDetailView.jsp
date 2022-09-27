@@ -5,13 +5,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>
-
-</script>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 수강후기 상세 조회</title>
+<link href="/resources/css/menubar-style.css" rel="stylesheet">
+<link href="/resources/css/header-style.css" rel="stylesheet">
 </head>
 <body>
 	<div id="wrap">
@@ -28,6 +27,10 @@
 				<td>${lectureBoard.lBoardLocalName }</td>
 			</tr>
 			<tr>
+				<td>조회수</td>
+				<td>${totalViewCount }</td>
+			</tr>
+			<tr>
 				<td>교육원명</td>
 				<td>${lectureBoard.lBoardCenterName }</td>
 			</tr>
@@ -39,21 +42,12 @@
 				<td>내용</td>
 				<td>${lectureBoard.lBoardContents }</td>
 			</tr>
-			<tr>
-				<td>조회수</td>
-				<td>${lectureBoard.lBoardCount }</td>
-			</tr>
-			<tr>
-				<td>추천수</td>
-				<td>${lectureBoard.lBoardUpCount }</td>
-			</tr>
+			
 			<tr>
 				<td>첨부파일</td>
 				<td><img alt="본문이미지" src="/resources/buploadFiles/${lectureBoard.lBoardFileRename }" width="300" height="300"></td>
 			</tr>
-			<tr>
-				<td colspan="2" align="center"><a href="/lecture/modifyView.do?lBoardNo=${lectureBoard.lBoardNo}&page=${page}">수정 페이지로 이동</a></td>
-			</tr>
+			
 		</table>
 	
 	<!-- 댓글 등록 -->
@@ -73,59 +67,79 @@
 	
 		<!-- 댓글 목록 -->
 		<table align="center" width="500" border="1">
-			<c:forEach items="${lcList }" var="lbComment">
+			<c:forEach items="${lcList }" var="lbComment" varStatus="i">
 				<tr>
-					<td>${lbComment.lCommentContents }</td>
+					<td id="lmodify-inactive${i.count}">${lbComment.lCommentContents }</td>
+					<td id="lmodify-active${i.count}" style="display:none">
+						<input id="lCommentNo${i.count}" type="hidden" value="${lbComment.lCommentNo}">
+						<textarea id="lmodify-text${i.count}" name="lmodifyCommentContents" >${lbComment.lCommentContents }</textarea>
+					</td>
 					<td>${lbComment.lCommentRegtime }</td>
-					<%-- <c:if test="${loginUserId eq lbComment.userId }"> --%>
-						<td>
-							<a href="#" onclick="modifyView(this,'${lbComment.lCommentContents }',${lbComment.lCommentNo},${lBoardNo },${page });">수정</a>
-							<button onclick="removeComment(${lbComment.lCommentNo},${lectureBoard.lBoardNo }, ${page });">삭제</button>
-						</td>
-					<%-- </c:if> --%>
+					<td>
+						<c:if test="${lbComment.userId eq sessionScope.loginUser.userId }">
+            <!-- 댓글 수정 -->
+						<button id="lmodify-comment-btn${i.count}">수정</button>
+            <!-- 댓글 삭제 -->
+          			    <button onclick="removeComment(${lbComment.lCommentNo},${lectureBoard.lBoardNo }, ${page });">삭제</button>
+						</c:if>
+					</td>
 				</tr>
-			<%-- 	<tr> 
- 					<td colspan="3"><input type="text" size="50" value="${lbComment.lCommentContents }"></td>
- 				</tr>  --%>
 			</c:forEach>
 		</table>
-		<%-- <table align="center">
-			<tr>
-				<td>
-					<<button onclick="location.href='/lecture/modifyComment.do?lBoardNo=${lectureBoard.lBoardNo }&page=${page}'">수정</button> 
-					<button onclick="location.href='/lecture/list.do?page=${page}'">목록</button>
-				</td>
-			</tr>
-		</table> --%>
 	</div>
 	<script>
 		function removeComment(lCommentNo, lBoardNo, page) {
-			event.preventDefault();
 			if(confirm("댓글을 삭제하시겠습니까?")) {
 				location.href="/lecture/removeComment.do?lBoardNo="+lBoardNo+"&page="+page+"&lCommentNo="+lCommentNo;
 			}
 		}
-		function modifyView(obj, lCommentContents, lCommentNo,lBoardNo,page) {
-			event.preventDefault();
-			var $tr = $("<tr>");
-			$tr.append("<td colspan='3'><input type='text' size='50' value='"+lCommentContents+"'></td>");
-			$tr.append("<td><button onclick='modifyComment(this, "+lCommentNo+","+lBoardNo+","+page+");'>수정</button></td>");
-			$(obj).parent().parent().after($tr);
-		}
-		function modifyComment(obj, lCommentNo ,lBoardNo, page) {
-			var inputTag = $(obj).parent().siblings().eq(0).children();
-			var lCommentContents = inputTag.val();
-			var $form = $("<form>");
-			$form.attr("action", "/lecture/modifyComment.do");
-			$form.attr("method", "post");
-			$form.append("<input type='hidden' value='"+lBoardNo+"' name='lBoardNo'>");
-			$form.append("<input type='hidden' value='"+page+"' name='page'>");
-			$form.append("<input type='hidden' value='"+lCommentContents+"' name='lCommentContents'>");
-			$form.append("<input type='hidden' value='"+lCommentNo+"' name='lCommentNo'>");
-			console.log($form[0]);
-			$form.appendTo("body");
-			$form.submit();
-		}
+		
+		var httpRequest;
+		let lmodifyCommentList=Array.from(document.querySelectorAll('[id^=lmodify-comment-btn]'));
+	       let lmodifyInactiveList=Array.from(document.querySelectorAll('[id^=lmodify-inactive]'));
+	       let lmodifyActiveList=Array.from(document.querySelectorAll('[id^=lmodify-active]'));
+	       let lCommentNoList=Array.from(document.querySelectorAll('[id^=lCommentNo]'));
+	       let lmodifyTextList=Array.from(document.querySelectorAll('[id^=lmodify-text]'));
+	      
+	       if (lmodifyCommentList==null){
+	           console.log("list is null");
+	          }
+	           for(let i=0; i<lmodifyCommentList.length; i++){
+	             lmodifyCommentList[i].addEventListener('click', ()=> {
+	             if (lmodifyActiveList[i].style.display == 'block') {
+	               var lcommentText = lmodifyTextList[i].value;
+	               var lCommentNo = lCommentNoList[i].value;
+	               console.log(lcommentText);
+	               console.log(lCommentNo);
+	               var reqJson = new Object();
+	               reqJson.lcommentText = lcommentText;
+	               reqJson.lCommentNo = lCommentNo;
+
+	               httpRequest = new XMLHttpRequest();
+	               httpRequest.onreadystatechange = () => {
+	                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                   if (httpRequest.status === 200) {
+	                     var result = httpRequest.response;
+	                     
+	                     lmodifyActiveList[i].style.display = 'none';
+	                     lmodifyInactiveList[i].innerText = result.lmodifiedComment;
+	                     lmodifyInactiveList[i].style.display='block'
+	                   } else {
+	                     alert(httpRequest.status);
+	                   }
+	                 }
+	               };
+	               httpRequest.open('POST', '/lecture/modifyComment.do', true);
+	               httpRequest.responseType = 'json';
+	               httpRequest.setRequestHeader('Content-Type', 'application/json');
+	               httpRequest.send(JSON.stringify(reqJson));
+	             } 
+	             else {
+	               lmodifyInactiveList[i].style.display = 'none';
+	               lmodifyActiveList[i].style.display = 'block';
+	             }
+	           });
+	           }
 </script>
 </body>
 </html>

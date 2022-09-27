@@ -32,9 +32,7 @@
 			, L_BOARD_FILE_RENAME = #{lBoardFileRename}, L_BOARD_FILE_PATH = #{lBoardFilePath}, L_BOARD_CREATE_DATE = DEFAULT 
 		WHERE L_BOARD_NO = #{lBoardNo}
 	</update>
-	<update id="updateLectureCount">
-		UPDATE LECTURE_BOARD_TBL SET L_BOARD_COUNT = L_BOARD_COUNT + 1 WHERE L_BOARD_NO = #{lBoardNo}	
-	</update>
+	
 	<select id="selectAllLectureBoard" resultMap="lectureResultMap">
 		SELECT * FROM LECTURE_BOARD_TBL ORDER BY L_BOARD_NO DESC
 	</select>
@@ -89,6 +87,19 @@
 			ORDER BY L_BOARD_NO DESC
 		</where> 
 	</select>
+	
+	<delete id="deleteLecture">
+		DELETE FROM LECTURE_BOARD_TBL WHERE L_BOARD_NO = #{lBoardNo}
+	</delete>
+	
+	<update id="updateLectureViewCount">
+		UPDATE LECTURE_BOARD_TBL SET L_BOARD_COUNT = L_BOARD_COUNT + 1 WHERE L_BOARD_NO = #{lBoardNo}	
+	</update>
+	
+	<update id="updateLectureUp">
+		UPDATE LECTURE_BOARD_TBL SET L_BOARD_UPCOUNT = L_BOARD_UPCOUNT + 1 WHERE L_BOARD_NO = #{lBoardNo}
+	</update>
+	
 	<!-- 댓글 관리 -->	
 	<resultMap type="LectureBoardComment"  	 id="commentResultMap">
 		<id 	property="lCommentNo" 		 column="L_COMMENT_NO" />
@@ -108,8 +119,71 @@
 	<delete id="deleteComment">
 		DELETE FROM LECTURE_COMMENT_TBL WHERE L_COMMENT_NO = #{lCommentNo}
 	</delete>
-	<update id="updateComment">
-		UPDATE LECTURE_COMMENT_TBL SET L_COMMENT_CONTENTS = #{lCommentContents}
+	<update id="updateComment" parameterType="hashMap">
+		UPDATE LECTURE_COMMENT_TBL SET L_COMMENT_CONTENTS = #{lcommentText}
 		WHERE L_COMMENT_NO = #{lCommentNo}
 	</update>
+	
+	<resultMap type="LectureUpCount" id="upCountResultMap">
+			<result property="userId" column="USER_ID"/>
+			<result property="lBoardNo" column="L_BOARD_NO"/>
+		</resultMap>
+		<select id="selectTotalUpCount" resultType="_int">
+			SELECT COUNT(*) FROM LECTURE_UPCOUNT_TBL WHERE L_BOARD_NO = #{lBoardNo}
+		</select>
+		<select id="selectUpCount" resultType="_int">
+			SELECT COUNT(*) FROM LECTURE_UPCOUNT_TBL
+			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo}
+		</select>
+		<insert id="insertUpCount">
+			INSERT INTO LECTURE_UPCOUNT_TBL
+			VALUES(#{userId},#{lBoardNo})
+		</insert>
+		<delete id="deleteUpCount">
+			DELETE FROM LECTURE_UPCOUNT_TBL
+			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo}
+		</delete>
+		
+		<resultMap type="LectureDownCount" id="downCountResultMap">
+			<result property="userId" column="USER_ID"/>
+			<result property="lBoardNo" column="L_BOARD_NO"/>
+		</resultMap>
+		<select id="selectTotalDownCount" resultType="_int">
+			SELECT COUNT(*) FROM LECTURE_DOWNCOUNT_TBL WHERE L_BOARD_NO = #{LBoardNo}
+		</select>
+		<select id="selectDownCount" resultType="_int">
+			SELECT COUNT(*) FROM LECTURE_DOWNCOUNT_TBL
+			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo}
+		</select>
+		<insert id="insertDownCount">
+			INSERT INTO LECTURE_DOWNCOUNT_TBL
+			VALUES(#{userId},#{lBoardNo})
+		</insert>
+		<delete id="deleteDownCount">
+			DELETE FROM LECTURE_DOWNCOUNT_TBL
+			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo}
+		</delete>
+		
+		<resultMap type="LectureViewCount" id="viewCountResultMap">
+			<result property="userId" column="USER_ID"/>
+			<result property="lBoardNo" column="L_BOARD_NO"/>
+		</resultMap>
+		<select id="selectViewCountCheck" resultType="_int">
+			SELECT COUNT(*) FROM LECTURE_VIEW_COUNT_TBL 
+			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo}
+		</select>
+		<select id="selectTotalViewCount" resultType="_int">
+			SELECT COUNT(*) FROM LECTURE_VIEW_COUNT_TBL WHERE L_BOARD_NO = #{lBoardNo}
+		</select>
+		
+		<insert id="insertViewCount">
+			INSERT INTO LECTURE_VIEW_COUNT_TBL 
+			VALUES(#{userId}, #{lBoardNo})
+		</insert>
+		<update id="updatePoint">
+			UPDATE USER_TBL SET USER_POINT = USER_POINT - 200 WHERE USER_ID = #{userId}
+		</update>
+		<update id="updateViewable">
+			UPDATE USER_TBL SET VIEWABLE = 'Y' WHERE USER_ID = #{userId}
+		</update>
 </mapper>
