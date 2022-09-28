@@ -39,7 +39,7 @@
 		#{fBoardLocalName}, #{fBoardCenterName}, #{fBoardCourseName},
 		#{fBoardFinishYear}, #{fBoardJobYn}, #{fBoardJobName},
 		#{fBoardSalary}, #{fBoardCompany}, #{fBoardContents}, #{fBoardFileName}, #{fBoardFileRename},
-		#{fBoardFilePath, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+		#{fBoardFilePath}, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
 	</insert>
 
 	<!-- 조회수 증가 -->

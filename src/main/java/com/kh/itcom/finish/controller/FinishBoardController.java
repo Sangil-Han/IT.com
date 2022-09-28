@@ -50,7 +50,7 @@ public class FinishBoardController {
 			String fBoardFilename = uploadFile.getOriginalFilename();
 			if (!uploadFile.getOriginalFilename().equals("")) {
 				String root = request.getSession().getServletContext().getRealPath("resources");
-				String savePath = root + "\\fuploadFiles";
+				String savePath = root + "\\files\\fuploadFiles";
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 				String fBoardFileRename = sdf.format(new Date(System.currentTimeMillis())) + "."
 						+ fBoardFilename.substring(fBoardFilename.lastIndexOf(".") + 1);
@@ -152,7 +152,7 @@ public class FinishBoardController {
 	// 게시글 상세 페이지
 	@RequestMapping(value = "/finish/detailView.do", method = RequestMethod.GET)
 	public ModelAndView boardDetailView(ModelAndView mv, @RequestParam("fBoardNo") int fBoardNo,
-			@RequestParam("page") Integer page, @RequestParam(value = "point") String point,
+			@RequestParam("page") Integer page,
 			HttpSession session) {
 		try {
 			FinishBoard fBoard = fService.printOneByNo(fBoardNo);
@@ -167,7 +167,6 @@ public class FinishBoardController {
 				isRecomm="N";
 			}
 			List<FinishComment> cList = fService.printAllComment(fBoardNo);
-			fService.usePoint(userId, point);
 			session.setAttribute("boardNo", fBoard.getfBoardNo());
 			mv.addObject("fBoard", fBoard);
 			mv.addObject("cList", cList);
@@ -182,9 +181,15 @@ public class FinishBoardController {
 		}
 		return mv;
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="/finish/usePoint.do", method=RequestMethod.POST)
+	public void userPoint(@RequestBody Map<String, Object> pointMap, HttpSession session) {
+		fService.usePoint(pointMap.get("userId").toString(), pointMap.get("point").toString());
+	}
 
 	// 게시글 수정 폼으로 이동
-	@RequestMapping(value = "/finish/modifyView.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/finish/modifyView.do", method = RequestMethod.POST)
 	public ModelAndView modifyView(ModelAndView mv, @RequestParam("fBoardNo") Integer fBoardNo,
 			@RequestParam("page") Integer page) {
 		try {
@@ -210,7 +215,7 @@ public class FinishBoardController {
 			// 파일을 첨부했을 때
 			if (reloadFile != null && !fBoardFileName.equals("")) {
 				String root = request.getSession().getServletContext().getRealPath("resources");
-				String savedPath = root + "\\fuploadFiles";
+				String savedPath = root + "\\files\\fuploadFiles";
 				// 파일이 이미 존재하면 삭제
 				File file = new File(savedPath + "\\" + fBoard.getfBoardFileRename());
 				if (file.exists()) {
@@ -256,17 +261,17 @@ public class FinishBoardController {
 		int result = fService.registerComment(fComment);
 
 		if (result > 0) {
-			mv.setViewName("redirect:/finish/detailView.do?fBoardNo=" + fBoardNo + "&page=" + page + "&point=0");
+			mv.setViewName("redirect:/finish/detailView.do?fBoardNo=" + fBoardNo + "&page=" + page);
 		}
 		return mv;
 	}
 
-	@RequestMapping(value = "/finish/removeComment.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/finish/removeComment.do", method = RequestMethod.POST)
 	public String removeComment(@RequestParam("fCommentNo") Integer fCommentNo,
 			@RequestParam("fBoardNo") Integer fBoardNo, @RequestParam("page") Integer page) {
 		int result = fService.removeComment(fCommentNo);
 		if (result > 0) {
-			return "redirect:/finish/detailView.do?fBoardNo=" + fBoardNo + "&page=" + page + "&point=0";
+			return "redirect:/finish/detailView.do?fBoardNo=" + fBoardNo + "&page=" + page;
 		} else {
 			return "common/errorPage";
 		}
@@ -277,7 +282,7 @@ public class FinishBoardController {
 			@RequestParam("page") Integer page) {
 			int result = fService.addUpDownCount(fBoardNo, userId, "UP");
 			if (result > 0) {
-				return "redirect:/finish/detailView.do?fBoardNo=" + fBoardNo+"&page="+page+"&point=0";
+				return "redirect:/finish/detailView.do?fBoardNo=" + fBoardNo+"&page="+page;
 			}
 			else {
 				return "common.errorPage";
@@ -288,7 +293,7 @@ public class FinishBoardController {
 			@RequestParam("page") Integer page) {
 			int result = fService.addUpDownCount(fBoardNo, userId, "DOWN");
 			if (result > 0) {
-				return "redirect:/finish/detailView.do?fBoardNo=" + fBoardNo+"&page="+page+"&point=0";
+				return "redirect:/finish/detailView.do?fBoardNo=" + fBoardNo+"&page="+page;
 			}
 			else {
 				return "common.errorPage";
@@ -298,10 +303,6 @@ public class FinishBoardController {
 	@ResponseBody
 	@RequestMapping(value="/finish/modifyComment.do", method=RequestMethod.POST)
 	public Map<String, Object> modifyComment(@RequestBody Map<String, Object> inputMap) {
-		
-		String modifiedComment=(String) inputMap.get("commentText");
-		String fBoardNo=(String) inputMap.get("fCommentNo");
-		
 		fService.modifyComment(inputMap);
 		
 		Map<String, Object> returnMap=new HashMap<>();
