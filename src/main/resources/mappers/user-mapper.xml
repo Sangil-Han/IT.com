@@ -29,11 +29,11 @@
 		UPDATE USER_TBL SET USER_PW = #{userPw} WHERE USER_ID = #{userId}
 	</update>
 	<update id="updateLevel" parameterType="string">
-	<foreach collection="list" item="item" separator=",">
-		UPDATE USER_TBL SET USER_LEVEL = (SELECT APPLICATION_LV
-											FROM LEVEL_UP_TBL
-											WHERE USER_ID = #{item})
-		WHERE USER_ID = #{item}
+		<foreach collection="list" item="item">
+			UPDATE USER_TBL SET
+				USER_LEVEL = (SELECT APPLICATION_LV FROM LEVEL_UP_TBL WHERE USER_ID = #{item}),
+				VIEWABLE = 'N'
+			WHERE USER_ID = #{item}
 		</foreach>
 	</update>
 	<update id="deleteUser">

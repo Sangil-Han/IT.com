@@ -117,9 +117,10 @@ public class AdminController {
 				List<String> checkedUsers = Arrays.asList(checked.split(","));
 				int result = aService.removeUsers(checkedUsers);
 				if (result > 0) {
-					mv.addObject("redirect:/admin/adminPageView.do?content=user");
+					mv.addObject("content", "user");
+					mv.setViewName("redirect:/admin/adminPageView.do");
 				}
-				mv.setViewName("redirect:/admin/adminPageView.do?content=user");
+				mv.setViewName("redirect:/admin/adminPageView.do");
 			} else {
 				mv.setViewName("redirect:/user/loginView.do");
 			}
@@ -132,20 +133,21 @@ public class AdminController {
 	}
 
 	// 등업 신청 승인
-	@RequestMapping(value = "/admin/levelUpApprove", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/levelUpApprove.do", method = RequestMethod.POST)
 	public ModelAndView levelUpApprove(HttpServletRequest request, @RequestParam("checked") String checked,
 			ModelAndView mv) {
 		try {
 			HttpSession session = request.getSession();
 			Admin admin = (Admin) session.getAttribute("loginAdmin");
 			if (admin != null) {
+				System.out.println(0);
 				List<String> checkedUsers = Arrays.asList(checked.split(","));
 				System.out.println(checkedUsers.toString());
 				int result = aService.approveLevelUp(checkedUsers);
-				if (result > 0) {
-					mv.setViewName("redirect:/admin/adminPageView.do?content=level");
-				}
-				mv.setViewName("redirect:/admin/adminPageView.do?content=level");
+				System.out.println("result:" + result);
+				System.out.println(1);
+				mv.addObject("content", "level");
+				mv.setViewName("redirect:/admin/adminPageView.do");
 			} else {
 				mv.setViewName("redirect:/user/loginView.do");
 			}
@@ -158,7 +160,7 @@ public class AdminController {
 	}
 
 	// 등업 신청 거절
-	@RequestMapping(value = "/admin/levelUpDeny", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/levelUpDeny.do", method = RequestMethod.POST)
 	public ModelAndView levelUpDeny(HttpServletRequest request, @RequestParam("checked") String checked,
 			ModelAndView mv) {
 		try {
@@ -166,12 +168,9 @@ public class AdminController {
 			Admin admin = (Admin) session.getAttribute("loginAdmin");
 			if (admin != null) {
 				List<String> checkedUsers = Arrays.asList(checked.split(","));
-				System.out.println(checkedUsers.toString());
 				int result = aService.denyLevelUp(checkedUsers);
-				if (result > 0) {
-					mv.setViewName("redirect:/admin/adminPageView.do?content=level");
-				}
-				mv.setViewName("redirect:/admin/adminPageView.do?content=level");
+				mv.addObject("content", "level");
+				mv.setViewName("redirect:/admin/adminPageView.do");
 			} else {
 				mv.setViewName("redirect:/user/loginView.do");
 			}

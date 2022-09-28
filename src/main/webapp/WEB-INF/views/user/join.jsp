@@ -9,49 +9,47 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 회원가입</title>
-<link href="/resources/css/header.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" />
+<link href="/resources/css/form.css" rel="stylesheet">
 </head>
 <body>
-	<div id="wrapper">
-		<h1>
-			<a href="/home.do">IT.com</a>
+	<div id="wrapper" class="col-lg-4 offset-lg-4">
+		<h1 style="margin-top: 100px">
+			<a href="/home.do" class="text-primary"><i class="fa-solid fa-desktop"></i> IT.com</a>
 		</h1>
 		<form action="/user/join.do" method="post" onsubmit="return beforeJoin();">
 			<input type="hidden" id="chk-num" value="${chkNum }" />
-			<div class="join-input">
-				<label for="user-id">아이디</label>
-				<input type="text" id="user-id" name="userId" value="${userId }" autocomplete="off" placeholder="영문+숫자 6~20자" required />
-				<button type="button" id="id-chk-btn" onclick="checkId();">확인</button>
-				<div id="chk-msg">${chkMsg }</div>
+      <label for="user-id" class="form-label">아이디</label>
+			<div class="input-group mb-3">
+				<input type="text" id="user-id" class="form-control" name="userId" value="${userId }" autocomplete="off" placeholder="영문+숫자 6~20자" required />
+				<button type="button" id="id-chk-btn" class="btn btn-outline-secondary" onclick="checkId();">확인</button>
 			</div>
-			<div class="join-input">
-				<label for="user-pw">비밀번호</label>
-				<input type="password" id="user-pw" name="userPw" autocomplete="off" placeholder="영문+숫자 8~30자 " required />
+      <div id="chk-msg">${chkMsg }</div>
+			<div class="mb-3">
+				<label for="user-pw" class="form-label">비밀번호</label>
+				<input type="password" id="user-pw" class="form-control" name="userPw" autocomplete="off" placeholder="영문+숫자 8~30자 " required />
 			</div>
-			<div class="join-input">
-				<label for="user-pw">비밀번호 확인</label>
-				<input type="password" id="user-pw-re" name="userPwRe" autocomplete="off" required />
+			<div class="mb-3">
+				<label for="user-pw" class="form-label">비밀번호 확인</label>
+				<input type="password" id="user-pw-re" class="form-control" name="userPwRe" autocomplete="off" required />
 				<div id="pw-msg"></div>
 			</div>
-			<div class="join-input">
-				<label for="user-email">이메일</label>
-				<input type="email" id="user-email" name="userEmail" autocomplete="off" required />
+			<div class="mb-3">
+				<label for="user-email" class="form-label">이메일</label>
+				<input type="email" id="user-email" class="form-control" name="userEmail" autocomplete="off" required />
 			</div>
-			<div class="btn-area">
-				<button>가입하기</button>
+			<div class="d-grid gap-2">
+				<button class="btn btn-primary mb-3">가입하기</button>
 			</div>
 		</form>
-		<ul id="user-opt">
-			<li><a href="/user/loginView.do">로그인</a></li>
-		</ul>
+		<div id="user-opt">
+			<a href="/user/loginView.do">로그인</a>
+		</div>
 	</div>
 	<script>
-		
 		window.onkeydown = function() {
 			let kcode = event.keyCode;
 			if (kcode == 116) {
-				// history.replaceState({}, null, location.pathname);
-				// location.replace(location.href);
 				location.href = '/user/joinView.do';
 			}
 		}
@@ -125,5 +123,7 @@
       return true;
     }
 	</script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/422d96f707.js" crossorigin="anonymous"></script>
 </body>
 </html>

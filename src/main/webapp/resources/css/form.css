@@ -7,11 +7,11 @@ li {
   list-style-type: none;
 }
 
-#wrap {
-  width: 80%;
+h1 {
+  text-align: center;
+  padding-bottom: 30px;
 }
 
-#page-title {
-  color: black;
+#user-opt {
   text-align: center;
 }

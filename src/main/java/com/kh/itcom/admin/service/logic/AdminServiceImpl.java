@@ -71,6 +71,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public int approveLevelUp(List<String> checkedUsers) {
+		System.out.println("service");
 		int result = aStore.updateLevelApproval(session, checkedUsers);
 		return result;
 	}

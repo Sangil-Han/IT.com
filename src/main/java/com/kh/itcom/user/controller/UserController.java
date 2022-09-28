@@ -275,6 +275,7 @@ public class UserController {
 					phpi.setEndPage(phpi.getPageCount());
 				}
 				List<PointHistory> phList = uService.printPointHistory(loginUser.getUserId(), phpi);
+				System.out.println(phList.toString());
 				if (!phList.isEmpty()) {
 					mv.addObject("phList", phList);
 					mv.addObject("phpi", phpi);

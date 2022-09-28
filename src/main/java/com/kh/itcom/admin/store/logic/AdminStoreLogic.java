@@ -70,15 +70,13 @@ public class AdminStoreLogic implements AdminStore {
 	@Override
 	public int updateLevelApproval(SqlSession session, List<String> checkedUsers) {
 		int result = session.update("UserMapper.updateLevel", checkedUsers);
-		if (result > 0) {
-			result = session.update("LevelMapper.updateLevelApproval", checkedUsers);
-		}
+		result = session.update("LevelMapper.updateLevelApproval", checkedUsers);
 		return result;
 	}
 
 	@Override
 	public int updateLevelDenial(SqlSession session, List<String> checkedUsers) {
-		int result = session.update("LevelMapper.updateLevelApproval", checkedUsers);
+		int result = session.update("LevelMapper.updateLevelDenial", checkedUsers);
 		return result;
 	}
 

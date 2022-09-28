@@ -9,12 +9,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 공지사항 게시판</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" />
 <link href="/resources/css/header.css" rel="stylesheet">
-</head>
+<link href="/resources/css/common.css" rel="stylesheet"></head>
 <body>
-	<div id="wrap">
+	<div id="wrap" class="col-lg-10 offset-lg-1">
 		<jsp:include page="../common/header.jsp"></jsp:include>
-		<h2 id="page-title">
+		<h2 id="page-title" class="text-bg-primary my-3 p-3 bg-opacity-50">
 			<a href="/notice/boardView.do">공지사항</a>
 		</h2>
 		<form action="/notice/search.do" class="search-option">
@@ -29,7 +30,7 @@
 		<c:if test="${sessionScope.loginAdmin ne null}">
 			<button onclick="location.href='/notice/writeView.do'">글쓰기</button>
 		</c:if>
-		<table width="100%">
+		<table class="table" width="100%">
 			<tr>
 				<th width="10%">NO</th>
 				<th width="50%">제목</th>

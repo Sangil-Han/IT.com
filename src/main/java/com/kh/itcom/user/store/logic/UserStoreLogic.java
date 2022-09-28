@@ -53,6 +53,7 @@ public class UserStoreLogic implements UserStore {
 		int offset = (phpi.getCurrentPage() - 1) * phpi.getRowLimit();
 		RowBounds rowBounds = new RowBounds(offset, phpi.getRowLimit());
 		List<PointHistory> phList = session.selectList("PointMapper.selectPointHistory", userId, rowBounds);
+		System.out.println("store: " + phList.toString());
 		return phList;
 	}
 
