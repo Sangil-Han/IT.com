@@ -47,8 +47,8 @@ public class AdminStoreLogic implements AdminStore {
 
 	// 회원 삭제
 	@Override
-	public int deleteUsers(SqlSession session, List<String> idList) {
-		int result = session.delete("UserMapper.deleteUsers", idList);
+	public int deleteUsers(SqlSession session, List<String> checkedUsers) {
+		int result = session.update("UserMapper.deleteUsers", checkedUsers);
 		return result;
 	}
 
@@ -66,5 +66,20 @@ public class AdminStoreLogic implements AdminStore {
 		int count = session.selectOne("LevelMapper.selectCountAllLevelUp");
 		return count;
 	}
-	
+
+	@Override
+	public int updateLevelApproval(SqlSession session, List<String> checkedUsers) {
+		int result = session.update("UserMapper.updateLevel", checkedUsers);
+		if (result > 0) {
+			result = session.update("LevelMapper.updateLevelApproval", checkedUsers);
+		}
+		return result;
+	}
+
+	@Override
+	public int updateLevelDenial(SqlSession session, List<String> checkedUsers) {
+		int result = session.update("LevelMapper.updateLevelApproval", checkedUsers);
+		return result;
+	}
+
 }

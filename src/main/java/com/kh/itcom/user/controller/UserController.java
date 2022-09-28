@@ -93,11 +93,19 @@ public class UserController {
 	@RequestMapping(value = "/user/join.do", method = RequestMethod.POST)
 	public ModelAndView userJoin(@ModelAttribute User user, ModelAndView mv) {
 		try {
-			int result = uService.joinUser(user);
-			if (result > 0) {
-				mv.setViewName("redirect:/home.do");
+			int check = aService.checkAdminId(user.getUserId());
+			if (check > 0) {
+				System.out.println("관리자 아이디");
 			} else {
-				// 회원가입 실패
+				check = uService.checkUserId(user.getUserId());
+				if (check > 0) {
+					System.out.println("중복 아이디");
+				} else {
+					int result = uService.joinUser(user);
+					if (result > 0) {
+						mv.setViewName("redirect:/home.do");
+					}
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage()); // error check
@@ -198,14 +206,10 @@ public class UserController {
 				if (mppi.getPageCount() < mppi.getEndPage()) {
 					mppi.setEndPage(mppi.getPageCount());
 				}
-				List<MyPost> myPostList = uService.printMyPostList(loginUser.getUserId(), mppi); // TODO: mppi param으로 주기
-				if (!myPostList.isEmpty()) {
-					mv.addObject("mpList", myPostList);
-					mv.addObject("mppi", mppi);
-					mv.setViewName("user/myPage");
-				} else {
-					System.out.println("작성글 조회 실패");
-				}
+				List<MyPost> myPostList = uService.printMyPostList(loginUser.getUserId(), mppi); // TODO: mppi param으로
+				mv.addObject("mpList", myPostList);
+				mv.addObject("mppi", mppi);
+				mv.setViewName("user/myPage");
 			} else {
 				mv.setViewName("redirect:/user/loginView.do");
 			}
@@ -230,10 +234,8 @@ public class UserController {
 			User loginUser = (User) session.getAttribute("loginUser");
 			if (loginUser != null) {
 				List<LevelUp> lhList = uService.printLevelHistory(loginUser.getUserId());
-				if (!lhList.isEmpty()) {
-					mv.addObject("lhList", lhList);
-					mv.setViewName("user/levelHistory");
-				}
+				mv.addObject("lhList", lhList);
+				mv.setViewName("user/levelHistory");
 			} else {
 				mv.setViewName("redirect:/user/loginView.do");
 			}

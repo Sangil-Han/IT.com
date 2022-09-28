@@ -17,7 +17,7 @@
 		</h2>
 		<h3>등업 신청</h3>
 		<form action="/user/levelUp.do" method="post" enctype="multipart/form-data">
-			<input type="hidden" name="adminId" value="${sessionScope.loginAdmin.adminId }" />
+			<input type="hidden" name="userId" value="${sessionScope.loginUser.userId }" />
 			<div>
 				<c:if test="${sessionScope.loginUser.userLevel eq '일반회원' }">
 					<input type="radio" id="lecture-user" name="applicationLv" value="수강회원" checked /> <label for="lecture-user">수강회원</label>

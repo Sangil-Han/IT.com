@@ -7,6 +7,7 @@
 <title>IT.com : Main</title>
 </head>
 <body>
+
 	<h1>메인 페이지</h1>
 	<jsp:include page="common/header.jsp"></jsp:include>
 </body>

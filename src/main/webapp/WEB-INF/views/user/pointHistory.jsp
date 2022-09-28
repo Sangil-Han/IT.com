@@ -20,13 +20,14 @@
 		</h2>
 		<h3>포인트 내역</h3>
 		<table width="80%">
-			<tr>
-				<th width="10%">NO</th>
-				<th width="20%">변동일자</th>
-				<th width="35%">구분</th>
-				<th width="35%">포인트</th>
-			</tr>
+
 			<c:if test="${not empty phList }">
+				<tr>
+					<th width="10%">NO</th>
+					<th width="20%">변동일자</th>
+					<th width="35%">구분</th>
+					<th width="35%">포인트</th>
+				</tr>
 				<c:forEach items="${phList }" var="point" varStatus="i">
 					<tr>
 						<td>${phpi.rowCount - ((phpi.currentPage - 1 ) * phpi.rowLimit + i.index) }</td>
@@ -36,22 +37,19 @@
 					</tr>
 				</c:forEach>
 				<tr>
-					<td colspan="4">
-						<c:if test="${phpi.startPage ne 1 }">
+					<td colspan="4"><c:if test="${phpi.startPage ne 1 }">
 							<a href="/user/pointHistoryView.do?page=${phpi.startPage - 1 }">[이전]</a>
-						</c:if>
-						<c:forEach var="p" begin="${phpi.startPage }" end="${phpi.endPage }">
+						</c:if> <c:forEach var="p" begin="${phpi.startPage }"
+							end="${phpi.endPage }">
 							<c:if test="${phpi.currentPage eq p }">
 								<b>${p }</b>
 							</c:if>
 							<c:if test="${phpi.currentPage ne p }">
 								<a href="/user/pointHistoryView.do?page=${p }">${p }</a>
 							</c:if>
-						</c:forEach>
-						<c:if test="${phpi.endPage ne phpi.pageCount }">
+						</c:forEach> <c:if test="${phpi.endPage ne phpi.pageCount }">
 							<a href="/user/pointHistoryView.do?page=${phpi.endPage + 1 }">[다음]</a>
-						</c:if>
-					</td>
+						</c:if></td>
 				</tr>
 			</c:if>
 			<c:if test="${empty phList }">

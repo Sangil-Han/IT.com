@@ -20,12 +20,12 @@
 		</h2>
 		<h3>등급 변동 내역</h3>
 		<table width="80%">
-			<tr>
-				<th width="10%">NO</th>
-				<th width="40%">변동일</th>
-				<th width="50%">등급</th>
-			</tr>
 			<c:if test="${not empty lhList }">
+				<tr>
+					<th width="10%">NO</th>
+					<th width="40%">변동일</th>
+					<th width="50%">등급</th>
+				</tr>
 				<c:forEach items="${lhList }" var="level" varStatus="i">
 					<tr>
 						<td>${fn:length(lhList) - i.index }</td>

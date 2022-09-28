@@ -20,13 +20,13 @@
 			<input type="hidden" id="chk-num" value="${chkNum }" />
 			<div class="join-input">
 				<label for="user-id">아이디</label>
-				<input type="text" id="user-id" name="userId" value="${userId }" onchange="idChanged();" autocomplete="off" required />
+				<input type="text" id="user-id" name="userId" value="${userId }" autocomplete="off" placeholder="영문+숫자 6~20자" required />
 				<button type="button" id="id-chk-btn" onclick="checkId();">확인</button>
 				<div id="chk-msg">${chkMsg }</div>
 			</div>
 			<div class="join-input">
 				<label for="user-pw">비밀번호</label>
-				<input type="password" id="user-pw" name="userPw" autocomplete="off" required />
+				<input type="password" id="user-pw" name="userPw" autocomplete="off" placeholder="영문+숫자 8~30자 " required />
 			</div>
 			<div class="join-input">
 				<label for="user-pw">비밀번호 확인</label>
@@ -46,17 +46,53 @@
 		</ul>
 	</div>
 	<script>
+		
 		window.onkeydown = function() {
 			let kcode = event.keyCode;
 			if (kcode == 116) {
 				// history.replaceState({}, null, location.pathname);
 				// location.replace(location.href);
-				location.href='/user/joinView.do';
+				location.href = '/user/joinView.do';
 			}
 		}
-		
+
+		let idCondition = /^[a-zA-Z0-9]{6,20}$/;
+		let idTag = document.querySelector('#user-id');
+		idTag.addEventListener('keyup', function(e) {
+      document.querySelector('#chk-num').value = '';
+			if (idTag.value.length > 0) {
+				if (!idTag.value.match(idCondition)) {
+					idTag.style.outline = "1px solid red";
+				} else{
+					idTag.style.outline = "none";
+				}
+			}
+		});
+
+		let pwCondition = /^[a-zA-Z0-9]{8,30}$/;
+		let pwTag = document.querySelector('#user-pw');
+		pwTag.addEventListener('keyup', function(e) {
+			if (pwTag.value.length > 0) {
+				if (!pwTag.value.match(pwCondition)) {
+					pwTag.style.outline = "1px solid red";
+				} else{
+					pwTag.style.outline = "none";
+				}
+			}
+		});
+
+		let reTag = document.querySelector('#user-pw-re');
+		let pwMsg = document.querySelector('#pw-msg');
+		reTag.addEventListener('keyup', function(e) {
+			if (pwTag.value != reTag.value) {
+				pwMsg.innerHTML = '비밀번호가 일치하지 않습니다.';
+				pwMsg.style.color = 'red';
+			} else{
+				pwMsg.innerHTML = '';
+			}
+    });
+
 		function checkId() {
-			
 			let userId = document.querySelector('#user-id').value;
 			if (userId != '') {
 				let form = document.createElement('form');
@@ -75,26 +111,19 @@
 			}
 		}
 
-		function idChanged(){
-			let chkNum = document.querySelector('#chk-num');
-			chkNum.value = '';
-		}
-		
 		function beforeJoin() {
-			let chkNum = document.querySelector('#chk-num');
-			if (chkNum.value === '') {
+      if (document.querySelector('#chk-num').value === '') {
 				document.querySelector('#chk-msg').innerHTML = '아이디 확인을 진행해주세요.';
 				return false;
-			}
-			let pw = document.querySelector('#user-pw');
-			let re = document.querySelector('#user-pw-re');
-			if (pw.value != re.value) {
-				document.querySelector('#pw-msg').innerHTML = '비밀번호가 일치하지 않습니다.';
+        }
+			if (!pwTag.value.match(pwCondition)) {
 				return false;
-			} else {
-				return true;
 			}
-		}
+			if (pwTag.value != reTag.value) {
+				return false;
+			}
+      return true;
+    }
 	</script>
 </body>
 </html>

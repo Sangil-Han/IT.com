@@ -51,8 +51,8 @@ public class AdminServiceImpl implements AdminService {
 
 	// 회원 삭제
 	@Override
-	public int removeUsers(List<String> idList) {
-		int result = aStore.deleteUsers(session, idList);
+	public int removeUsers(List<String> checkedUsers) {
+		int result = aStore.deleteUsers(session, checkedUsers);
 		return result;
 	}
 
@@ -67,6 +67,18 @@ public class AdminServiceImpl implements AdminService {
 	public int printTotalLevelUpCount() {
 		int count = aStore.selectCountAllLevelUp(session);
 		return count;
+	}
+
+	@Override
+	public int approveLevelUp(List<String> checkedUsers) {
+		int result = aStore.updateLevelApproval(session, checkedUsers);
+		return result;
+	}
+
+	@Override
+	public int denyLevelUp(List<String> checkedUsers) {
+		int result = aStore.updateLevelDenial(session, checkedUsers);
+		return result;
 	}
 
 }

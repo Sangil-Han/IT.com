@@ -53,12 +53,10 @@
 						<option value="">전체</option>
 						<option value="">아이디</option>
 						<option value="">이메일</option>
-					</select>
-					<input type="text" />
+					</select> <input type="text" />
 					<button>검색</button>
 				</form>
-				<form action="/admin/userDeletion.do" method="post">
-					<input type="hidden" onsubmit="beforeUserDeletion();">
+				<form action="/admin/userDelete.do" method="post" id="user-delete-form" onsubmit="return beforeUserDeletion();">
 					<button>삭제</button>
 					<table>
 						<tr>
@@ -69,9 +67,8 @@
 							<th>포인트</th>
 							<th>가입일</th>
 							<th>탈퇴일</th>
-							<th>
-								<input type="checkbox" id="user-chk-all" name="userChkAll" onclick="checkAll(this.name);" />
-							</th>
+							<th><input type="checkbox" id="user-chk-all"
+								name="userChkAll" onclick="checkAll(this.name);" /></th>
 						</tr>
 						<c:if test="${not empty uList }">
 							<c:forEach items="${uList }" var="user" varStatus="i">
@@ -89,7 +86,7 @@
 										<c:if test="${user.withdrawal eq 'Y' }">${user.withdrawDate }</c:if>
 									</td>
 									<td>
-										<input type="checkbox" name="userChkOne" value="${user.userId }" onclick="checkOnes(this.name);">
+									<input type="checkbox" name="userChkOne" value="${user.userId }" onclick="checkOnes(this.name);">
 									</td>
 								</tr>
 							</c:forEach>
@@ -122,9 +119,9 @@
 			</div>
 			<div id="level-control" class="tab-content" style="display: none">
 				<h4>등업 관리</h4>
-				<form action="">
-					<button class="level-control">승인</button>
-					<button class="level-control">거절</button>
+				<form action="" method="post" id="level-control-form">
+					<button id="approve" class="level-control-btn">승인</button>
+					<button id="deny" class="level-control-btn">거절</button>
 					<table>
 						<tr>
 							<th>NO</th>
@@ -144,7 +141,8 @@
 									<c:if test="${level.applicationStatus eq 'Y'}">
 										<td>승인</td>
 									</c:if>
-									<c:if test="${level.applicationStatus ne 'Y' && level.applicationStatus ne 'N'}">
+									<c:if
+										test="${level.applicationStatus ne 'Y' && level.applicationStatus ne 'N'}">
 										<td>대기</td>
 									</c:if>
 									<c:if test="${level.applicationStatus eq 'N'}">
@@ -154,28 +152,26 @@
 									<td>${level.applicationLv}</td>
 									<td>${level.applicationDate}</td>
 									<td><a><img alt="" src=""></a></td>
-									<td>
-										<input type="checkbox" name="levelChkOne" onclick="checkOnes(this.name);" />
-									</td>
+									<td><input type="checkbox" name="levelChkOne"
+										onclick="checkOnes(this.name);" /></td>
 								</tr>
 							</c:forEach>
 							<tr>
-								<td colspan="7">
-									<c:if test="${lupi.startPage ne 1 }">
-										<a href="/admin/${url }.do?content=user&page=${lupi.startPage - 1 }">[이전]</a>
-									</c:if>
-									<c:forEach var="p" begin="${upi.startPage }" end="${lupi.endPage }">
+								<td colspan="7"><c:if test="${lupi.startPage ne 1 }">
+										<a
+											href="/admin/${url }.do?content=user&page=${lupi.startPage - 1 }">[이전]</a>
+									</c:if> <c:forEach var="p" begin="${upi.startPage }"
+										end="${lupi.endPage }">
 										<c:if test="${lupi.currentPage eq p }">
 											<b>${p }</b>
 										</c:if>
 										<c:if test="${lupi.currentPage ne p }">
 											<a href="/admin/${url }.do?content=user&page=${p }">${p }</a>
 										</c:if>
-									</c:forEach>
-									<c:if test="${lupi.endPage ne lupi.pageCount }">
-										<a href="/admin/${url }.do?content=user&page=${lupi.endPage + 1 }">[다음]</a>
-									</c:if>
-								</td>
+									</c:forEach> <c:if test="${lupi.endPage ne lupi.pageCount }">
+										<a
+											href="/admin/${url }.do?content=user&page=${lupi.endPage + 1 }">[다음]</a>
+									</c:if></td>
 							</tr>
 						</c:if>
 						<c:if test="${empty luList }">
@@ -192,14 +188,12 @@
 		// 탭 메뉴
 		const tabMenu = document.querySelectorAll('#tab-menu li');
 		const tabContent = document.querySelectorAll('#content-area > div');
-
 		tabMenu.forEach(function(item, i) {
 			item.addEventListener('click', function(e) {
 				e.preventDefault();
 				showContent(i);
 			});
 		});
-
 		function showContent(n) {
 			tabContent.forEach(function(item) {
 				item.style.display = 'none';
@@ -207,9 +201,8 @@
 			tabContent[n].style.display = 'block';
 		}
 
-		// 페이징
+		// 탭 페이징
 		let preContent = '${ tabContent }';
-
 		if (preContent == 'center') {
 			showContent(0);
 		} else if (preContent == 'user') {
@@ -251,12 +244,10 @@
 				} else {
 					document.querySelector('#user-chk-all').checked = false;
 				}
-				selectUsers();
 			} else if (name == 'levelChkOne') {
 				let oneChkBx = document.getElementsByName('levelChkOne');
 				let chkBxCount = oneChkBx.length;
 				let chkedCount = 0;
-
 				for (let i = 0; i < oneChkBx.length; i++) {
 					if (oneChkBx[i].checked) {
 						chkedCount++;
@@ -271,17 +262,81 @@
 		}
 
 		// 체크된 유저 리스트
-		function selectUsers() {
-			let checkedBoxes = document
-					.querySelectorAll('input[name=userChkOne]:checked');
-			let checkedUsers = [];
-			checkedBoxes.forEach(function(item) {
-				checkedUsers.push(item.value);
-			});
-			console.log(checkedUsers);
-			document.querySelector('input#checkedUsers').setAttribute('value',
-					checkedUsers);
+		function beforeUserDeletion() {
+			// let checked = [];
+      let checked = '';
+			document.querySelectorAll('input[name=userChkOne]:checked').forEach(function(item) {
+						// checked.push(item.value);
+            checked += item.value;
+            checked += ','
+					});
+			if (checked.length === 0) {
+				alert('삭제할 회원을 선택해주세요.');
+				return false;
+			} else {
+				if (confirm('정말 삭제하시겠습니까?')) {
+          let input = document.createElement('input');
+          input.setAttribute('type', 'hidden');
+          input.setAttribute('name', 'checked');
+          input.setAttribute('value', checked);
+          document.querySelector('#user-delete-form').appendChild(input);
+					//// let checkedUsers = document.querySelector('#checked-users');
+					// checked.forEach(function(item, i){
+					// 	let input = document.createElement('input');
+					// 	input.setAttribute('type', 'hidden');
+					// 	input.setAttribute('name', 'checkedUsers[]');
+					// 	input.setAttribute('value', item);
+          //   alert(item); // vc
+					// 	document.querySelector('#user-delete-form').appendChild(input);
+					// })
+					//// checkedUsers.setAttribute('value', checked);
+					//// checkedUsers.setAttribute('name', 'checkedUsers');
+					return true;
+				} else {
+					return false;
+				}
+			}
 		};
+		
+		let levelControlForm = document.querySelector('#level-control-form');
+		document.querySelector('#approve').addEventListener('click', function(){
+			e.preventDefault();
+      let checked = '';
+			document.querySelectorAll('input[name=levelChkOne]:checked').forEach(function(item) {
+        checked += item.value;
+        checked += ','
+      });
+			if (checked.length === 0) {
+				alert('승인할 등업 신청을 선택해주세요.');
+			} else {
+          let input = document.createElement('input');
+          input.setAttribute('type', 'hidden');
+          input.setAttribute('name', 'checked');
+          input.setAttribute('value', checked);
+          document.querySelector('#level-control-form').appendChild(input);
+          levelControlForm.setAttribute('action', '/admin/levelUpApprove.do');
+          levelControlForm.submit();
+        }
+		});
+		document.querySelector('#deny').addEventListener('click', function(){
+			e.preventDefault();
+      let checked = '';
+			document.querySelectorAll('input[name=levelChkOne]:checked').forEach(function(item) {
+        checked += item.value;
+        checked += ','
+      });
+			if (checked.length === 0) {
+				alert('거절할 등업 신청을 선택해주세요.');
+			} else {
+        let input = document.createElement('input');
+        input.setAttribute('type', 'hidden');
+        input.setAttribute('name', 'checked');
+        input.setAttribute('value', checked);
+        document.querySelector('#level-control-form').appendChild(input);
+        levelControlForm.setAttribute('action', '/admin/levelUpDeny.do');
+        levelControlForm.submit();
+      }
+		});
 	</script>
 </body>
 </html>

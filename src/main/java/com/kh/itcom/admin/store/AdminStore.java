@@ -25,10 +25,14 @@ public interface AdminStore {
 	int selectCountAllUser(SqlSession session);
 
 	// 회원 삭제
-	int deleteUsers(SqlSession session, List<String> idList);
+	int deleteUsers(SqlSession session, List<String> checkedUsers);
 
 	// 등업 신청 목록
 	List<LevelUp> selectLevelUpList(SqlSession session, PageInfo lupi);
 
 	int selectCountAllLevelUp(SqlSession session);
+
+	int updateLevelApproval(SqlSession session, List<String> checkedUsers);
+
+	int updateLevelDenial(SqlSession session, List<String> checkedUsers);
 }

@@ -1,5 +1,6 @@
 package com.kh.itcom.admin.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,17 +17,15 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kh.itcom.admin.domain.Admin;
 import com.kh.itcom.admin.service.AdminService;
 import com.kh.itcom.common.domain.PageInfo;
+import com.kh.itcom.user.domain.Checked;
 import com.kh.itcom.user.domain.LevelUp;
 import com.kh.itcom.user.domain.User;
-import com.kh.itcom.user.service.UserService;
 
 @Controller
 public class AdminController {
 
 	@Autowired
 	private AdminService aService;
-	@Autowired
-	private UserService uService;
 
 	/**
 	 * 관리자 페이지
@@ -100,27 +100,85 @@ public class AdminController {
 	}
 
 	/**
-	 * TODO:
-	 * 회원 삭제
+	 * TODO: 회원 삭제
+	 * 
 	 * @param request
 	 * @param idList
 	 * @param mv
 	 * @return
 	 */
-	@RequestMapping(value = "/admin/userDeletion.do", method = RequestMethod.POST)
-	public ModelAndView userSuspension(HttpServletRequest request, @RequestParam(value = "checkedUsers") List<String> idList,
+	@RequestMapping(value = "/admin/userDelete.do", method = RequestMethod.POST)
+	public ModelAndView userSuspension(HttpServletRequest request, @RequestParam("checked") String checked,
 			ModelAndView mv) {
 		try {
 			HttpSession session = request.getSession();
 			Admin admin = (Admin) session.getAttribute("loginAdmin");
 			if (admin != null) {
-				int result = aService.removeUsers(idList);
-				mv.setViewName("redirect:/admin/adminPageView.do");
+				List<String> checkedUsers = Arrays.asList(checked.split(","));
+				int result = aService.removeUsers(checkedUsers);
+				if (result > 0) {
+					mv.addObject("redirect:/admin/adminPageView.do?content=user");
+				}
+				mv.setViewName("redirect:/admin/adminPageView.do?content=user");
 			} else {
 				mv.setViewName("redirect:/user/loginView.do");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println(e.toString()); // error check
+		}
+		return mv;
+	}
 
+	// 등업 신청 승인
+	@RequestMapping(value = "/admin/levelUpApprove", method = RequestMethod.POST)
+	public ModelAndView levelUpApprove(HttpServletRequest request, @RequestParam("checked") String checked,
+			ModelAndView mv) {
+		try {
+			HttpSession session = request.getSession();
+			Admin admin = (Admin) session.getAttribute("loginAdmin");
+			if (admin != null) {
+				List<String> checkedUsers = Arrays.asList(checked.split(","));
+				System.out.println(checkedUsers.toString());
+				int result = aService.approveLevelUp(checkedUsers);
+				if (result > 0) {
+					mv.setViewName("redirect:/admin/adminPageView.do?content=level");
+				}
+				mv.setViewName("redirect:/admin/adminPageView.do?content=level");
+			} else {
+				mv.setViewName("redirect:/user/loginView.do");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println(e.toString()); // error check
+		}
+		return mv;
+	}
+
+	// 등업 신청 거절
+	@RequestMapping(value = "/admin/levelUpDeny", method = RequestMethod.POST)
+	public ModelAndView levelUpDeny(HttpServletRequest request, @RequestParam("checked") String checked,
+			ModelAndView mv) {
+		try {
+			HttpSession session = request.getSession();
+			Admin admin = (Admin) session.getAttribute("loginAdmin");
+			if (admin != null) {
+				List<String> checkedUsers = Arrays.asList(checked.split(","));
+				System.out.println(checkedUsers.toString());
+				int result = aService.denyLevelUp(checkedUsers);
+				if (result > 0) {
+					mv.setViewName("redirect:/admin/adminPageView.do?content=level");
+				}
+				mv.setViewName("redirect:/admin/adminPageView.do?content=level");
+			} else {
+				mv.setViewName("redirect:/user/loginView.do");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println(e.toString()); // error check
 		}
 		return mv;
 	}

@@ -20,6 +20,22 @@
 		#{certFileName}, #{certFileRename}, #{certFilePath},
 		DEFAULT, DEFAULT, DEFAULT)
 	</insert>
+	<update id="updateLevelApproval" parameterType="string">
+		UPDATE LEVEL_UP_TBL SET APPLICATION_STATUS = 'Y', LV_CHANGE_DATE = SYSDATE
+		WHERE USER_ID IN
+			<foreach collection="list" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND APPLICATION_STATUS = null
+	</update>
+	<update id="updateLevelDenial" parameterType="string">
+		UPDATE LEVEL_UP_TBL SET APPLICATION_STATUS = 'N', LV_CHANGE_DATE = SYSDATE
+		WHERE USER_ID IN
+			<foreach collection="list" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND APPLICATION_STATUS = null
+	</update>
 	<select id="selectLevelHistory" resultMap="levelUpResultMap">
 		SELECT APPLICATION_LV, LV_CHANGE_DATE FROM LEVEL_UP_TBL
 		WHERE USER_ID = #{userId} AND APPLICATION_STATUS = 'Y'

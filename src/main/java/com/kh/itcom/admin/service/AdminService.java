@@ -22,10 +22,14 @@ public interface AdminService {
 	int printTotalUserCount();
 
 	// 회원 삭제
-	int removeUsers(List<String> idList);
+	int removeUsers(List<String> checkedUsers);
 
 	// 등업 신청 목록
 	List<LevelUp> printLevelUpList(PageInfo lupi);
 
 	int printTotalLevelUpCount();
+
+	int approveLevelUp(List<String> checkedUsers);
+
+	int denyLevelUp(List<String> checkedUsers);
 }
