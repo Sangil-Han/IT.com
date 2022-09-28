@@ -144,46 +144,46 @@
 			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo}
 		</delete>
 		
-		<resultMap type="LectureDownCount" id="downCountResultMap">
-			<result property="userId" column="USER_ID"/>
-			<result property="lBoardNo" column="L_BOARD_NO"/>
-		</resultMap>
-		<select id="selectTotalDownCount" resultType="_int">
-			SELECT COUNT(*) FROM LECTURE_DOWNCOUNT_TBL WHERE L_BOARD_NO = #{LBoardNo}
-		</select>
-		<select id="selectDownCount" resultType="_int">
-			SELECT COUNT(*) FROM LECTURE_DOWNCOUNT_TBL
-			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo}
-		</select>
-		<insert id="insertDownCount">
-			INSERT INTO LECTURE_DOWNCOUNT_TBL
-			VALUES(#{userId},#{lBoardNo})
-		</insert>
-		<delete id="deleteDownCount">
-			DELETE FROM LECTURE_DOWNCOUNT_TBL
-			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo}
-		</delete>
+<!-- 		<resultMap type="LectureDownCount" id="downCountResultMap"> -->
+<!-- 			<result property="userId" column="USER_ID"/> -->
+<!-- 			<result property="lBoardNo" column="L_BOARD_NO"/> -->
+<!-- 		</resultMap> -->
+<!-- 		<select id="selectTotalDownCount" resultType="_int"> -->
+<!-- 			SELECT COUNT(*) FROM LECTURE_DOWNCOUNT_TBL WHERE L_BOARD_NO = #{LBoardNo} -->
+<!-- 		</select> -->
+<!-- 		<select id="selectDownCount" resultType="_int"> -->
+<!-- 			SELECT COUNT(*) FROM LECTURE_DOWNCOUNT_TBL -->
+<!-- 			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo} -->
+<!-- 		</select> -->
+<!-- 		<insert id="insertDownCount"> -->
+<!-- 			INSERT INTO LECTURE_DOWNCOUNT_TBL -->
+<!-- 			VALUES(#{userId},#{lBoardNo}) -->
+<!-- 		</insert> -->
+<!-- 		<delete id="deleteDownCount"> -->
+<!-- 			DELETE FROM LECTURE_DOWNCOUNT_TBL -->
+<!-- 			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo} -->
+<!-- 		</delete> -->
 		
-		<resultMap type="LectureViewCount" id="viewCountResultMap">
-			<result property="userId" column="USER_ID"/>
-			<result property="lBoardNo" column="L_BOARD_NO"/>
-		</resultMap>
-		<select id="selectViewCountCheck" resultType="_int">
-			SELECT COUNT(*) FROM LECTURE_VIEW_COUNT_TBL 
-			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo}
-		</select>
-		<select id="selectTotalViewCount" resultType="_int">
-			SELECT COUNT(*) FROM LECTURE_VIEW_COUNT_TBL WHERE L_BOARD_NO = #{lBoardNo}
-		</select>
+<!-- 		<resultMap type="LectureViewCount" id="viewCountResultMap"> -->
+<!-- 			<result property="userId" column="USER_ID"/> -->
+<!-- 			<result property="lBoardNo" column="L_BOARD_NO"/> -->
+<!-- 		</resultMap> -->
+<!-- 		<select id="selectViewCountCheck" resultType="_int"> -->
+<!-- 			SELECT COUNT(*) FROM LECTURE_VIEW_COUNT_TBL  -->
+<!-- 			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo} -->
+<!-- 		</select> -->
+<!-- 		<select id="selectTotalViewCount" resultType="_int"> -->
+<!-- 			SELECT COUNT(*) FROM LECTURE_VIEW_COUNT_TBL WHERE L_BOARD_NO = #{lBoardNo} -->
+<!-- 		</select> -->
 		
-		<insert id="insertViewCount">
-			INSERT INTO LECTURE_VIEW_COUNT_TBL 
-			VALUES(#{userId}, #{lBoardNo})
-		</insert>
-		<update id="updatePoint">
-			UPDATE USER_TBL SET USER_POINT = USER_POINT - 200 WHERE USER_ID = #{userId}
-		</update>
-		<update id="updateViewable">
-			UPDATE USER_TBL SET VIEWABLE = 'Y' WHERE USER_ID = #{userId}
-		</update>
+<!-- 		<insert id="insertViewCount"> -->
+<!-- 			INSERT INTO LECTURE_VIEW_COUNT_TBL  -->
+<!-- 			VALUES(#{userId}, #{lBoardNo}) -->
+<!-- 		</insert> -->
+<!-- 		<update id="updatePoint"> -->
+<!-- 			UPDATE USER_TBL SET USER_POINT = USER_POINT - 200 WHERE USER_ID = #{userId} -->
+<!-- 		</update> -->
+<!-- 		<update id="updateViewable"> -->
+<!-- 			UPDATE USER_TBL SET VIEWABLE = 'Y' WHERE USER_ID = #{userId} -->
+<!-- 		</update> -->
 </mapper>

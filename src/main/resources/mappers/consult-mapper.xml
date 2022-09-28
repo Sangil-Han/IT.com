@@ -17,7 +17,7 @@
 		<result property="cBoardFilePath" 	column="C_BOARD_FILE_PATH"/>
 		<result property="cBoardCreateDate" column="C_BOARD_CREATE_DATE"/>
 		<result property="cBoardCount" 		column="C_BOARD_COUNT"/>
-		<result property="cBoardUpCount" 	column="C_BOARD_UP_COUNT"/>
+		<result property="cBoardUpCount" 	column="C_BOARD_UPCOUNT"/>
 	</resultMap>
 	<select id="selectAllBoard" resultMap="boardResultMap">
 		SELECT * FROM CONSULT_BOARD_TBL ORDER BY C_BOARD_NO DESC
@@ -102,8 +102,6 @@
 		<result property="userId" column="USER_ID"/>
 		<result property="commentContents" column="COMMENT_CONTENTS"/>
 		<result property="commentRegtime" column="COMMENT_REGTIME"/>
-		<result property="commentUp" column="COMMENT_UP"/>
-		<result property="commentDown" column="COMMENT_DOWN"/>
 	</resultMap>
 	<select id="selectAllComment" resultMap="commentResultMap">
 		SELECT *
@@ -112,7 +110,7 @@
 	
 	<insert id="insertComment">
 		INSERT INTO CONSULT_COMMENT_TBL
-		VALUES(SEQ_CONSULT_COMMENT_NO.NEXTVAL, #{cBoardNo},#{userId},#{commentContents},TO_CHAR(SYSDATE, 'YYYY.MM.DD HH24:MI'),NULL,NULL)
+		VALUES(SEQ_CONSULT_COMMENT_NO.NEXTVAL, #{cBoardNo},#{userId},#{commentContents},TO_CHAR(SYSDATE, 'YYYY.MM.DD HH24:MI'))
 	</insert>
 	<delete id="deleteComment">
 		DELETE FROM CONSULT_COMMENT_TBL WHERE COMMENT_NO = #{commentNo}

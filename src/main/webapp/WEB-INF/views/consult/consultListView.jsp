@@ -10,34 +10,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 상담후기 게시판</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<script src="https://kit.fontawesome.com/422d96f707.js" crossorigin="anonymous"></script>
+	<style>
+	</style>
 </head>
 <body>
 	<div id="wrap">
 		<jsp:include page="../common/header.jsp"></jsp:include>
-		<h1 align="center">상담후기 게시판</h1>
-		<img src="/img/consult.png" class="img-fluid" alt="...">
-		<table  class="table table-sm" align="center" border="2">
+		<div id="banner"><img id="img" src="/resources/img/consult9.png" class="img-fluid" alt="상담후기 게시판"></div>
+		<br><br>
+		<table class="table table-bordered w-75" align="center" border="2">
 			<tr>
-				<th>제목</th>
-				<th>등록일</th>
-				<th>조회수</th>
-				<th>추천수</th>
+				<th colspan="3" class="table-primary" style="text-align:center">제목</th>
+				<th class="table-primary" style="text-align:center">등록일</th>
+				<th class="table-primary" style="text-align:center">조회수</th>
+				<th class="table-primary" style="text-align:center">추천수</th>
 			</tr>
 			<c:if test="${!empty cList }">
 				<c:forEach items="${cList }" var="cBoard" varStatus="i">
 					<tr>
-						<td>
+						<td colspan="3">
 							<a href="#" onclick="detailView('${userId}','${sessionScope.loginAdmin.adminId}', ${cBoard.cBoardNo },${currentPage },'${level }','${point }','${viewable }');">${cBoard.cBoardTitle }</a>
 						</td>
-						<td>${cBoard.cBoardCreateDate }</td>
-						<td>${cBoard.cBoardCount }</td>
-						<td>${cBoard.cBoardUpCount }</td>
+						<td style="text-align:center">${cBoard.cBoardCreateDate }</td>
+						<td style="text-align:center">${cBoard.cBoardCount }</td>
+						<td style="text-align:center">${cBoard.cBoardUpCount }</td>
 					</tr>
 				</c:forEach>
 				<tr align="center" height="20">
-					<td align="center">
+					<td align="center" colspan="6">
 						<nav aria-label="Page navigation example">
-							<ul class="pagination">
+							<ul class="pagination" align="center">
 								<li class="page-item">
 									<c:if test="${currentPage > 5}">
 						 				<a class="page-link" href="/consult/${urlVal }.do?page=${startNavi - 1 }&searchCondition=${searchCondition}&searchValue=${searchValue}"" aria-label="Previous">
@@ -68,7 +71,7 @@
 			<tr>
 				<td colspan="5" align="center">
 					<form action="/consult/consultSearch.do" method="get">
-						<select class="form-select" aria-label="Default select example" name="searchCondition">
+						<select style="float:left" class="form-select w-25" aria-label="Default select example" name="searchCondition">
 							<option value="all"
 								<c:if test="${searchCondition == 'all' }">selected</c:if>>전체
 							</option>
@@ -85,12 +88,12 @@
 								<c:if test="${searchCondition == 'local' }">selected</c:if>>지역명
 							</option>
 						</select>
-						<input type="text" name="searchValue" value="${searchValue }">
-						<input type="submit" value="검색" class="btn btn-outline-primary">
+						<input style="float:left" class="form-control w-50" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" type="text" name="searchValue" value="${searchValue }">
+						<input style="float:left" type="submit" value="검색" class="btn btn-outline-primary">
 					</form>
 				</td>
 				<c:if test="${empty sessionScope.loginAdmin }">
-					<td>
+					<td align="center">
 						<button type="button" class="btn btn-primary" href="#" onclick="writeForm('${userId}');">글쓰기</button>
 					</td>
 				</c:if>

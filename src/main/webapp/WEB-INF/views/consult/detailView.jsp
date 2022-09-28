@@ -10,78 +10,87 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 상담후기 상세 조회</title>
 <script src="/resources/js/jquery-3.6.1.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<script src="https://kit.fontawesome.com/422d96f707.js" crossorigin="anonymous"></script>
+	<style>
+		.upDown{
+			display: flex;
+  			justify-content: center;
+		}
+
+	</style>
 </head>
 <body>
 	<div id="wrap">
 		<jsp:include page="../common/header.jsp"></jsp:include>
-		<h1 align="center">상담후기 게시판</h1>
-		<table align="center" border="2">
+		<div><img src="/resources/img/consult9.png" alt="상담후기 게시판"></div>
+		<br><br>
+		<table align="center" border="2" class="table table-bordered w-75">
 			<tr>
-				<td>제목</td>
+				<th class="table-primary">제목</th>
 				<td>${cBoard.cBoardTitle }</td>
 			</tr>
 			<tr>
-				<td>지역구</td>
+				<th class="table-primary">지역구</td>
 				<td>${cBoard.cBoardLocalName }</td>
-				<td>작성일자</td>
+				<th class="table-primary">작성일자</td>
 				<td>${cBoard.cBoardCreateDate }</td>
-				<td>조회수</td>
+				<th class="table-primary">조회수</th>
 				<td>${totalViewCount }</td>
 			</tr>
 			<tr>
-				<td>교육원명</td>
+				<th class="table-primary">교육원명</td>
 				<td>${cBoard.cBoardCenterName }</td>
 			</tr>
 			<tr>
-				<td>과정명</td>
+				<th class="table-primary">과정명</td>
 				<td>${cBoard.cBoardCourseName }</td>
 			</tr>
 			<tr>
-				<td>상담날짜</td>
+				<th class="table-primary">상담날짜</td>
 				<td>${cBoard.consultDate }</td>
 			</tr>
 			<tr height="200" width="200">
-				<td colspan="2">${cBoard.cBoardContents }</td>
+				<td colspan="6">${cBoard.cBoardContents }</td>
 			</tr>
 			<tr height="100">
-				<td>첨부파일</td>
-				<td>
+				<th class="table-primary">첨부파일</td>
+				<td colspan="5">
 					<img alt="본문이미지" src="/resources/files/consult/${cBoard.cBoardFileRename }" width="300" height="300">
 				</td>
 			</tr>
-			<c:if test="${not empty sessionScope.loginUser }">
-			<tr>
-				<td>
-					<form action="/consult/boardUpCount.do" method="POST">
-						<input type="hidden" name="page" value="${page }">
-						<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
-						<input type="submit" value="추천">${totalUp}
-					</form>
-				</td>
-				<td>
-					<form action="/consult/boardDownCount.do" method="POST">
-						<input type="hidden" name="page" value="${page }">
-						<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
-						<input type="submit" value="비추천">${totalDown}
-					</form>
-				</td>
-			</tr>
-			</c:if>
 		</table>
-		<table align="center" width="500" border="1">
+		<c:if test="${not empty sessionScope.loginUser }">
+		<div class="col-md-4 offset-md-4 py-5 text-center">
+        	<form action="/consult/boardUpCount.do" method="post" style="display: inline">
+        		<input type="hidden" name="userId" value="${sessionScope.loginUser.userId }"/>
+                <input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }"/>
+                <input type="hidden" name="page" value="${page }"/>
+            	<button type="submit" class="btn btn-primary mx-3"><i class="fa-solid fa-thumbs-up fa-lg"></i> 추천 <b>${totalUp }</b></button>
+          	</form>
+          	<form action="/consult/boardDownCount.do" method="post" style="display: inline">
+            	<input type="hidden" name="userId" value="${sessionScope.loginUser.userId }"/>
+                <input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }"/>
+                <input type="hidden" name="page" value="${page }"/>
+            	<button type="submit" class="btn btn-danger"><i class="fa-solid fa-thumbs-down fa-lg"></i> 비추천 <b>${totalDown } </b></button>
+          	</form>
+        </div>
+			<br><br>
+		</c:if>
+		<table align="center" width="500" border="1" class="table table-bordered w-75">
 			<c:forEach items="${cList }" var="comment">
 				<tr id="tr">
 					<td>${comment.commentContents }</td>
 					<td>${comment.commentRegtime }</td>
 					<c:if test="${loginUserId eq comment.userId }">
 						<td>
-							<button onclick="commentModifyView(this,'${comment.commentContents }',${comment.commentNo },${cBoardNo },${page });">수정</button>
-							<button onclick="removeComment(${comment.commentNo},${cBoard.cBoardNo }, ${page });">삭제</button>
+							<button class="btn btn-secondary" onclick="commentModifyView(this,'${comment.commentContents }',${comment.commentNo },${cBoardNo },${page });">수정</button>
+							<button class="btn btn-danger" onclick="removeComment(${comment.commentNo},${cBoard.cBoardNo }, ${page });">삭제</button>
 						</td>
 					</c:if>
 					<c:if test="${not empty sessionScope.loginAdmin }">
 						<td>
-							<button onclick="removeComment(${comment.commentNo},${cBoard.cBoardNo }, ${page });">삭제</button>
+							<button class="btn btn-danger" onclick="removeComment(${comment.commentNo},${cBoard.cBoardNo }, ${page });">삭제</button>
 						</td>
 					</c:if>
 				</tr>
@@ -91,24 +100,25 @@
 		<form action="/consult/consultAddComment.do" method="post">
 			<input type="hidden" name="page" value="${page }">
 			<input type="hidden" name="cBoardNo" value="${cBoard.cBoardNo }">
-			<table align="center" width="500" border="1">
+			<table align="center">
 				<tr>
-					<td><textarea rows="3" cols="55" name="commentContents"></textarea></td>
-					<td><input type="submit" value="등록하기"></td>
+					<td width="1050"><input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg"name="commentContents"></td>
+					<td><input class="input-group-text" id="inputGroup-sizing-lg" type="submit" value="등록하기"></td>
 				</tr>
 			</table>
 		</form>
+		<br><br>
 		</c:if>
 		<table align="center">
 			<tr>
 				<td>
 					<c:if test="${loginUserId eq cBoard.userId }">
-						<button onclick="location.href='/consult/consultModifyView.do?cBoardNo=${cBoard.cBoardNo }&page=${page}'">수정</button>
+						<button class="btn btn-primary" onclick="location.href='/consult/consultModifyView.do?cBoardNo=${cBoard.cBoardNo }&page=${page}'">수정</button>
 					</c:if>
 					<c:if test="${not empty sessionScope.loginAdmin }">
-						<button onclick="removeBoard(${page});">삭제</button>
+						<button class="btn btn-danger" onclick="removeBoard(${page});">삭제</button>
 					</c:if>
-					<button onclick="location.href='/consult/consultList.do?page=${page}'">목록</button>
+					<button class="btn btn-secondary" onclick="location.href='/consult/consultList.do?page=${page}'">목록</button>
 				</td>
 			</tr>
 		</table>
@@ -123,8 +133,8 @@
 		function commentModifyView(obj, commentContents, commentNo,cBoardNo,page) {
 			event.preventDefault();
 			var $tr = $("<tr>");
-			$tr.append("<td colspan='3'><input type='text' size='50' value='"+commentContents+"'");
-			$tr.append("<td><button onclick='modifyComment(this, "+commentNo+","+cBoardNo+","+page+");'>수정</button></td>");
+			$tr.append("<td colspan='3'><input type='text' class='form-control' aria-label='Sizing example input' aria-describedby='inputGroup-sizing-default' type='text' size='50' value='"+commentContents+"'");
+			$tr.append("<td><button class='input-group-text' id='inputGroup-sizing-default' onclick='modifyComment(this, "+commentNo+","+cBoardNo+","+page+");'>수정</button></td>");
 			$(obj).parent().parent().after($tr);
 		}
 		function modifyComment(obj, commentNo ,cBoardNo, page) {
