@@ -9,8 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 수료후기 게시판</title>
-<link href="/resources/css/menubar-style.css" rel="stylesheet">
-<link href="/resources/css/header-style.css" rel="stylesheet">
+<link href="/resources/css/header.css" rel="sytlesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" />
+
 </head>
 <body>
 	<div id="wrap">
@@ -54,9 +55,8 @@
 				<c:forEach items="${fList }" var="fBoard" varStatus="i">
 					<tr>
 						<td>
-							<%-- <a href="/finish/detailView.do?fBoardNo=${fBoard.fBoardNo}&page=${currentPage}" onclick="return showDetailView('${loginUser.userLevel}', ${loginUser.userPoint });">${fBoard.fBoardTitle }</a> --%>
 							<a href="#"
-							<c:if test="${sessionScope.loginUser ne null }"> onclick="showDetailView('${loginUser.userLevel}', '${loginUser.viewable}', ${loginUser.userPoint }, ${fBoard.fBoardNo}, ${currentPage });"</c:if>
+							<c:if test="${sessionScope.loginUser ne null }"> onclick="showDetailView('${loginUser.userId}', '${loginUser.userLevel}', '${loginUser.viewable}', ${loginUser.userPoint }, ${fBoard.fBoardNo}, ${currentPage });"</c:if>
 							<c:if test="${sessionScope.loginUser eq null }"> onclick="notLogin()";</c:if>>
 								${fBoard.fBoardTitle }</a>
 						</td>
@@ -93,7 +93,7 @@
 	</div>
 	<script>
 		// 회원의 등급, 포인트를 확인하는 메소드
-		function showDetailView(userLevel, viewable, userPoint, fBoardNo,
+		function showDetailView(userId, userLevel, viewable, userPoint, fBoardNo,
 				currentPage) {
 			event.preventDefault();
 			const levelName = '수료회원';
@@ -101,7 +101,7 @@
 				// 수료회원이고 작성이력이 있으면
 				if (userLevel == levelName&& viewable==requiredViewable) {
 					location.href = "/finish/detailView.do?fBoardNo="
-							+ fBoardNo + "&page=" + currentPage + "&point=0";
+							+ fBoardNo + "&page=" + currentPage;
 				}
 
 				// 수료회원이 아니거나 작성이력이 없으면 포인트 사용
@@ -110,7 +110,16 @@
 						if (userPoint >= 300) {
 							location.href = "/finish/detailView.do?fBoardNo="
 									+ fBoardNo + "&page=" + currentPage
-									+ "&point=-300";
+
+                  var httpRequest;
+                  var reqJson=new Object();
+                  reqJson.point='-300';
+                  reqJson.userId=userId;
+                  httpRequest=new XMLHttpRequest();
+                  httpRequest.open('POST', '/finish/usePoint.do', true);
+                  httpRequest.responseType="json";
+                  httpRequest.setRequestHeader('Content-Type', 'application/json');
+                  httpRequest.send(JSON.stringify(reqJson));
 						} else {
 							alert("포인트가 부족합니다");
 						}
@@ -118,10 +127,24 @@
 				}
 			}
 
+    // var httpSession1;
+    // var httpSession2;
+    // var httpSession3;
+
+    // var fBoardList=Array.from(document.querySelectorAll('[id^=check-user-first]'));
+
+    // for(let i=0; fBoardList.length; i++){
+    //   fBoardList[i].addEventListener('click', (${loginUser.userId})=>{
+    //   })
+    // }
+
 		function notLogin() {
 			alert("로그인이 필요합니다");
 			location.href = "/user/loginView.do";
 		}
+    
 	</script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

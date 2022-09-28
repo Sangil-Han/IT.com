@@ -9,13 +9,68 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 수료후기 상세 조회</title>
-<link href="/resources/css/menubar-style.css" rel="stylesheet">
-<link href="/resources/css/header-style.css" rel="stylesheet">
+<link href="/resources/css/header.css" rel="sytlesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" />
+<style>
+  th{
+    text-align: center;
+  }
+</style>
 </head>
 <body>
 	<div id="wrap">
 		<jsp:include page="../common/header.jsp"></jsp:include>
-		<h1 align="center">수료후기 게시판</h1>
+		<h1 class="h1" align="center">수료후기 게시판</h1>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+          <table class="table table-boldered border" >
+            <tbody>
+              <tr>
+                <th scope="row" class="table-primary">제목</th>
+                <td>${fBoard.fBoardTitle }</td>
+              </tr>
+              <tr>
+                <th scope="row" class="table-primary">지역구</th>
+                <td>${fBoard.fBoardLocalName }</td>
+              </tr>
+              <tr>
+                <th scope="row" class="table-primary">교육원명</th>
+                <td colspan="2">${fBoard.fBoardCenterName }</td>
+              </tr>
+              <tr>
+                <th scope="row" class="table-primary">과정명</th>
+                <td>${fBoard.fBoardCourseName }</td>
+              </tr>
+              <tr>
+                <th scope="row" class="table-primary">수료연도</th>
+                <td>${fBoard.fBoardFinishYear }</td>
+              </tr>
+              <tr>
+                <th scope="row" class="table-primary">취업여부</th>
+                <td>${fBoard.fBoardJobYn }</td>
+              </tr>
+              <c:if test="${fBoard.fBoardJobYn  eq 'Y'}">
+                <tr>
+                  <th scope="row" class="table-primary">직무</th>
+                  <td>${fBoard.fBoardJobName }</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="table-primary">초봉</th>
+                  <td>${fBoard.fBoardSalary }</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="table-primary">기업명</th>
+                  <td>${fBoard.fBoardCompany }</td>
+                </tr>
+              </c:if>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    
 		<br> <br>
 		<table align="center" width="500" border="1">
 			<tr>
@@ -64,9 +119,11 @@
 			<tr>
 				<td colspan="2" align="center">
 					<c:if test="${fBoard.fBoardUserId eq sessionScope.loginUser.userId}">
-						<%-- <a href="/finish/modifyView.do?fBoardNo=${fBoard.fBoardNo }&page=${page}">수정</a> --%>
-						<button  onclick="location.href='/finish/modifyView.do?fBoardNo=${fBoard.fBoardNo }&page=${page}' ">수정</button>
-						<%-- <a href="#" onclick="boardRemove(${page});">삭제하기</a> --%>
+						<form action="finish/modifyView.do" method=post>
+							<input type="hidden" name="fBoardNo" value="${fBoard.fBoardNo }">
+            				<input type="hidden" name="page" value="${page}">
+							<button>수정</button>
+						</form>
 					</c:if>
 				</td>
 			</tr>
@@ -110,40 +167,33 @@
 
 		<!-- 댓글 목록 -->
 		<table align="center" width="500" border="1">
-			<c:forEach items="${cList }" var="comment">
+			<c:forEach items="${cList }" var="comment" varStatus="i">
 				<tr>
           
-					<td id="modify-inactive">${comment.fCommentContents }</td>
-					<td id="modify-active" style="display:none">
-						<input id="fCommentNo" type="hidden" value="${comment.fCommentNo}">
-						<textarea id="modify-text" name="modifyCommentContents" >${comment.fCommentContents }</textarea>
+					<td id="modify-inactive${i.count}">${comment.fCommentContents }</td>
+					<td id="modify-active${i.count}" style="display:none">
+						<input id="fCommentNo${i.count}" type="hidden" value="${comment.fCommentNo}">
+						<textarea id="modify-text${i.count}" name="modifyCommentContents" >${comment.fCommentContents }</textarea>
 					</td>
 					<td>${comment.fCommentRegtime }</td>
 					<td>
 						<c:if test="${comment.userId eq sessionScope.loginUser.userId }">
-						<%-- <a href="#" onclick="modifyView(this, '${reply.replyContents }',${reply.replyNo });">수정</a>
-						<a href="#" onclick="removeReply(${reply.replyNo});">삭제</a> --%>
             <!-- 댓글 수정 -->
-						<button id="modify-comment-btn">수정</button>
+						<button id="modify-comment-btn${i.count}">수정</button>
             <!-- 댓글 삭제 -->
-						<button onclick="checkCommentRemove(${comment.fCommentNo}, ${comment.fBoardNo }, ${page });">삭제</button>
-            
+            			<form action="/finish/removeComment.do" method=post onsubmit="return checkRemove();">
+            				<input type="hidden" name="fCommentNo" value="${comment.fCommentNo }">
+            				<input type="hidden" name="fBoardNo" value="${comment.fBoardNo }">
+            				<input type="hidden" name="page" value="${page }">
+							<button>삭제</button>
+            			</form>
 						</c:if>
 					</td>
 				</tr>
-				<%-- <tr>
-			<td colspan="3"><input type="text" size="50" value="${reply.replyContents }"></td>
-			<td><button>수정</button></td>
-		</tr> --%>
 			</c:forEach>
 		</table>
 	</div>
 	<script>
-		function checkCommentRemove(commentNo, fBoardNo, page){
-			if(confirm("댓글을 삭제하시겠습니까?")){
-				location.href="/finish/removeComment.do?fCommentNo="+commentNo+"&fBoardNo="+fBoardNo+"&page="+page;
-			}
-		}
 		
 		function checkCanUpDown(isRecomm){
 			const yes='Y'
@@ -155,22 +205,33 @@
 				return true;
 			}
 		}
-
-  //   function checkModifyActive(){
-  //     var modifyCommentArea=document.getElementById("modify-active");
-  //     if(modifyCommentArea.style.display=="none"){
-  //       modifyCommentArea.style.display="block";
-        
-  //   }
-  // }
 		
+		function checkRemove(){
+			if (confirm("댓글을 삭제하시겠습니까?")){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+
   var httpRequest;
-        if (document.getElementById('modify-comment-btn')==null) {
-        }
-        document.getElementById('modify-comment-btn').addEventListener('click', ()=> {
-          if (document.getElementById('modify-active').style.display == 'block') {
-            var commentText = document.getElementById('modify-text').value;
-            var fCommentNo = document.getElementById('fCommentNo').value;
+       let modifyCommentList=Array.from(document.querySelectorAll('[id^=modify-comment-btn]'));
+       let modifyInactiveList=Array.from(document.querySelectorAll('[id^=modify-inactive]'));
+       let modifyActiveList=Array.from(document.querySelectorAll('[id^=modify-active]'));
+       let fCommentNoList=Array.from(document.querySelectorAll('[id^=fCommentNo]'));
+       let modifyTextList=Array.from(document.querySelectorAll('[id^=modify-text]'));
+
+       if (modifyCommentList==null){
+        console.log("list is null");
+       }
+        for(let i=0; i<modifyCommentList.length; i++){
+          modifyCommentList[i].addEventListener('click', ()=> {
+          if (modifyActiveList[i].style.display == 'block') {
+            var commentText = modifyTextList[i].value;
+            var fCommentNo = fCommentNoList[i].value;
+            console.log(commentText);
+            console.log(fCommentNo);
             var reqJson = new Object();
             reqJson.commentText = commentText;
             reqJson.fCommentNo = fCommentNo;
@@ -181,9 +242,9 @@
                 if (httpRequest.status === 200) {
                   var result = httpRequest.response;
                   
-                  document.getElementById('modify-active').style.display = 'none';
-                  document.getElementById('modify-inactive').innerText = result.modifiedComment;
-                  document.getElementById('modify-inactive').style.display='block'
+                  modifyActiveList[i].style.display = 'none';
+                  modifyInactiveList[i].innerText = result.modifiedComment;
+                  modifyInactiveList[i].style.display='block'
                 } else {
                   alert(httpRequest.status);
                 }
@@ -195,11 +256,13 @@
             httpRequest.send(JSON.stringify(reqJson));
           } 
           else {
-            document.getElementById('modify-inactive').style.display = 'none';
-            document.getElementById('modify-active').style.display = 'block';
+            modifyInactiveList[i].style.display = 'none';
+            modifyActiveList[i].style.display = 'block';
           }
         });
+        }
 		
 	</script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
