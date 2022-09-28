@@ -30,6 +30,9 @@
 						<td>${lectureBoard.lBoardCreateDate }</td>
 						<td>${lectureBoard.lBoardCount }</td>
 						<td>${lectureBoard.lBoardUpCount }</td>
+						<c:if test="${not empty sessionScope.loginAdmin }">
+							<td>삭제</td>
+						</c:if>
 					</tr>
 				</c:forEach>
 				<tr align="center" height="20">
@@ -81,20 +84,41 @@
 					</form>
 				</td>
 				<td>
-					<button onclick="location.href='/lecture/writeView.do';">글쓰기</button>
+					<button href="#" onclick="writeForm('${userId}');">글쓰기</button>
 				</td>
 			</tr>
 		</table>
 	</div>
 	<script>
-		function lectureDetailView(userId, lBoardNo, currentPage) {
-			if(userId == "") {
+		function lectureDetailView(userId, adminId, lBoardNo, currentPage, userLevel, userPoint, viewable) {
+			event.preventDefault();
+			var level = '일반회원';
+			var viewableNo = 'N';
+			if(userId == "" && adminId == "") {
 				if(confirm("로그인이 필요한 서비스입니다. 로그인하시겠습니까?")){
 					location.href='/user/loginView.do';
 				}
-			}else{
-				location.href='/lecture/detail.do?lBoardNo='+lBoardNo+'&page='+currentPage;
-			}
+ 			}
+			if(userLevel == level && viewable == viewableNo) {
+ 				if(confirm("200포인트를 사용하여 열람하시겠습니까?")) {
+ 					if(userPoint >= 200){
+	 					location.href='/lecture/detail.do?lBoardNo='+lBoardNo+'&page='+currentPage;
+ 					}else if(userPoint < 200){
+ 						alert("포인트가 부족합니다");
+ 					}
+ 				}
+ 			}else{
+ 				location.href='/lecture/detail.do?lBoardNo='+lBoardNo+'&page='+currentPage;
+ 			}
+		}
+		function writeForm(userId) {
+			if(userId == ""){
+				if(confirm("로그인이 필요한 서비스입니다 로그인하시겠습니까?")){
+					location.href='/user/loginView.do';
+				}
+			}else {
+				location.href='/lecture/writeView.do';
+		}
 		}
 	</script>
 </body>

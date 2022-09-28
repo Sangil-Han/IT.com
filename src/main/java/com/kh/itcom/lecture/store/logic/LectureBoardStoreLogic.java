@@ -2,6 +2,7 @@ package com.kh.itcom.lecture.store.logic;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.itcom.consult.domain.ConsultBoardComment;
 import com.kh.itcom.lecture.domain.LectureBoard;
 import com.kh.itcom.lecture.domain.LectureBoardComment;
+import com.kh.itcom.lecture.domain.LectureUpCount;
 import com.kh.itcom.lecture.store.LectureBoardStore;
 
 @Repository
@@ -78,11 +80,10 @@ public class LectureBoardStoreLogic implements LectureBoardStore {
 	}
 
 	@Override
-	public int updateComment(SqlSession session, LectureBoardComment lbComment) {
-		int result = session.update("LectureMapper.updateComment",lbComment);
-		return result;
+	public void updateComment(SqlSession session, Map<String, Object> inputMap) {
+		session.update("LectureMapper.updateComment", inputMap);
 	}
-
+	
 	@Override
 	public int deleteComment(SqlSession session, Integer lCommentNo) {
 		int result= session.delete("LectureMapper.deleteComment",lCommentNo);
@@ -94,4 +95,29 @@ public class LectureBoardStoreLogic implements LectureBoardStore {
 		List<LectureBoardComment> lcList = session.selectList("LectureMapper.selectAllComment", lBoardNo);
 		return lcList;
 	}
+
+	@Override
+	public int selectUpCount(SqlSession session, LectureUpCount lUpCount) {
+		int result = session.selectOne("LectureMapper.selectUpCount",lUpCount);
+		return result;
+	}
+
+	@Override
+	public int insertUpCount(SqlSession session, LectureUpCount lUpCount) {
+		int result = session.insert("LectureMapper.insertUpCount", lUpCount);
+		return result;
+	}
+
+	@Override
+	public int updateBoardUp(SqlSession session, int lectureBoardNo) {
+		int result = session.update("LectureMapper.updateBoardUp", lectureBoardNo);
+		return result;
+	}
+
+	@Override
+	public int deleteUpCount(SqlSession session, LectureUpCount lUpCount) {
+		int result = session.delete("LectureMapper.deleteUpCount", lUpCount);
+		return result;
+	}
+
 }
