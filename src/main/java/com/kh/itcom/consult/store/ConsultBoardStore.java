@@ -18,6 +18,8 @@ public interface ConsultBoardStore {
 
 	public int updateBoard(SqlSessionTemplate session, ConsultBoard cBoard);
 
+	public int deleteBoard(SqlSessionTemplate session, int cBoardNo);
+
 	public List<ConsultBoard> selectAllBoard(SqlSession session, int currentPage, int boardLimit);
 	
 	public int selectTotalCount(SqlSession session, String searchCondition, String searchValue);
@@ -30,10 +32,11 @@ public interface ConsultBoardStore {
 	///////////////////////////// 댓글 기능 ////////////////////////////////////////
 	public int insertComment(SqlSession session, ConsultBoardComment comment);
 
-	public List<ConsultBoardComment> selectAllComment(SqlSessionTemplate session, Integer cBoardNo);
-
 	public int deleteComment(SqlSessionTemplate session, Integer commentNo);
 
+	public int updateComment(SqlSessionTemplate session, ConsultBoardComment comment);
+
+	public List<ConsultBoardComment> selectAllComment(SqlSessionTemplate session, Integer cBoardNo);
 
 	public int insertUpCount(SqlSessionTemplate session, ConsultUpCount upCount);
 
@@ -51,8 +54,6 @@ public interface ConsultBoardStore {
 
 	public int selectTotalDownCount(SqlSessionTemplate session, Integer cBoardNo);
 
-	public int updateComment(SqlSessionTemplate session, ConsultBoardComment comment);
-
 	public int insertViewCount(SqlSessionTemplate session, ConsultViewCount viewCount);
 
 	public int selectViewCountCheck(SqlSessionTemplate session, ConsultViewCount viewCount);
@@ -63,12 +64,12 @@ public interface ConsultBoardStore {
 
 	public int updateBoardUp(SqlSessionTemplate session, int consultBoardNo);
 
-	public int deleteBoard(SqlSessionTemplate session, int cBoardNo);
-
-	public int updatePoint(SqlSessionTemplate session, User loginUser);
+	public void updatePoint(SqlSessionTemplate session, String loginUserId);
 
 	public void updateViewable(SqlSessionTemplate session, User loginUser);
 
-	public User selectUser(SqlSessionTemplate session, User loginUser);
+	public User selectUser(SqlSessionTemplate session, String userId);
+
+	public User selectViewable(SqlSessionTemplate session, String loginUserId);
 
 }

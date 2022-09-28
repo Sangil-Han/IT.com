@@ -33,6 +33,12 @@ public class ConsultBoardStoreLogic implements ConsultBoardStore {
 	}
 
 	@Override
+	public int deleteBoard(SqlSessionTemplate session, int cBoardNo) {
+		int result = session.delete("CBoardMapper.deleteBoard", cBoardNo);
+		return result;
+	}
+
+	@Override
 	public List<ConsultBoard> selectAllBoard(SqlSession session, int currentPage, int boardLimit) {
 		int offset = (currentPage - 1)*boardLimit;
 		RowBounds rowBounds = new RowBounds(offset, boardLimit);
@@ -74,20 +80,32 @@ public class ConsultBoardStoreLogic implements ConsultBoardStore {
 	}
 
 	@Override
-	public List<ConsultBoardComment> selectAllComment(SqlSessionTemplate session, Integer cBoardNo) {
-		List<ConsultBoardComment> cList = session.selectList("CBoardMapper.selectAllComment", cBoardNo);
-		return cList;
-	}
-
-	@Override
 	public int deleteComment(SqlSessionTemplate session, Integer commentNo) {
 		int result= session.delete("CBoardMapper.deleteComment",commentNo);
 		return result;
 	}
 
 	@Override
+	public int updateComment(SqlSessionTemplate session, ConsultBoardComment comment) {
+		int result = session.update("CBoardMapper.updateComment",comment);
+		return result;
+	}
+
+	@Override
+	public List<ConsultBoardComment> selectAllComment(SqlSessionTemplate session, Integer cBoardNo) {
+		List<ConsultBoardComment> cList = session.selectList("CBoardMapper.selectAllComment", cBoardNo);
+		return cList;
+	}
+
+	@Override
 	public int insertUpCount(SqlSessionTemplate session, ConsultUpCount upCount) {
 		int result = session.insert("CBoardMapper.insertUpCount", upCount);
+		return result;
+	}
+
+	@Override
+	public int deleteUpCount(SqlSessionTemplate session, ConsultUpCount upCount) {
+		int result = session.delete("CBoardMapper.deleteUpCount", upCount);
 		return result;
 	}
 
@@ -104,20 +122,8 @@ public class ConsultBoardStoreLogic implements ConsultBoardStore {
 	}
 
 	@Override
-	public int deleteUpCount(SqlSessionTemplate session, ConsultUpCount upCount) {
-		int result = session.delete("CBoardMapper.deleteUpCount", upCount);
-		return result;
-	}
-
-	@Override
 	public int insertDownCount(SqlSessionTemplate session, ConsultDownCount downCount) {
 		int result = session.insert("CBoardMapper.insertDownCount", downCount);
-		return result;
-	}
-
-	@Override
-	public int selectDownCount(SqlSessionTemplate session, ConsultDownCount downCount) {
-		int result = session.selectOne("CBoardMapper.selectDownCount",downCount);
 		return result;
 	}
 
@@ -128,14 +134,14 @@ public class ConsultBoardStoreLogic implements ConsultBoardStore {
 	}
 
 	@Override
-	public int selectTotalDownCount(SqlSessionTemplate session, Integer cBoardNo) {
-		int result = session.selectOne("CBoardMapper.selectTotalDownCount", cBoardNo);
+	public int selectDownCount(SqlSessionTemplate session, ConsultDownCount downCount) {
+		int result = session.selectOne("CBoardMapper.selectDownCount",downCount);
 		return result;
 	}
 
 	@Override
-	public int updateComment(SqlSessionTemplate session, ConsultBoardComment comment) {
-		int result = session.update("CBoardMapper.updateComment",comment);
+	public int selectTotalDownCount(SqlSessionTemplate session, Integer cBoardNo) {
+		int result = session.selectOne("CBoardMapper.selectTotalDownCount", cBoardNo);
 		return result;
 	}
 
@@ -170,15 +176,8 @@ public class ConsultBoardStoreLogic implements ConsultBoardStore {
 	}
 
 	@Override
-	public int deleteBoard(SqlSessionTemplate session, int cBoardNo) {
-		int result = session.delete("CBoardMapper.deleteBoard", cBoardNo);
-		return result;
-	}
-
-	@Override
-	public int updatePoint(SqlSessionTemplate session, User loginUser) {
-		int result = session.update("CBoardMapper.updatePoint", loginUser);
-		return result;
+	public void updatePoint(SqlSessionTemplate session, String loginUserId) {
+		 session.update("CBoardMapper.updatePoint", loginUserId);
 	}
 
 	@Override
@@ -187,9 +186,15 @@ public class ConsultBoardStoreLogic implements ConsultBoardStore {
 	}
 
 	@Override
-	public User selectUser(SqlSessionTemplate session, User loginUser) {
-		User selectUser = session.selectOne("CBoardMapper.selectUser", loginUser);
+	public User selectUser(SqlSessionTemplate session, String userId) {
+		User selectUser = session.selectOne("CBoardMapper.selectUser", userId);
 		return selectUser;
+	}
+
+	@Override
+	public User selectViewable(SqlSessionTemplate session, String loginUserId) {
+		User selectViewable = session.selectOne("CBoardMapper.selectViewable",loginUserId);
+		return selectViewable;
 	}
 
 }

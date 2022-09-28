@@ -9,14 +9,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 상담후기 게시판</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 </head>
 <body>
 	<div id="wrap">
 		<jsp:include page="../common/header.jsp"></jsp:include>
 		<h1 align="center">상담후기 게시판</h1>
-		<img src="/img/consult.png" class="img-fluid" alt="...">
-		<table  class="table table-sm" align="center" border="2">
+		<table align="center" border="1">
 			<tr>
 				<th>제목</th>
 				<th>등록일</th>
@@ -35,40 +33,33 @@
 					</tr>
 				</c:forEach>
 				<tr align="center" height="20">
-					<td align="center">
-						<nav aria-label="Page navigation example">
-							<ul class="pagination">
-								<li class="page-item">
-									<c:if test="${currentPage > 5}">
-						 				<a class="page-link" href="/consult/${urlVal }.do?page=${startNavi - 1 }&searchCondition=${searchCondition}&searchValue=${searchValue}"" aria-label="Previous">
-											<span aria-hidden="true">&laquo;</span>
-				      					</a>
-				      				</c:if>
-			    				</li>
-								<c:forEach var="p" begin="${startNavi }" end="${endNavi }">	
-								    <li class="page-item"><a class="page-link" href="/consult/${urlVal }.do?page=${p }&searchCondition=${searchCondition}&searchValue=${searchValue}">${p }</a></li>
-			    				</c:forEach>
-			    				<c:if test="${maxPage-4 > currentPage }">
-								    <li class="page-item">
-								    	<a class="page-link" href="/consult/${urlVal }.do?page=${endNavi + 1 }&searchCondition=${searchCondition}&searchValue=${searchValue}" aria-label="Next">
-					        				<span aria-hidden="true">&raquo;</span>
-					      				</a>
-				    				</li>
-				    			</c:if>
-							</ul>
-						</nav>
+					<td colspan="6">
+						<c:if test="${currentPage > 5}">
+							<a href="/consult/${urlVal }.do?page=${startNavi - 1 }&searchCondition=${searchCondition}&searchValue=${searchValue}">[이전]</a>
+						</c:if>
+						<c:forEach var="p" begin="${startNavi }" end="${endNavi }">
+							<c:if test="${currentPage == p }">
+								<b>${p }</b>
+							</c:if>
+							<c:if test="${currentPage != p }">
+								<a href="/consult/${urlVal }.do?page=${p }&searchCondition=${searchCondition}&searchValue=${searchValue}">${p }</a>
+							</c:if>
+						</c:forEach>
+						<c:if test="${maxPage-4 > currentPage }">
+							<a href="/consult/${urlVal }.do?page=${endNavi + 1 }&searchCondition=${searchCondition}&searchValue=${searchValue}">[다음]</a>
+						</c:if>
 					</td>
 				</tr>
 			</c:if>
 			<c:if test="${empty cList }">
 				<tr>
-					<td colspan="6">게시글이 존재하지 않습니다</td>
+					<td colspan="6">검색한 결과가 없습니다</td>
 				</tr>
 			</c:if>
 			<tr>
 				<td colspan="5" align="center">
 					<form action="/consult/consultSearch.do" method="get">
-						<select class="form-select" aria-label="Default select example" name="searchCondition">
+						<select name="searchCondition">
 							<option value="all"
 								<c:if test="${searchCondition == 'all' }">selected</c:if>>전체
 							</option>
@@ -86,12 +77,12 @@
 							</option>
 						</select>
 						<input type="text" name="searchValue" value="${searchValue }">
-						<input type="submit" value="검색" class="btn btn-outline-primary">
+						<input type="submit" value="검색">
 					</form>
 				</td>
 				<c:if test="${empty sessionScope.loginAdmin }">
 					<td>
-						<button type="button" class="btn btn-primary" href="#" onclick="writeForm('${userId}');">글쓰기</button>
+						<button href="#" onclick="writeForm('${userId}');">글쓰기</button>
 					</td>
 				</c:if>
 			</tr>

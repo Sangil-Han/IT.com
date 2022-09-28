@@ -35,6 +35,12 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	}
 
 	@Override
+	public int removeBoard(int cBoardNo) {
+		int result = cStore.deleteBoard(session, cBoardNo);
+		return result;
+	}
+
+	@Override
 	public List<ConsultBoard> printAllBoard(int currentPage, int boardLimit) {
 		List<ConsultBoard> cList = cStore.selectAllBoard(session, currentPage, boardLimit);
 		return cList;
@@ -66,21 +72,21 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	}
 
 	@Override
-	public List<ConsultBoardComment> printAllComment(Integer cBoardNo) {
-		List<ConsultBoardComment> cList = cStore.selectAllComment(session, cBoardNo);
-		return cList;
-	}
-
-	@Override
 	public int deleteComment(Integer commentNo) {
 		int result = cStore.deleteComment(session, commentNo);
 		return result;
 	}
 
 	@Override
-	public int upCountCheck(ConsultUpCount upCount) {
-		int result = cStore.selectUpCount(session, upCount);
+	public int modifyComment(ConsultBoardComment comment) {
+		int result = cStore.updateComment(session, comment);
 		return result;
+	}
+
+	@Override
+	public List<ConsultBoardComment> printAllComment(Integer cBoardNo) {
+		List<ConsultBoardComment> cList = cStore.selectAllComment(session, cBoardNo);
+		return cList;
 	}
 
 	@Override
@@ -96,14 +102,14 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	}
 
 	@Override
-	public int printTotalUpCount(Integer cBoardNo) {
-		int result = cStore.selectTotalUpCount(session, cBoardNo);
+	public int upCountCheck(ConsultUpCount upCount) {
+		int result = cStore.selectUpCount(session, upCount);
 		return result;
 	}
 
 	@Override
-	public int downCountCheck(ConsultDownCount downCount) {
-		int result = cStore.selectDownCount(session, downCount);
+	public int printTotalUpCount(Integer cBoardNo) {
+		int result = cStore.selectTotalUpCount(session, cBoardNo);
 		return result;
 	}
 
@@ -120,14 +126,8 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	}
 
 	@Override
-	public int printTotalDownCount(Integer cBoardNo) {
-		int result = cStore.selectTotalDownCount(session,cBoardNo);
-		return result;
-	}
-
-	@Override
-	public int modifyComment(ConsultBoardComment comment) {
-		int result = cStore.updateComment(session, comment);
+	public int downCountCheck(ConsultDownCount downCount) {
+		int result = cStore.selectDownCount(session, downCount);
 		return result;
 	}
 
@@ -138,8 +138,20 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	}
 
 	@Override
+	public int updateBoardViewCount(Integer cBoardNo) {
+		int result = cStore.updateBoardViewCount(session, cBoardNo);
+		return result;
+	}
+
+	@Override
 	public int printViewCountCheck(ConsultViewCount viewCount) {
 		int result = cStore.selectViewCountCheck(session, viewCount);
+		return result;
+	}
+
+	@Override
+	public int printTotalDownCount(Integer cBoardNo) {
+		int result = cStore.selectTotalDownCount(session,cBoardNo);
 		return result;
 	}
 
@@ -150,27 +162,14 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	}
 
 	@Override
-	public int updateBoardViewCount(Integer cBoardNo) {
-		int result = cStore.updateBoardViewCount(session, cBoardNo);
-		return result;
-	}
-
-	@Override
 	public int modifyBoardUp(int consultBoardNo) {
 		int result = cStore.updateBoardUp(session, consultBoardNo);
 		return result;
 	}
 
 	@Override
-	public int removeBoard(int cBoardNo) {
-		int result = cStore.deleteBoard(session, cBoardNo);
-		return result;
-	}
-
-	@Override
-	public int modifyPoint(User loginUser) {
-		int result = cStore.updatePoint(session, loginUser);
-		return result;
+	public void modifyPoint(String loginUserId) {
+		cStore.updatePoint(session, loginUserId);
 	}
 
 	@Override
@@ -179,9 +178,15 @@ public class ConsultBoardServiceImpl implements ConsultBoardService{
 	}
 
 	@Override
-	public User printUser(User loginUser) {
-		User printUser = cStore.selectUser(session, loginUser);
+	public User printUser(String userId) {
+		User printUser = cStore.selectUser(session, userId);
 		return printUser;
+	}
+
+	@Override
+	public User printViewable(String loginUserId) {
+		User printViewable = cStore.selectViewable(session, loginUserId);
+		return printViewable;
 	}
 
 }

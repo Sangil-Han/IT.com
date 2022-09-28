@@ -65,8 +65,9 @@ public class ConsultBoardController {
 			Admin loginAdmin = (Admin)session.getAttribute("loginAdmin");
 			String adminId = loginAdmin != null ? loginAdmin.getAdminId() : "";
 			int totalViewCount = cService.printTotalViewCount(viewCount);
-			User user = cService.printUser(loginUser);
+			User user = cService.printUser(userId);
 			String level = user.getUserLevel();
+			System.out.println("테스트 : "+level);
 			int point = user.getUserPoint();
 			String viewable = user.getViewable();
 			mv.addObject("totalViewCount", totalViewCount);
@@ -76,8 +77,8 @@ public class ConsultBoardController {
 			mv.addObject("point", point);
 			mv.addObject("viewable", viewable);
 		} catch (Exception e) {
-			mv.addObject("msg", e.getMessage());
-			mv.setViewName("common/errorPage");
+//			mv.addObject("msg", e.getMessage());
+//			mv.setViewName("common/errorPage");
 		}
 		if(!cList.isEmpty()) {
 			mv.addObject("urlVal", "consultList");
@@ -102,14 +103,22 @@ public class ConsultBoardController {
 			String loginUserId = loginUser != null ? loginUser.getUserId() : "";
 			Admin loginAdmin = (Admin)session.getAttribute("loginAdmin");
 			String adminId = loginAdmin != null ? loginAdmin.getAdminId() : "";
+			System.out.println(adminId);
 			ConsultBoard cBoard = cService.printOneByNo(cBoardNo);
 			viewCount.setUserId(loginUserId);
 			List<ConsultBoardComment> cList = cService.printAllComment(cBoardNo);
+			if(adminId.equals("")) {
+				User loginViewable = cService.printViewable(loginUserId);
+				String viewable = loginViewable.getViewable();
+				if(viewable.equals("N")) {
+					cService.modifyPoint(loginUserId);
+				}
+			}
 			int viewCountCheck = cService.printViewCountCheck(viewCount);
 			int totalViewCount = cService.printTotalViewCount(viewCount);
 			if(viewCountCheck == 0 && adminId.equals("")) {
-				int registViewCount = cService.registBoardViewCount(viewCount);
-				int modifyViewCount = cService.updateBoardViewCount(cBoardNo);
+				int registViewCount = cService.registBoardViewCount(viewCount); // 게시글 조회수 +1
+				int modifyViewCount = cService.updateBoardViewCount(cBoardNo);  // CONSULT_BOARD_TBL 게시글 조회수 +1
 			}
 			int totalUp = cService.printTotalUpCount(cBoardNo);
 			int totalDown = cService.printTotalDownCount(cBoardNo);
@@ -123,8 +132,8 @@ public class ConsultBoardController {
 			mv.addObject("page", page);
 			mv.setViewName("consult/detailView");
 		   } catch (Exception e) {
-				mv.addObject("msg", e.getMessage());
-				mv.setViewName("common/errorPage");
+//				mv.addObject("msg", e.getMessage());
+//				mv.setViewName("common/errorPage");
 		}
 		return mv;
 	}
@@ -197,7 +206,9 @@ public class ConsultBoardController {
 				cBoard.setcBoardFilePath(cBoardFilePath);
 			}
 			User loginUser = (User)session.getAttribute("loginUser");
-			String viewable = loginUser.getViewable();
+			String loginUserId = loginUser.getUserId();
+			User loginViewable = cService.printViewable(loginUserId);
+			String viewable = loginViewable.getViewable();
 			if(viewable.equals("N")) {
 				cService.modifyViewable(loginUser);
 			}
