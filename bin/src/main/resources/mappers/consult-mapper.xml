@@ -187,24 +187,4 @@
 <!-- 	<update id="updatePoint"> -->
 <!-- 		UPDATE USER_TBL SET USER_POINT = USER_POINT + #{point} WHERE USER_ID = #{userId} -->
 <!-- 	</update> -->
-
-	<resultMap type="User" id="userResultMap">
-		<id property="userId" column="USER_ID" />
-		<result property="userPw" column="USER_PW" />
-		<result property="userEmail" column="USER_EMAIL" />
-		<result property="newEmail" column="NEW_EMAIL" />
-		<result property="authentication" column="AUTHENTICATION" />
-		<result property="userLevel" column="USER_LEVEL" />
-		<result property="userPoint" column="USER_POINT" />
-		<result property="viewable" column="VIEWABLE" />
-		<result property="joinDate" column="JOIN_DATE" />
-		<result property="withdrawal" column="WITHDRAWAL" />
-		<result property="withdrawDate" column="WITHDRAW_DATE" />
-	</resultMap>
-	<select id="selectUser" resultMap="userResultMap">
-		SELECT * FROM USER_TBL WHERE USER_ID = #{userId}
-	</select>
-	<select id="selectViewable" resultMap="userResultMap">
-		SELECT VIEWABLE FROM USER_TBL WHERE USER_ID = #{userId}
-	</select>
 </mapper>

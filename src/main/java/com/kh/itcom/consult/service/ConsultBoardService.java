@@ -17,6 +17,8 @@ public interface ConsultBoardService {
 	
 	public int modifyBoard(ConsultBoard cBoard);
 
+	public int removeBoard(int cBoardNo);
+
 	public int getTotalCount(String searchCondition, String searchValue);
 
 	public List<ConsultBoard> printAllByValue(String searchCondition, String searchValue, int currentPage,
@@ -26,15 +28,17 @@ public interface ConsultBoardService {
 
 	public int registerComment(ConsultBoardComment comment);
 
-	public List<ConsultBoardComment> printAllComment(Integer cBoardNo);
-
 	public int deleteComment(Integer commentNo);
+
+	public int modifyComment(ConsultBoardComment comment);
+
+	public List<ConsultBoardComment> printAllComment(Integer cBoardNo);
 
 	public int registerUpCount(ConsultUpCount upCount);
 
-	public int upCountCheck(ConsultUpCount upCount);
-
 	public int removeUpCount(ConsultUpCount upCount);
+
+	public int upCountCheck(ConsultUpCount upCount);
 
 	public int printTotalUpCount(Integer cBoardNo);
 
@@ -46,24 +50,24 @@ public interface ConsultBoardService {
 
 	public int printTotalDownCount(Integer cBoardNo);
 
-	public int modifyComment(ConsultBoardComment comment);
-
 	public int registBoardViewCount(ConsultViewCount viewCount);
+
+	public int updateBoardViewCount(Integer cBoardNo);
 
 	public int printViewCountCheck(ConsultViewCount viewCount);
 
 	public int printTotalViewCount(ConsultViewCount viewCount);
 
-	public int updateBoardViewCount(Integer cBoardNo);
-
 	public int modifyBoardUp(int consultBoardNo);
 
-	public int removeBoard(int cBoardNo);
-
-	public int modifyPoint(User loginUser);
+	public void modifyPoint(String loginUserId);
 
 	public void modifyViewable(User loginUser);
 
-	public User printUser(User loginUser);
+	public User printUser(String userId);
+
+	public User printViewable(String loginUserId);
+
+//	public void modiftViewable(String loginUserId);
 
 }

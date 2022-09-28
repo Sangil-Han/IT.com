@@ -79,11 +79,11 @@
 							<button onclick="removeComment(${comment.commentNo},${cBoard.cBoardNo }, ${page });">삭제</button>
 						</td>
 					</c:if>
-					<c:if test="${not empty sessionScope.loginAdmin }">
-						<td>
+					<td>
+						<c:if test="${not empty sessionScope.loginAdmin }">
 							<button onclick="removeComment(${comment.commentNo},${cBoard.cBoardNo }, ${page });">삭제</button>
-						</td>
-					</c:if>
+						</c:if>
+					</td>
 				</tr>
 			</c:forEach>
 		</table>
