@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="FinishBoardMapper">
+	<resultMap type="FinishBoard" id="finishBoardResultMap">
+		<id property="fBoardNo" column="F_BOARD_NO"></id>
+		<result property="fBoardUserId" column="USER_ID" />
+		<result property="fBoardTitle" column="F_BOARD_TITLE" />
+		<result property="fBoardLocalName" column="F_BOARD_LOCAL_NAME" />
+		<result property="fBoardCenterName"
+			column="F_BOARD_CENTER_NAME" />
+		<result property="fBoardCourseName"
+			column="F_BOARD_COURSE_NAME" />
+		<result property="fBoardFinishYear"
+			column="F_BOARD_FINISH_YEAR" />
+		<result property="fBoardJobYn" column="F_BOARD_JOB_YN" />
+		<result property="fBoardJobName" column="F_BOARD_JOB_NAME" />
+		<result property="fBoardSalary" column="F_BOARD_SALARY" />
+		<result property="fBoardCompany" column="F_BOARD_COMPANY" />
+		<result property="fBoardContents" column="F_BOARD_CONTENTS" />
+		<result property="fBoardFileName" column="F_BOARD_FILE_NAME" />
+		<result property="fBoardFileRename"
+			column="F_BOARD_FILE_RENAME" />
+		<result property="fBoardFilePath" column="F_BOARD_FILE_PATH" />
+		<result property="fBoardCreateDate"
+			column="F_BOARD_CREATE_DATE" />
+		<result property="fBoardUpCount" column="F_BOARD_UP_COUNT" />
+		<result property="fBoardDownCount" column="F_BOARD_DOWN_COUNT" />
+		<result property="fBoardCount" column="F_BOARD_COUNT" />
+	</resultMap>
+
+
+	<!-- 게시글 등록 mapper, id/file 설정 미완료 -->
+	<insert id="insertBoard">
+		INSERT INTO FINISH_BOARD_TBL
+		VALUES(SEQ_FBOARD_NO.NEXTVAL, #{fBoardUserId}, #{fBoardTitle},
+		#{fBoardLocalName}, #{fBoardCenterName}, #{fBoardCourseName},
+		#{fBoardFinishYear}, #{fBoardJobYn}, #{fBoardJobName},
+		#{fBoardSalary}, #{fBoardCompany}, #{fBoardContents}, #{fBoardFileName}, #{fBoardFileRename},
+		#{fBoardFilePath, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+	</insert>
+
+	<!-- 조회수 증가 -->
+	<update id="updateBoardCount">
+		UPDATE FINISH_BOARD_TBL SET F_BOARD_COUNT=F_BOARD_COUNT+1 WHERE F_BOARD_NO=#{fBoardNo}
+	</update>
+	
+	<!-- 게시글 수정 -->
+	<update id="updateBoard">
+		UPDATE FINISH_BOARD_TBL SET F_BOARD_TITLE=#{fBoardTitle}, F_BOARD_LOCAL_NAME=#{fBoardLocalName}, F_BOARD_CENTER_NAME=#{fBoardCenterName}, F_BOARD_COURSE_NAME=#{fBoardCourseName}, F_BOARD_FINISH_YEAR=#{fBoardFinishYear}, F_BOARD_JOB_YN=#{fBoardJobYn}, F_BOARD_JOB_NAME=#{fBoardJobName}, F_BOARD_SALARY=#{fBoardSalary}, F_BOARD_COMPANY=#{fBoardCompany}, F_BOARD_CONTENTS=#{fBoardContents}, F_BOARD_FILE_NAME=#{fBoardFileName}, F_BOARD_FILE_RENAME=#{fBoardFileRename}, F_BOARD_FILE_PATH=#{fBoardFilePath} WHERE F_BOARD_NO=#{fBoardNo} 
+	</update>
+	
+	<update id="updateUserPoint">
+		UPDATE USER_TBL SET USER_POINT=USER_POINT+#{point} WHERE USER_ID=#{userId}
+	</update>
+	
+	<!-- 수료게시판 게시글 수 return -->
+	<select id="selectTotalCount" resultType="_int">
+		SELECT COUNT(*) FROM FINISH_BOARD_TBL
+		<where>
+			<if test="searchOption.toString()=='title'">
+				F_BOARD_TITLE LIKE '%'||UPPER(#{searchValue})||'%'
+			</if>
+			<if test="searchOption.toString()=='contents'">
+				F_BOARD_CONTENTS LIKE '%'||UPPER(#{searchValue})||'%'
+			</if>
+			<if test="searchOption.toString()=='local'">
+				F_BOARD_LOCAL_NAME LIKE '%'||UPPER(#{searchValue})||'%'
+			</if>
+			<if test="searchOption.toString()=='center'">
+				F_BOARD_CENTER_NAME LIKE '%'||UPPER(#{searchValue})||'%'
+			</if>
+			<if test="searchOption.toString()=='all'">
+				F_BOARD_TITLE LIKE '%'||UPPER(#{searchValue})||'%'
+				OR
+				F_BOARD_CONTENTS LIKE '%'||UPPER(#{searchValue})||'%'
+				OR 
+				F_BOARD_CENTER_NAME LIKE '%'||UPPER(#{searchValue})||'%'
+				OR 
+				F_BOARD_LOCAL_NAME LIKE '%'||UPPER(#{searchValue})||'%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 모든 게시글 SELECT -->
+	<select id="selectAllBoard" resultMap="finishBoardResultMap">
+		SELECT * FROM FINISH_BOARD_TBL ORDER BY F_BOARD_NO DESC
+	</select>
+	
+	<!-- 검색 조건에 의한 게시글 SELECT -->
+	<select id="selectAllByValue" resultMap="finishBoardResultMap">
+		SELECT * FROM FINISH_BOARD_TBL
+		<where>
+			<if test="searchOption.toString()=='center'">
+				F_BOARD_CENTER_NAME LIKE '%'||UPPER(#{searchValue})||'%'
+			</if>
+			<if test="searchOption.toString()=='local'">
+				F_BOARD_LOCAL_NAME LIKE '%'||UPPER(#{searchValue})||'%'
+			</if>
+			<if test="searchOption.toString()=='title'">
+				F_BOARD_TITLE LIKE '%'||UPPER(#{searchValue})||'%'
+			</if>
+			<if test="searchOption.toString()=='contents'">
+				F_BOARD_CONTENTS LIKE '%'||UPPER(#{searchValue})||'%'
+			</if>
+			<if test="searchOption.toString()=='all'">
+				F_BOARD_TITLE LIKE '%'||UPPER(#{searchValue})||'%' OR F_BOARD_CONTENTS LIKE '%'||UPPER(#{searchValue})||'%' OR F_BOARD_LOCAL_NAME LIKE '%'||UPPER(#{searchValue})||'%' OR F_BOARD_CENTER_NAME LIKE '%'||UPPER(#{searchValue})||'%'
+			</if>
+		</where>
+		ORDER BY F_BOARD_NO DESC
+	</select>
+	
+	<!-- boardNo로 하나의 board를 가져오는 select -->
+	<select id="selectOneByNo" resultMap="finishBoardResultMap">
+		SELECT * FROM FINISH_BOARD_TBL WHERE F_BOARD_NO=#{fBoardNo} 
+	</select>
+	
+	
+	
+	<!-- 댓글 관리 -->
+	<resultMap type="FinishComment" id="commentResultMap">
+		<id property="fCommentNo" column="F_COMMENT_NO"/>
+		<result property="fBoardNo" column="F_BOARD_NO"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="fCommentContents" column="F_COMMENT_CONTENTS"/>
+		<result property="fCommentRegtime" column="F_COMMENT_REGTIME"/>
+	</resultMap>
+	
+	<insert id="insertComment">
+		INSERT INTO FINISH_COMMENT_TBL VALUES(SEQ_FCOMMENT_NO.NEXTVAL, #{fBoardNo}, #{userId}, #{fCommentContents}, #{fCommentRegtime})
+	</insert>
+	
+	<update id="updateComment" parameterType="hashMap">
+		UPDATE FINISH_COMMENT_TBL SET F_COMMENT_CONTENTS=#{commentText} WHERE F_COMMENT_NO=#{fCommentNo}
+	</update>
+	<delete id="deleteComment">
+		DELETE FROM FINISH_COMMENT_TBL WHERE F_COMMENT_NO=${fCommentNo}
+	</delete>
+	
+	<select id="selectAllComment" resultMap="commentResultMap">
+		SELECT * FROM FINISH_COMMENT_TBL WHERE F_BOARD_NO=#{fBoardNo} ORDER BY F_COMMENT_NO
+	</select>
+	
+	
+	<!-- 게시글 추천/비추천 -->
+	<insert id="insertUpDownCount">
+		INSERT INTO FINISH_UPDOWN_RECORD_TBL VALUES(SEQ_UPDOWN_RECORD_NO.NEXTVAL, #{userId}, #{fBoardNo}, #{upOrDown})
+	</insert>
+	
+	<select id="selectCountUp" resultType="_int">
+		SELECT COUNT(*) FROM FINISH_UPDOWN_RECORD_TBL WHERE F_BOARD_NO=#{fBoardNo} AND UP_OR_DOWN='UP'
+	</select>
+	
+	<select id="selectCountDown" resultType="_int">
+		SELECT COUNT(*) FROM FINISH_UPDOWN_RECORD_TBL WHERE F_BOARD_NO=#{fBoardNo} AND UP_OR_DOWN='DOWN'
+	</select>
+	
+	<select id="selectUserRecordUpDown" resultType="_int">
+		SELECT COUNT(*) FROM FINISH_UPDOWN_RECORD_TBL WHERE F_BOARD_NO=#{fBoardNo} AND USER_ID=#{userId}
+	</select>
+	
+</mapper>
+

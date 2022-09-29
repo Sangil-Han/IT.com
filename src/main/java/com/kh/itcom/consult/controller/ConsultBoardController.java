@@ -64,21 +64,20 @@ public class ConsultBoardController {
 			String userId = loginUser != null ? loginUser.getUserId() : "";
 			Admin loginAdmin = (Admin)session.getAttribute("loginAdmin");
 			String adminId = loginAdmin != null ? loginAdmin.getAdminId() : "";
-			int totalViewCount = cService.printTotalViewCount(viewCount);
+//			int totalViewCount = cService.printTotalViewCount(viewCount);
 			User user = cService.printUser(userId);
 			String level = user.getUserLevel();
-			System.out.println("테스트 : "+level);
 			int point = user.getUserPoint();
 			String viewable = user.getViewable();
-			mv.addObject("totalViewCount", totalViewCount);
+//			mv.addObject("totalViewCount", totalViewCount);
 			mv.addObject("userId", userId);
 			mv.addObject("adminId", adminId);
 			mv.addObject("level", level);
 			mv.addObject("point", point);
 			mv.addObject("viewable", viewable);
 		} catch (Exception e) {
-//			mv.addObject("msg", e.getMessage());
-//			mv.setViewName("common/errorPage");
+			mv.addObject("msg", e.getMessage());
+			mv.setViewName("common/errorPage");
 		}
 		if(!cList.isEmpty()) {
 			mv.addObject("urlVal", "consultList");
@@ -87,8 +86,8 @@ public class ConsultBoardController {
 			mv.addObject("startNavi", startNavi);
 			mv.addObject("endNavi", endNavi);
 			mv.addObject("cList",cList);
-			mv.setViewName("consult/consultListView");
 		}
+		mv.setViewName("consult/consultListView");
 		return mv;
 	}
 	@RequestMapping(value="/consult/consultDetailView.do", method=RequestMethod.GET)
@@ -103,7 +102,6 @@ public class ConsultBoardController {
 			String loginUserId = loginUser != null ? loginUser.getUserId() : "";
 			Admin loginAdmin = (Admin)session.getAttribute("loginAdmin");
 			String adminId = loginAdmin != null ? loginAdmin.getAdminId() : "";
-			System.out.println(adminId);
 			ConsultBoard cBoard = cService.printOneByNo(cBoardNo);
 			viewCount.setUserId(loginUserId);
 			List<ConsultBoardComment> cList = cService.printAllComment(cBoardNo);
@@ -132,8 +130,8 @@ public class ConsultBoardController {
 			mv.addObject("page", page);
 			mv.setViewName("consult/detailView");
 		   } catch (Exception e) {
-//				mv.addObject("msg", e.getMessage());
-//				mv.setViewName("common/errorPage");
+				mv.addObject("msg", e.getMessage());
+				mv.setViewName("common/errorPage");
 		}
 		return mv;
 	}
