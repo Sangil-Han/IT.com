@@ -1,0 +1,42 @@
+@charset "UTF-8";
+#main_image {
+  position: relative;
+  width: 1200px;
+  height: 450px;
+  /* image 가운데 정렬 */
+  margin-left: calc((100% - 1200px) / 2); /* 부모 tag인 main의 width 이용 */
+  margin-right: calc((100% - 1200px) / 2);
+  background-image: url('/resources/img/mainImg1.png'); /* 시작 이미지  */
+  background-position: center;
+  background-size: 30cm 300px;
+  background-repeat: no-repeat;
+}
+.leftbtn {
+  position: absolute;
+  width: 60px;
+  height: 70px;
+  margin-top: 195px;
+  margin-left: 20px;
+  outline-style: none;
+}
+.rightbtn {
+  position: absolute;
+  width: 60px;
+  height: 70px;
+  margin-top: 195px;
+  margin-left: 1120px;
+  outline-style: none;
+}
+
+#table {
+	width: 35%;
+	margin-left: 200px;
+	float: left;
+	margin-bottom: 50px;
+}
+
+.card {
+	float: left;
+	margin-left: 250px;
+	margin-top: 100px;
+}

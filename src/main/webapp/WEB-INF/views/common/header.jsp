@@ -10,11 +10,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 헤더</title>
 <link href="/resources/css/header.css" rel="stylesheet">
+<script src="https://kit.fontawesome.com/422d96f707.js" crossorigin="anonymous"></script>
 </head>
 <body>
 	<div class="header">
 		<div class="Logo-area">
-			<a href="/home.do"><img alt="IT.com" src="/resources/img/logo.png" width="60">IT.com</a>
+			<i class="fa-solid fa-desktop fa-4x text-primary"></i>
+			<a href="/home.do" style="text-decoration-line: none; font-size: 50px;">IT.com</a>
 		</div>
 		<form class="form-area" action="" method="post">
 			<div class="search-area">
@@ -27,8 +29,8 @@
 				<table align="right">
 					<tr>
 						<td rowspan="2">
-							<button onclick="location.href='/user/loginView.do'">로그인</button>
-							<button onclick="location.href='/user/joinView.do'">회원가입</button>
+							<button onclick="location.href='/user/loginView.do'" class="btn btn-primary">로그인</button>
+							<button onclick="location.href='/user/joinView.do'" class="btn btn-secondary">회원가입</button>
 						</td>
 					</tr>
 				</table>

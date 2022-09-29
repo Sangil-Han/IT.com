@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<PointHistory> printPointHistory(String userId, PageInfo phpi) {
 		List<PointHistory> phList = uStore.selectPointHistory(session, userId, phpi);
+		System.out.println("service: " + phList.toString());
 		return phList;
 	}
 
