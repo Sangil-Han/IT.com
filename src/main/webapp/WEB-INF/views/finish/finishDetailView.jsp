@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,12 +23,12 @@
 		<h1 class="h1" align="center">수료후기 게시판</h1>
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 offset-lg-2">
-          <table class="table table-boldered border" >
+        <div class="col-lg-10 offset-lg-1">
+          <table class="table table-bordered" >
             <tbody>
-              <tr>
-                <th scope="row" class="table-primary">제목</th>
-                <td>${fBoard.fBoardTitle }</td>
+              <tr class>
+                <th scope="row" class="table-primary" >제목</th>
+                <td class="ms-2">${fBoard.fBoardTitle }</td>
               </tr>
               <tr>
                 <th scope="row" class="table-primary">지역구</th>
@@ -36,7 +36,7 @@
               </tr>
               <tr>
                 <th scope="row" class="table-primary">교육원명</th>
-                <td colspan="2">${fBoard.fBoardCenterName }</td>
+                <td>${fBoard.fBoardCenterName }</td>
               </tr>
               <tr>
                 <th scope="row" class="table-primary">과정명</th>
@@ -69,130 +69,98 @@
         </div>
       </div>
     </div>
-
-    
-		<br> <br>
-		<table align="center" width="500" border="1">
-			<tr>
-				<td>제목</td>
-				<td>${fBoard.fBoardTitle }</td>
-			<tr>
-				<td>지역구</td>
-				<td>${fBoard.fBoardLocalName }</td>
-			</tr>
-			<tr>
-				<td>교육원명</td>
-				<td>${fBoard.fBoardCenterName }</td>
-			</tr>
-			<tr>
-				<td>과정명</td>
-				<td>${fBoard.fBoardCourseName }</td>
-			</tr>
-			<tr>
-				<td>수료연도</td>
-				<td>${fBoard.fBoardFinishYear }</td>
-			</tr>
-			<tr>
-				<td>취업여부</td>
-				<td>${fBoard.fBoardJobYn }</td>
-			</tr>
-			<c:if test="${fBoard.fBoardJobYn  eq 'Y'}">
-				<tr>
-					<td>직무</td>
-					<td>${fBoard.fBoardJobName }</td>
-				</tr>
-				<tr>
-					<td>초봉</td>
-					<td>${fBoard.fBoardSalary }</td>
-				</tr>
-				<tr>
-					<td>기업명</td>
-					<td>${fBoard.fBoardCompany }</td>
-				</tr>
-			</c:if>
-			<tr height="300">
-				<td>내용</td>
-				<td>${fBoard.fBoardContents }
-					<img alt="본문이미지" src="/resources/fuploadFiles/${fBoard.fBoardFileRename}">
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" align="center">
-					<c:if test="${fBoard.fBoardUserId eq sessionScope.loginUser.userId}">
-						<form action="finish/modifyView.do" method=post>
+    <div class="container">
+      <div class="row px-3">
+        <div class="col-lg-10 offset-lg-1 border border-secondary rounded-1 p-5">
+          <c:if test="${fBoard.fBoardFileRename ne null}">
+            <img class="img-fluid" src="/resources/files/fuploadFiles/${fBoard.fBoardFileRename}">
+          </c:if>
+          <p class="py-4">${fBoard.fBoardContents }</i></p>
+        </div>
+        <div class="col-md-8 offset-md-2 py-5 text-center">
+          <form action="/finish/addUpCount.do" method="post" style="display: inline">
+						<input type="hidden" name="userId" value="${sessionScope.loginUser.userId }"/>
+						<input type="hidden" name="fBoardNo" value="${fBoard.fBoardNo }"/>
+						<input type="hidden" name="page" value="${page }"/>
+            <button class="btn btn-primary"onclick="return checkCanUpDown('${isRecomm}');"><i class="fa-solid fa-thumbs-up fa-lg"></i> 추천 <b>${upCount }</b></button>
+          </form>
+          <form action="/finish/addDownCount.do" method="post" style="display: inline">
+						<input type="hidden" name="userId" value="${sessionScope.loginUser.userId }"/>
+						<input type="hidden" name="fBoardNo" value="${fBoard.fBoardNo }"/>
+						<input type="hidden" name="page" value="${page }"/>
+            <button class="btn btn-danger" onclick="return checkCanUpDown('${isRecomm}');"><i class="fa-solid fa-thumbs-down fa-lg"></i> 비추천 <b>${downCount } </b></button>
+          </form>
+        </div>
+        <div class="col-md-2 py-5 text-center">
+          <c:if test="${fBoard.fBoardUserId eq sessionScope.loginUser.userId}">
+						<form action="/finish/modifyView.do" method=post class="me-5">
 							<input type="hidden" name="fBoardNo" value="${fBoard.fBoardNo }">
-            				<input type="hidden" name="page" value="${page}">
-							<button>수정</button>
+            	<input type="hidden" name="page" value="${page}">
+							<input type="submit" class="btn btn-secondary" value="수정"/>
 						</form>
 					</c:if>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" align="center">
-					<a href="/finish/listView.do?page=${page }">목록으로</a>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" align="center">
-					<form action="/finish/addUpCount.do" method="post" style="display: inline">
-						<input type="hidden" name="userId" value="${sessionScope.loginUser.userId }"/>
-						<input type="hidden" name="fBoardNo" value="${fBoard.fBoardNo }"/>
-						<input type="hidden" name="page" value="${page }"/>
-						<button onclick="return checkCanUpDown('${isRecomm}');">추천 ${upCount }</button>
-					</form>
-					<form action="/finish/addDownCount.do" method="post" style="display: inline">
-						<input type="hidden" name="userId" value="${sessionScope.loginUser.userId }"/>
-						<input type="hidden" name="fBoardNo" value="${fBoard.fBoardNo }"/>
-						<input type="hidden" name="page" value="${page }"/>
-						<button onclick="return checkCanUpDown('${isRecomm}');">비추천 ${downCount }</button>
-					</form>
-				</td>
-			</tr>
-				
-		</table>
+        </div>
+      </div>
+    </div>
 
-		<!-- 댓글 등록 -->
-		<form action="/finish/addComment.do" method="post">
-			<input type="hidden" name="fBoardNo" value="${fBoard.fBoardNo }">
-			<input type="hidden" name="page" value=${page }>
-			<table align="center" width="500" border="1">
-				<tr>
-					<td><textarea rows="3" cols="55" name="fCommentContents"></textarea></td>
-					<td>
-						<button>등록하기</button>
-					</td>
-				</tr>
-			</table>
-		</form>
-
-		<!-- 댓글 목록 -->
-		<table align="center" width="500" border="1">
-			<c:forEach items="${cList }" var="comment" varStatus="i">
-				<tr>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+          <table class="table">
+              <tr class="border-bottom">
+                <td scope="row"><b class="fs-5">댓글 ${fn:length(cList)}</b></td>
+              </tr>
+              <c:forEach items="${cList }" var="comment" varStatus="i">
+                <tr class="border-bottom">
+                  <td id="modify-inactive${i.count}" width="67%" style="border-style: none;">${comment.fCommentContents }</td>
+					        <td id="modify-active${i.count}" style="display:none" width="67%">
+						        <input id="fCommentNo${i.count}" type="hidden" value="${comment.fCommentNo}">
+                    <div>
+                      <textarea class="form-control" id="modify-text${i.count}" name="modifyCommentContents" style="resize:none">${comment.fCommentContents }</textarea>
+                    </div>
+					        </td>
+                  <td width="15%" class="lh-lg">${comment.fCommentRegtime }</td>
+                  <td width="18%" align="right" >
+                    <c:if test="${comment.userId eq sessionScope.loginUser.userId }">
+                    <form action="/finish/removeComment.do" method=post onsubmit="return checkRemove();" >
+                      <input type="hidden" name="fCommentNo" value="${comment.fCommentNo }">
+                      <input type="hidden" name="fBoardNo" value="${comment.fBoardNo }">
+                      <input type="hidden" name="page" value="${page }">
+                      <!-- <button type="button" class="btn" id="modify-comment-btn${i.count}">수정</button>
+                      <button class="btn">삭제</button> -->
+                      <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-outline-secondary text-black" id="modify-comment-btn${i.count}" >수정</button>
+                        <button class="btn btn-outline-secondary text-black">삭제</button>
+                      </div>
+                    </form>
+                    </c:if>
+                  </td>
+                </tr>
+              </c:forEach>
+            </table>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-lg-10 offset-lg-1">
           
-					<td id="modify-inactive${i.count}">${comment.fCommentContents }</td>
-					<td id="modify-active${i.count}" style="display:none">
-						<input id="fCommentNo${i.count}" type="hidden" value="${comment.fCommentNo}">
-						<textarea id="modify-text${i.count}" name="modifyCommentContents" >${comment.fCommentContents }</textarea>
-					</td>
-					<td>${comment.fCommentRegtime }</td>
-					<td>
-						<c:if test="${comment.userId eq sessionScope.loginUser.userId }">
-            <!-- 댓글 수정 -->
-						<button id="modify-comment-btn${i.count}">수정</button>
-            <!-- 댓글 삭제 -->
-            			<form action="/finish/removeComment.do" method=post onsubmit="return checkRemove();">
-            				<input type="hidden" name="fCommentNo" value="${comment.fCommentNo }">
-            				<input type="hidden" name="fBoardNo" value="${comment.fBoardNo }">
-            				<input type="hidden" name="page" value="${page }">
-							<button>삭제</button>
-            			</form>
-						</c:if>
-					</td>
-				</tr>
-			</c:forEach>
-		</table>
-	</div>
+            <form action="/finish/addComment.do" method="post">
+              <input type="hidden" name="fBoardNo" value="${fBoard.fBoardNo }">
+              <input type="hidden" name="page" value=${page }>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="fCommentContents" placeholder="댓글을 입력해주세요." aria-label="댓글을 입력해주세요." aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary">등록</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2 offset-sm-5 text-center my-3">
+          <button class="btn btn-secondary px-4" onclick="location.href='/finish/listView.do?page=${page }';">목록으로</button>
+        </div>
+      </div> 
+    </div>
+
 	<script>
 		
 		function checkCanUpDown(isRecomm){
@@ -264,5 +232,6 @@
 		
 	</script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/422d96f707.js" crossorigin="anonymous"></script>
 </body>
 </html>

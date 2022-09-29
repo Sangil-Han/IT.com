@@ -12,7 +12,7 @@ public class FinishBoard {
 	private String fBoardFinishYear;
 	private String fBoardJobYn;
 	private String fBoardJobName;
-	private int fBoardSalary;
+	private String fBoardSalary;
 	private String fBoardCompany;
 	private String fBoardContents;
 	private String fBoardFileName;
@@ -76,10 +76,10 @@ public class FinishBoard {
 	public void setfBoardJobName(String fBoardJobName) {
 		this.fBoardJobName = fBoardJobName;
 	}
-	public int getfBoardSalary() {
+	public String getfBoardSalary() {
 		return fBoardSalary;
 	}
-	public void setfBoardSalary(int fBoardSalary) {
+	public void setfBoardSalary(String fBoardSalary) {
 		this.fBoardSalary = fBoardSalary;
 	}
 	public String getfBoardCompany() {
