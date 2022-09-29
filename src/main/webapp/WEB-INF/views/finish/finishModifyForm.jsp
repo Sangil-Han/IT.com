@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
 <html>
@@ -14,27 +15,76 @@
     <div id="wrap">
       <jsp:include page="../common/header.jsp"></jsp:include>
       <h1 align="center">수료후기 게시판</h1>
-      <form action="/finish/modify.do" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="page" value="${page }" />
-        <input type="hidden" name="fBoardNo" value="${fBoard.fBoardNo }" />
-        <input type="hidden" name="fBoardFileName" value="${fBoard.fBoardFileName }" />
-        <input type="hidden" name="fBoardFileRename" value="${fBoard.fBoardFileRename }" />
-        제목 <input type="text" name="fBoardTitle" value="${fBoard.fBoardTitle }" /><br /><br />
-        지역구 <input type="text" name="fBoardLocalName" value="${fBoard.fBoardLocalName }" /><br /><br />
-        교육원명 <input type="text" name="fBoardCenterName" value="${fBoard.fBoardCenterName }" /><br /><br />
-        과정명 <input type="text" name="fBoardCourseName" value="${fBoard.fBoardCourseName }" /><br /><br />
-        수료연도 <input type="text" name="fBoardFinishYear" value="${fBoard.fBoardFinishYear }" /><br /><br />
-        취업여부 <input type="text" name="fBoardJobYn" value="${fBoard.fBoardJobYn }" /><br /><br />
-        직무 <input type="text" name="fBoardJobName" value="${fBoard.fBoardJobName }" /><br /><br />
-        초봉 <input type="number" name="fBoardSalary" value="${fBoard.fBoardSalary }" /><br /><br />
-        기업명 <input type="text" name="fBoardCompany" value="${fBoard.fBoardCompany }" /><br /><br />
-        내용 <textarea rows="10" cols="50" name="fBoardContents">${fBoard.fBoardContents }</textarea>
-        <input type="file" name="reloadFile" />
-        <a href="#">${fBoard.fBoardFileName }</a>
-        <input type="submit" value="수정" />
-        <a href="/finish/listView.do?page=${page }">목록으로</a>
-        <a href="javascript:history.go(-1);">이전 페이지로</a>
-      </form>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10 offset-lg-1">
+            <form action="/finish/modify.do" method="post" enctype="multipart/form-data">
+            <table class="table table-bordered">
+              <tbody>
+                <tr class>
+                  <th scope="row" class="table-primary">제목</th>
+                  <td class="ms-2"><input type="text" class="form-control" name="fBoardTitle" value="${fBoard.fBoardTitle }" /></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="table-primary">지역구</th>
+                  <td><input type="text" class="form-control" name="fBoardLocalName" value="${fBoard.fBoardLocalName }" /></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="table-primary">교육원명</th>
+                  <td><input type="text" class="form-control" name="fBoardCenterName" value="${fBoard.fBoardCenterName }" /></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="table-primary">과정명</th>
+                  <td><input type="text" class="form-control" name="fBoardCourseName" value="${fBoard.fBoardCourseName }" /></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="table-primary">수료연도</th>
+                  <td><input type="text" class="form-control" name="fBoardFinishYear" value="${fBoard.fBoardFinishYear }" /></td>
+                </tr>
+                <tr>
+                  <th scope="row" class="table-primary">취업여부</th>
+                  <td>
+
+                    <input class="form-check-input" type="radio" name="fBoardJobYn" id="flexRadioDefault1" value="Y" <c:if test="${fBoard.fBoardJobYn eq 'Y'}">checked</c:if>/>
+                    <label class="form-check-label" for="flexRadioDefault1"> Y</label>
+
+                    <input class="form-check-input" type="radio" name="fBoardJobYn" id="flexRadioDefault1" value="N" <c:if test="${fBoard.fBoardJobYn eq 'N'}">checked</c:if>/>
+                    <label class="form-check-label" for="flexRadioDefault1"> N</label>
+                  </td>
+                </tr>
+                <c:if test="${fBoard.fBoardJobYn  eq 'Y'}">
+                  <tr>
+                    <th scope="row" class="table-primary">직무</th>
+                    <td><input type="text" class="form-control" name="fBoardJobName" value="${fBoard.fBoardJobName }" /></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="table-primary">초봉</th>
+                    <td><input type="text" class="form-control" name="fBoardSalary" value="${fBoard.fBoardSalary }" /></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="table-primary">기업명</th>
+                    <td><input type="text" class="form-control" name="fBoardCompany" value="${fBoard.fBoardCompany }" /></td>
+                  </tr>
+                </c:if>
+              </tbody>
+            </table>
+            <div class="row mb-4">
+              <div class="col">
+                <textarea class="form-control" name="fBoardContents" style="resize: none; height: 500px">${fBoard.fBoardContents }</textarea>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="input-group mb-3" style="width: 75%">
+                <input type="file" class="form-control" id="inputGroupFile02" name="uploadFile" />
+                <label class="input-group-text" for="inputGroupFile02">Upload</label>
+              </div>
+              <button class="btn btn-primary ms-3" type="submit" style="width: 10%; height: 80%">등록</button>
+              <button class="btn btn-primary ms-3" type="reset" onclick="location.href='javascript:history.go(-1);'" style="width: 10%; height: 80%">취소</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
   </body>

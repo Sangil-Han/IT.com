@@ -81,7 +81,7 @@ public class FinishBoardController {
 
 	// 게시글 목록
 	@RequestMapping(value = "/finish/listView.do", method = RequestMethod.GET)
-	public ModelAndView listView(ModelAndView mv, @RequestParam(value = "page", required = false) Integer page) {
+	public ModelAndView listView(HttpSession session, ModelAndView mv, @RequestParam(value = "page", required = false) Integer page) {
 		// 페이징 처리
 		int currentPage = (page != null) ? page : 1;
 		int totalCount = fService.getTotalCount("", ""); // 총게시물수

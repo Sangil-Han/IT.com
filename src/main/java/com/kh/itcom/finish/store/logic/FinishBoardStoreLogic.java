@@ -107,6 +107,12 @@ public class FinishBoardStoreLogic implements FinishBoardStore {
 		paramMap.put("upOrDown", upOrDown);
 		
 		int result=session.insert("FinishBoardMapper.insertUpDownCount", paramMap);
+		if(upOrDown.equals("UP")) {
+			session.update("FinishBoardMapper.updateUp", fBoardNo);
+		}
+		else {
+			session.update("FinishBoardMapper.updateDown", fBoardNo);
+		}
 		return result;
 	}
 

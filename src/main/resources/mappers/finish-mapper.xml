@@ -161,5 +161,13 @@
 		SELECT COUNT(*) FROM FINISH_UPDOWN_RECORD_TBL WHERE F_BOARD_NO=#{fBoardNo} AND USER_ID=#{userId}
 	</select>
 	
+	<select id="updateUp">
+		UPDATE FINISH_BOARD_TBL SET F_BOARD_UP_COUNT=F_BOARD_UP_COUNT+1 WHERE F_BOARD_NO=#{fBoardNo}
+	</select>
+	
+	<select id="updateDown">
+		UPDATE FINISH_BOARD_TBL SET F_BOARD_DOWN_COUNT=F_BOARD_DOWN_COUNT+1 WHERE F_BOARD_NO=#{fBoardNo}
+	</select>
+	
 </mapper>
 
