@@ -247,51 +247,6 @@ public class UserController {
 	}
 
 	/**
-	 * 포인트 내역
-	 * 
-	 * @param request
-	 * @param page
-	 * @param mv
-	 * @return
-	 */
-	@RequestMapping(value = "/user/pointHistoryView.do", method = RequestMethod.GET)
-	public ModelAndView pointHistoryView(HttpServletRequest request,
-			@RequestParam(value = "page", required = false) Integer page, ModelAndView mv) {
-		try {
-			HttpSession session = request.getSession();
-			User loginUser = (User) session.getAttribute("loginUser");
-			if (loginUser != null) {
-				PageInfo phpi = new PageInfo();
-				phpi.setCurrentPage((page != null) ? page : 1);
-				phpi.setRowCount(uService.printTotalPointCount(loginUser.getUserId()));
-				phpi.setRowLimit(10);
-				phpi.setPageLimit(5);
-				phpi.setPageCount((int) ((double) phpi.getRowCount() / phpi.getRowLimit() + 0.9));
-				phpi.setStartPage(
-						((int) ((double) phpi.getCurrentPage() / phpi.getPageLimit() + 0.9) - 1) * phpi.getPageLimit()
-								+ 1);
-				phpi.setEndPage(phpi.getStartPage() + phpi.getPageLimit() - 1);
-				if (phpi.getPageCount() < phpi.getEndPage()) {
-					phpi.setEndPage(phpi.getPageCount());
-				}
-				List<PointHistory> phList = uService.printPointHistory(loginUser.getUserId(), phpi);
-				System.out.println(phList.toString());
-				if (!phList.isEmpty()) {
-					mv.addObject("phList", phList);
-					mv.addObject("phpi", phpi);
-				}
-				mv.setViewName("user/pointHistory");
-			} else {
-				mv.setViewName("redirect:/user/loginView.do");
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println(e.toString());
-		}
-		return mv;
-	}
-
-	/**
 	 * 등업 신청 화면
 	 * 
 	 * @param request
@@ -345,6 +300,51 @@ public class UserController {
 				if (result > 0) {
 					mv.setViewName("redirect:/user/myPageView.do");
 				}
+			} else {
+				mv.setViewName("redirect:/user/loginView.do");
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.toString());
+		}
+		return mv;
+	}
+
+	/**
+	 * 포인트 내역
+	 * 
+	 * @param request
+	 * @param page
+	 * @param mv
+	 * @return
+	 */
+	@RequestMapping(value = "/user/pointHistoryView.do", method = RequestMethod.GET)
+	public ModelAndView pointHistoryView(HttpServletRequest request,
+			@RequestParam(value = "page", required = false) Integer page, ModelAndView mv) {
+		try {
+			HttpSession session = request.getSession();
+			User loginUser = (User) session.getAttribute("loginUser");
+			if (loginUser != null) {
+				PageInfo phpi = new PageInfo();
+				phpi.setCurrentPage((page != null) ? page : 1);
+				phpi.setRowCount(uService.printTotalPointCount(loginUser.getUserId()));
+				phpi.setRowLimit(10);
+				phpi.setPageLimit(5);
+				phpi.setPageCount((int) ((double) phpi.getRowCount() / phpi.getRowLimit() + 0.9));
+				phpi.setStartPage(
+						((int) ((double) phpi.getCurrentPage() / phpi.getPageLimit() + 0.9) - 1) * phpi.getPageLimit()
+								+ 1);
+				phpi.setEndPage(phpi.getStartPage() + phpi.getPageLimit() - 1);
+				if (phpi.getPageCount() < phpi.getEndPage()) {
+					phpi.setEndPage(phpi.getPageCount());
+				}
+				List<PointHistory> phList = uService.printPointHistory(loginUser.getUserId(), phpi);
+				System.out.println(phList.toString());
+				if (!phList.isEmpty()) {
+					mv.addObject("phList", phList);
+					mv.addObject("phpi", phpi);
+				}
+				mv.setViewName("user/pointHistory");
 			} else {
 				mv.setViewName("redirect:/user/loginView.do");
 			}

@@ -13,7 +13,7 @@
 <link href="/resources/css/header.css" rel="stylesheet">
 <link href="/resources/css/common.css" rel="stylesheet"></head>
 <body>
-  <div id="wrap" class="col-lg-10 offset-lg-1">
+	<div id="wrap" class="col-lg-10 offset-lg-1">
     <jsp:include page="../common/header.jsp"></jsp:include>
 		<h2 id="page-title" class="text-bg-primary my-3 p-3 bg-opacity-50">
       <a href="/notice/boardView.do">공지사항</a>

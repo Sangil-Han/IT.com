@@ -21,6 +21,27 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	private AdminStore aStore;
 
+	// 등업 신청 승인
+	@Override
+	public int approveLevelUp(List<String> checkedUsers) {
+		int result = aStore.updateLevelApproval(session, checkedUsers);
+		return result;
+	}
+
+	// 등업 신청 거절
+	@Override
+	public int denyLevelUp(List<String> checkedUsers) {
+		int result = aStore.updateLevelDenial(session, checkedUsers);
+		return result;
+	}
+
+	// 회원 삭제
+	@Override
+	public int removeUsers(List<String> checkedUsers) {
+		int result = aStore.deleteUsers(session, checkedUsers);
+		return result;
+	}
+
 	// 관리자 아이디 판별
 	@Override
 	public int checkAdminId(String id) {
@@ -35,7 +56,7 @@ public class AdminServiceImpl implements AdminService {
 		return loginAdmin;
 	}
 
-	// 전체 회원 수
+	// 총 회원 수
 	@Override
 	public int printTotalUserCount() {
 		int count = aStore.selectCountAllUser(session);
@@ -49,11 +70,11 @@ public class AdminServiceImpl implements AdminService {
 		return uList;
 	}
 
-	// 회원 삭제
+	// 총 등업 신청 수
 	@Override
-	public int removeUsers(List<String> checkedUsers) {
-		int result = aStore.deleteUsers(session, checkedUsers);
-		return result;
+	public int printTotalLevelUpCount() {
+		int count = aStore.selectCountAllLevelUp(session);
+		return count;
 	}
 
 	// 등업 신청 목록
@@ -61,25 +82,6 @@ public class AdminServiceImpl implements AdminService {
 	public List<LevelUp> printLevelUpList(PageInfo lupi) {
 		List<LevelUp> luList = aStore.selectLevelUpList(session, lupi);
 		return luList;
-	}
-
-	@Override
-	public int printTotalLevelUpCount() {
-		int count = aStore.selectCountAllLevelUp(session);
-		return count;
-	}
-
-	@Override
-	public int approveLevelUp(List<String> checkedUsers) {
-		System.out.println("service");
-		int result = aStore.updateLevelApproval(session, checkedUsers);
-		return result;
-	}
-
-	@Override
-	public int denyLevelUp(List<String> checkedUsers) {
-		int result = aStore.updateLevelDenial(session, checkedUsers);
-		return result;
 	}
 
 }

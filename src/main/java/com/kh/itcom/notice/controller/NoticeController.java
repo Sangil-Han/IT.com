@@ -80,53 +80,6 @@ public class NoticeController {
 		return mv;
 	}
 
-	// 공지사항 게시판
-	@RequestMapping(value = "/notice/boardView.do", method = RequestMethod.GET)
-	public ModelAndView noticeBoardView(HttpServletRequest request,
-			@RequestParam(value = "page", required = false) Integer page, ModelAndView mv) {
-		try {
-			PageInfo npi = new PageInfo();
-			npi.setCurrentPage((page != null) ? page : 1);
-			npi.setRowCount(nService.printTotalNoticeCount()); // TODO:
-			npi.setRowLimit(10);
-			npi.setPageLimit(5);
-			npi.setPageCount((int) ((double) npi.getRowCount() / npi.getRowLimit() + 0.9));
-			npi.setStartPage(
-					((int) ((double) npi.getCurrentPage() / npi.getPageLimit() + 0.9) - 1) * npi.getPageLimit() + 1);
-			npi.setEndPage(npi.getStartPage() + npi.getPageLimit() - 1);
-			if (npi.getPageCount() < npi.getEndPage()) {
-				npi.setEndPage(npi.getPageCount());
-			}
-			List<Notice> nList = nService.printNoticeList(npi);
-			if (!nList.isEmpty()) {
-				mv.addObject("nList", nList);
-				mv.addObject("npi", npi);
-			}
-			mv.setViewName("notice/board");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println(e.toString());
-		}
-		return mv;
-	}
-
-	// 공지사항 상세 조회
-	@RequestMapping(value = "/notice/detailView.do", method = RequestMethod.GET)
-	public ModelAndView noticeDetailView(@RequestParam("noticeNo") int noticeNo, @RequestParam("page") Integer page,
-			ModelAndView mv) {
-		try {
-			Notice notice = nService.printNoticeByNo(noticeNo);
-			mv.addObject("notice", notice);
-			mv.addObject("page", page);
-			mv.setViewName("notice/detail");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-			System.out.println(e.toString());
-		}
-		return mv;
-	}
-
 	// 공지사항 수정 화면
 	@RequestMapping(value = "/notice/modifyView.do", method = RequestMethod.GET)
 	public ModelAndView noticeModifyView(HttpServletRequest request, @RequestParam("noticeNo") int noticeNo,
@@ -146,7 +99,7 @@ public class NoticeController {
 			} else {
 				mv.setViewName("redirect:/user/loginView.do");
 			}
-
+	
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
@@ -214,7 +167,54 @@ public class NoticeController {
 				mv.setViewName("redirect:/user/loginView.do");
 			}
 		} catch (Exception e) {
+	
+		}
+		return mv;
+	}
 
+	// 공지사항 게시판
+	@RequestMapping(value = "/notice/boardView.do", method = RequestMethod.GET)
+	public ModelAndView noticeBoardView(HttpServletRequest request,
+			@RequestParam(value = "page", required = false) Integer page, ModelAndView mv) {
+		try {
+			PageInfo npi = new PageInfo();
+			npi.setCurrentPage((page != null) ? page : 1);
+			npi.setRowCount(nService.printTotalNoticeCount()); // TODO:
+			npi.setRowLimit(10);
+			npi.setPageLimit(5);
+			npi.setPageCount((int) ((double) npi.getRowCount() / npi.getRowLimit() + 0.9));
+			npi.setStartPage(
+					((int) ((double) npi.getCurrentPage() / npi.getPageLimit() + 0.9) - 1) * npi.getPageLimit() + 1);
+			npi.setEndPage(npi.getStartPage() + npi.getPageLimit() - 1);
+			if (npi.getPageCount() < npi.getEndPage()) {
+				npi.setEndPage(npi.getPageCount());
+			}
+			List<Notice> nList = nService.printNoticeList(npi);
+			if (!nList.isEmpty()) {
+				mv.addObject("nList", nList);
+				mv.addObject("npi", npi);
+			}
+			mv.setViewName("notice/board");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.toString());
+		}
+		return mv;
+	}
+
+	// 공지사항 상세 조회
+	@RequestMapping(value = "/notice/detailView.do", method = RequestMethod.GET)
+	public ModelAndView noticeDetailView(@RequestParam("noticeNo") int noticeNo, @RequestParam("page") Integer page,
+			ModelAndView mv) {
+		try {
+			Notice notice = nService.printNoticeByNo(noticeNo);
+			mv.addObject("notice", notice);
+			mv.addObject("page", page);
+			mv.setViewName("notice/detail");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println(e.toString());
 		}
 		return mv;
 	}

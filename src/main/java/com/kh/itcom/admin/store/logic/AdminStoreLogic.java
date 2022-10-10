@@ -15,7 +15,29 @@ import com.kh.itcom.user.domain.User;
 @Repository
 public class AdminStoreLogic implements AdminStore {
 
-	// 관리자 아이디 판별
+	// 등업 신청 승인
+	@Override
+	public int updateLevelApproval(SqlSession session, List<String> checkedUsers) {
+		int result = session.update("UserMapper.updateLevel", checkedUsers);
+		result = session.update("LevelMapper.updateLevelApproval", checkedUsers);
+		return result;
+	}
+
+	// 등업 신청 거절
+	@Override
+	public int updateLevelDenial(SqlSession session, List<String> checkedUsers) {
+		int result = session.update("LevelMapper.updateLevelDenial", checkedUsers);
+		return result;
+	}
+
+	// 회원 삭제
+	@Override
+	public int deleteUsers(SqlSession session, List<String> checkedUsers) {
+		int result = session.update("UserMapper.deleteUsers", checkedUsers);
+		return result;
+	}
+
+	// 아이디 체크
 	@Override
 	public int selectCountAdminById(SqlSession session, String id) {
 		int check = session.selectOne("AdminMapper.selecCountAdminById", id);
@@ -29,7 +51,7 @@ public class AdminStoreLogic implements AdminStore {
 		return loginAdmin;
 	}
 
-	// 전체 회원 수
+	// 총 회원 수
 	@Override
 	public int selectCountAllUser(SqlSession session) {
 		int count = session.selectOne("UserMapper.selectCountAllUser");
@@ -45,11 +67,11 @@ public class AdminStoreLogic implements AdminStore {
 		return uList;
 	}
 
-	// 회원 삭제
+	// 총 등업 신청 수
 	@Override
-	public int deleteUsers(SqlSession session, List<String> checkedUsers) {
-		int result = session.update("UserMapper.deleteUsers", checkedUsers);
-		return result;
+	public int selectCountAllLevelUp(SqlSession session) {
+		int count = session.selectOne("LevelMapper.selectCountAllLevelUp");
+		return count;
 	}
 
 	// 등업 신청 목록
@@ -59,25 +81,6 @@ public class AdminStoreLogic implements AdminStore {
 		RowBounds rowBounds = new RowBounds(offset, lupi.getRowLimit());
 		List<LevelUp> luList = session.selectList("LevelMapper.selectLevelUpList", null, rowBounds);
 		return luList;
-	}
-
-	@Override
-	public int selectCountAllLevelUp(SqlSession session) {
-		int count = session.selectOne("LevelMapper.selectCountAllLevelUp");
-		return count;
-	}
-
-	@Override
-	public int updateLevelApproval(SqlSession session, List<String> checkedUsers) {
-		int result = session.update("UserMapper.updateLevel", checkedUsers);
-		result = session.update("LevelMapper.updateLevelApproval", checkedUsers);
-		return result;
-	}
-
-	@Override
-	public int updateLevelDenial(SqlSession session, List<String> checkedUsers) {
-		int result = session.update("LevelMapper.updateLevelDenial", checkedUsers);
-		return result;
 	}
 
 }

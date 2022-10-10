@@ -41,7 +41,7 @@
 					</select> <input type="text" />
 					<button>검색</button>
 				</form>
-				<table width="80%">
+				<table width="80%" class="table">
 					<tr>
 						<th width="30%">지역구</th>
 						<th width="70%">교육원</th>
@@ -54,18 +54,10 @@
       </div>
       <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
         <h4>회원 관리</h4>
-				<form action="/admin/userSearch.do" class="search-option">
-					<select name="searchOption" class="search-option">
-						<option value="">전체</option>
-						<option value="">아이디</option>
-						<option value="">이메일</option>
-					</select> <input type="text" />
-					<button>검색</button>
-				</form>
 				<form action="/admin/userDelete.do" method="post"
 					id="user-delete-form" onsubmit="return beforeUserDeletion();">
-					<button>삭제</button>
-					<table>
+					<button class="btn btn-danger">삭제</button>
+					<table class="table">
 						<tr>
 							<th>NO</th>
 							<th>아이디</th>
@@ -80,7 +72,7 @@
 						<c:if test="${not empty uList }">
 							<c:forEach items="${uList }" var="user" varStatus="i">
 								<tr>
-									<td>${upi.rowCount - ((upi.currentPage - 1 ) * upi.rowLimit + i.index) }</td>
+									<th scope="row">${upi.rowCount - ((upi.currentPage - 1 ) * upi.rowLimit + i.index) }</td>
 									<td><a
 										href="/user/myPostView.do?userId=${user.userId }&page=${upi.currentPage }">${user.userId }</a>
 									</td>
@@ -124,9 +116,9 @@
       </div>
       <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0"><h4>등업 관리</h4>
 				<form action="" method="post" id="level-control-form">
-					<button type="button" id="approve" class="level-control-btn">승인</button>
-					<button type="button" id="deny" class="level-control-btn">거절</button>
-					<table>
+					<button type="button" id="approve" class="btn btn-primary level-control-btn">승인</button>
+					<button type="button" id="deny" class="btn btn-danger level-control-btn">거절</button>
+					<table class="table">
 						<tr>
 							<th>NO</th>
 							<th>상태</th>
@@ -140,7 +132,7 @@
 						<c:if test="${not empty luList }">
 							<c:forEach items="${luList }" var="level" varStatus="i">
 								<tr>
-									<td>${lupi.rowCount - ((lupi.currentPage - 1 ) * lupi.rowLimit + i.index) }</td>
+									<th scope="row">${lupi.rowCount - ((lupi.currentPage - 1 ) * lupi.rowLimit + i.index) }</td>
 									<c:if test="${level.applicationStatus eq 'Y' }">
 										<td>승인</td>
 									</c:if>

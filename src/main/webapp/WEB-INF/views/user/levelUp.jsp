@@ -31,7 +31,7 @@
         <label for="finish-user" class="form-check-label">수료회원</label>
 			</div>
 			<div class="input-group mb-3 col-md-3 offset-md-3 my-5" style="width: 50%">
-        <input type="file" class="form-control" id="file">
+        <input type="file" class="form-control" id="file" name="file">
         <label class="input-group-text" for="file">Upload</label>
       </div>
 			<div class="d-flex justify-content-center my-5">

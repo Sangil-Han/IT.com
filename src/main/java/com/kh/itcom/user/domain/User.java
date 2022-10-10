@@ -17,26 +17,14 @@ public class User {
 
 	public User() {
 	}
-
-	/**
-	 * 로그인
-	 * 
-	 * @param userId
-	 * @param userPw
-	 */
+	
+	// 로그인
 	public User(String userId, String userPw) {
 		super();
 		this.userId = userId;
 		this.userPw = userPw;
 	}
 
-	/**
-	 * 회원가입
-	 * 
-	 * @param userId
-	 * @param userPw
-	 * @param userEmail
-	 */
 	public User(String userId, String userPw, String userEmail) {
 		super();
 		this.userId = userId;

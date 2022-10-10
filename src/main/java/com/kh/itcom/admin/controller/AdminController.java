@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kh.itcom.admin.domain.Admin;
 import com.kh.itcom.admin.service.AdminService;
 import com.kh.itcom.common.domain.PageInfo;
-import com.kh.itcom.user.domain.Checked;
 import com.kh.itcom.user.domain.LevelUp;
 import com.kh.itcom.user.domain.User;
 
@@ -100,7 +98,7 @@ public class AdminController {
 	}
 
 	/**
-	 * TODO: 회원 삭제
+	 * 회원 삭제
 	 * 
 	 * @param request
 	 * @param idList

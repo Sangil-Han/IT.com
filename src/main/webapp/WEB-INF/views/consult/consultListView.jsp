@@ -10,12 +10,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 상담후기 게시판</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<link href="/resources/css/header.css" rel="stylesheet">
+<link href="/resources/css/common.css" rel="stylesheet">
 <script src="https://kit.fontawesome.com/422d96f707.js" crossorigin="anonymous"></script>
 	<style>
 	</style>
 </head>
 <body>
-	<div id="wrap">
+	<div id="wrap" class="col-lg-10 offset-lg-1">
 		<jsp:include page="../common/header.jsp"></jsp:include>
 		<div id="banner"><img id="img" src="/resources/img/consult9.png" class="img-fluid" alt="상담후기 게시판"></div>
 		<br><br>

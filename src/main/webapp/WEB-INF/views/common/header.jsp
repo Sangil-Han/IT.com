@@ -19,9 +19,9 @@
 			<a href="/home.do" style="text-decoration-line: none; font-size: 50px;">IT.com</a>
 		</div>
 		<form class="form-area" action="" method="post">
-			<div class="search-area">
-				<input class="search" type="text" placeholder="검색어 입력">
-				<input type="button" class="img_btn">
+			<div class="input-group mb-3">
+				<input type="text" class="form-control" name="userId" value="${userId }" autocomplete="off" placeholder="검색어를 입력해주세요." required />
+				<button type="button" class="btn btn-outline-secondary" onclick="checkId();">확인</button>
 			</div>
 		</form>
 		<c:if test="${empty sessionScope.loginUser && empty sessionScope.loginAdmin }">
@@ -62,7 +62,7 @@
 		</c:if>
 	</div>
 	<div class="nav-area">
-		<div class="menu" onclick="">HRD수강평</div>
+		<div class="menu" onclick="location.href='https://www.hrd.go.kr/hrdp/ma/pmmao/indexNew.do'">HRD수강평</div>
 		<div class="menu" onclick="location.href='/consult/consultList.do'">상담후기 게시판</div>
 		<div class="menu" onclick="location.href='/lecture/list.do'">수강후기 게시판</div>
 		<div class="menu" onclick="location.href='/finish/listView.do'">수료후기 게시판</div>

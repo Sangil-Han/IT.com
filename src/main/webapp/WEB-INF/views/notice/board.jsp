@@ -7,15 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IT.com : 공지사항 게시판</title>
-    <link href="/resources/css/header.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" />
+    <link href="/resources/css/header.css" rel="stylesheet">
+	<link href="/resources/css/common.css" rel="stylesheet">
   </head>
   <body>
-    <div id="wrap">
+	<div id="wrap" class="col-lg-10 offset-lg-1">
       <jsp:include page="../common/header.jsp"></jsp:include>
-        <h2 id="page-title" class="text-bg-primary my-3 p-3 bg-opacity-50 text-center">
-          <a href="/notice/boardView.do" style="text-decoration: none; color:black;">공지사항</a>
-        </h2>
+        <img alt="" src="/resources/img/notice-logo.png">
       <div class="container">
       <div class="row">
         <div class="col-lg-9 offset-lg-1">

@@ -8,11 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IT.com : 수료후기 수정</title>
-    <link href="/resources/css/header.css" rel="sytlesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" />
+    <link href="/resources/css/header.css" rel="stylesheet">
+	<link href="/resources/css/common.css" rel="stylesheet">
   </head>
   <body>
-    <div id="wrap">
+	<div id="wrap" class="col-lg-10 offset-lg-1">
       <jsp:include page="../common/header.jsp"></jsp:include>
       <h1 align="center">수료후기 게시판</h1>
       <div class="container">
@@ -85,6 +86,7 @@
           </form>
         </div>
       </div>
+    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
   </body>

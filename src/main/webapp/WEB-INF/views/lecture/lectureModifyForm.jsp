@@ -10,7 +10,7 @@
 <title>IT.com : 수강후기 수정</title>
 </head>
 <body>
-	<div id="wrap">
+	<div id="wrap" class="col-lg-10 offset-lg-1">
 		<jsp:include page="../common/header.jsp"></jsp:include>
 		<h1 align="center">수강후기 게시판</h1>
 		<br>
