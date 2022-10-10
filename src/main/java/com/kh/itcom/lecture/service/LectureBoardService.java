@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.kh.itcom.lecture.domain.LectureBoard;
 import com.kh.itcom.lecture.domain.LectureBoardComment;
-import com.kh.itcom.lecture.domain.LectureUpCount;
 
 public interface LectureBoardService {
 	public int registerLecture(LectureBoard lectureboard);
@@ -29,13 +28,4 @@ public interface LectureBoardService {
 
 	public List<LectureBoardComment> printAllLectureBoardComment(Integer lBoardNo);
 
-	public int upCountCheck(LectureUpCount lUpCount);
-
-	public int registerUpCount(LectureUpCount lUpCount);
-
-	public int registerBoardUp(int lectureBoardNo);
-
-	public int removeUpCount(LectureUpCount lUpCount);
-
-	// 댓글 목록 조회
 }

@@ -124,23 +124,4 @@
 		WHERE L_COMMENT_NO = #{lCommentNo}
 	</update>
 	
-	<resultMap type="LectureUpCount" id="upCountResultMap">
-			<result property="userId" column="USER_ID"/>
-			<result property="lBoardNo" column="L_BOARD_NO"/>
-		</resultMap>
-		<select id="selectTotalUpCount" resultType="_int">
-			SELECT COUNT(*) FROM LECTURE_UPCOUNT_TBL WHERE L_BOARD_NO = #{lBoardNo}
-		</select>
-		<select id="selectUpCount" resultType="_int">
-			SELECT COUNT(*) FROM LECTURE_UPCOUNT_TBL
-			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo}
-		</select>
-		<insert id="insertUpCount">
-			INSERT INTO LECTURE_UPCOUNT_TBL
-			VALUES(#{userId},#{lBoardNo})
-		</insert>
-		<delete id="deleteUpCount">
-			DELETE FROM LECTURE_UPCOUNT_TBL
-			WHERE USER_ID = #{userId} AND L_BOARD_NO = #{lBoardNo}
-		</delete>
 </mapper>

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import com.kh.itcom.consult.domain.ConsultBoardComment;
 import com.kh.itcom.lecture.domain.LectureBoard;
 import com.kh.itcom.lecture.domain.LectureBoardComment;
-import com.kh.itcom.lecture.domain.LectureUpCount;
 import com.kh.itcom.lecture.store.LectureBoardStore;
 
 @Repository
@@ -94,30 +93,6 @@ public class LectureBoardStoreLogic implements LectureBoardStore {
 	public List<LectureBoardComment> selectAllComment(SqlSession session, Integer lBoardNo) {
 		List<LectureBoardComment> lcList = session.selectList("LectureMapper.selectAllComment", lBoardNo);
 		return lcList;
-	}
-
-	@Override
-	public int selectUpCount(SqlSession session, LectureUpCount lUpCount) {
-		int result = session.selectOne("LectureMapper.selectUpCount",lUpCount);
-		return result;
-	}
-
-	@Override
-	public int insertUpCount(SqlSession session, LectureUpCount lUpCount) {
-		int result = session.insert("LectureMapper.insertUpCount", lUpCount);
-		return result;
-	}
-
-	@Override
-	public int updateBoardUp(SqlSession session, int lectureBoardNo) {
-		int result = session.update("LectureMapper.updateBoardUp", lectureBoardNo);
-		return result;
-	}
-
-	@Override
-	public int deleteUpCount(SqlSession session, LectureUpCount lUpCount) {
-		int result = session.delete("LectureMapper.deleteUpCount", lUpCount);
-		return result;
 	}
 
 }

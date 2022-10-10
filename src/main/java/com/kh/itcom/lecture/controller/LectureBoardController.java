@@ -24,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.itcom.lecture.domain.LectureBoard;
 import com.kh.itcom.lecture.domain.LectureBoardComment;
-import com.kh.itcom.lecture.domain.LectureUpCount;
 import com.kh.itcom.lecture.service.LectureBoardService;
 import com.kh.itcom.user.domain.User;
 
@@ -37,6 +36,7 @@ public class LectureBoardController {
 	@RequestMapping(value="/lecture/writeView.do", method=RequestMethod.GET)
 	public String showlectureWrite() {
 		return "lecture/lectureWriteForm";
+		
 	}
 	
 	// 게시글 등록
@@ -152,12 +152,13 @@ public class LectureBoardController {
 		}
 		List<LectureBoard> lbList = lbService.printAllLectureBoard(currentPage, lboardLimit);
 		try {
-			User loginUser = (User)session.getAttribute("loginUser");
-			String userId = loginUser.getUserId();
-			mv.addObject("userId", userId);
+			// User loginUser = (User)session.getAttribute("loginUser");
+			// String userId = loginUser.getUserId();
+			// mv.addObject("userId", userId);
 		} catch (Exception e) {
 			mv.addObject("msg", e.getMessage());
 			mv.setViewName("common/errorPage");
+			e.printStackTrace();
 		}		
 		if(!lbList.isEmpty()) {
 			mv.addObject("urlVal", "list");
@@ -166,8 +167,8 @@ public class LectureBoardController {
 			mv.addObject("startNavi", startNavi);
 			mv.addObject("endNavi", endNavi);
 			mv.addObject("lbList", lbList);
-			mv.setViewName("lecture/lecturelistView");
 		}
+		mv.setViewName("lecture/lecturelistView");
 		return mv;
 	}
 	
@@ -181,13 +182,13 @@ public class LectureBoardController {
 			, HttpServletRequest request
 			, HttpServletResponse response) {
 		try {
-			User loginUser = (User)session.getAttribute("loginUser");
-			String loginUserId = loginUser.getUserId();
+			// User loginUser = (User)session.getAttribute("loginUser");
+			// String loginUserId = loginUser.getUserId();
 			LectureBoard lectureboard = lbService.printOneByNo(lBoardNo);
-			List<LectureBoardComment> lcList = lbService.printAllLectureBoardComment(lBoardNo);
+			List<LectureBoardComment> lbList = lbService.printAllLectureBoardComment(lBoardNo);
 			session.setAttribute("lBoardNo", lectureboard.getlBoardNo());
-			mv.addObject("lcList", lcList);
-			mv.addObject("loginUserId", loginUserId);
+			mv.addObject("lbList", lbList);
+			// mv.addObject("loginUserId", loginUserId);
 			mv.addObject("lectureBoard", lectureboard);
 			mv.addObject("page", page);
 			mv.setViewName("lecture/lectureDetailView");
@@ -247,9 +248,9 @@ public class LectureBoardController {
 			, @ModelAttribute LectureBoardComment lbComment
 			, @RequestParam("page") int page
 			, HttpSession session) {
-		User user = (User)session.getAttribute("loginUser");
-		String userId = user.getUserId();
-		lbComment.setUserId(userId);
+		// User user = (User)session.getAttribute("loginUser");
+		// String userId = user.getUserId();
+		// lbComment.setUserId(userId);
 		int lBoardNo = lbComment.getlBoardNo();
 		
 		Date date = new Date();
@@ -288,27 +289,5 @@ public class LectureBoardController {
 		}
 		return mv;
 	}
-	
-	@RequestMapping(value="/lecture/lectureUpCount.do", method=RequestMethod.POST)
-	public ModelAndView lectureUpCount(
-			ModelAndView mv
-			, @ModelAttribute LectureUpCount lUpCount
-			, @ModelAttribute LectureBoard lectureboard
-			, @RequestParam("page") int page
-			, HttpSession session) {
-		User user = (User)session.getAttribute("loginUser");
-		String userId = user.getUserId();
-		lUpCount.setUserId(userId);
-		int lBoardNo = lUpCount.getlBoardNo();
-		int lectureBoardNo = lectureboard.getlBoardNo();
-		int upCountCheck = lbService.upCountCheck(lUpCount);
-		if(upCountCheck == 0) {
-			int insertUpCount = lbService.registerUpCount(lUpCount);
-			int printBoardUp = lbService.registerBoardUp(lectureBoardNo);
-		}else if(upCountCheck == 1) {
-			int deleteUpCount = lbService.removeUpCount(lUpCount);
-		}
-		mv.setViewName("redirect:/lecture/detail.do?lBoardNo="+lBoardNo+"&page="+page);
-		return mv;
-	}
+
 }
