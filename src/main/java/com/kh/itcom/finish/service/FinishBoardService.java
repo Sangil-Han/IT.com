@@ -10,25 +10,19 @@ public interface FinishBoardService {
 
 	int registerBoard(FinishBoard fBoard);
 
-	int getTotalCount(String searchOption, String searchValue);
-
-	List<FinishBoard> printAllBoard(int currentPage, int boardLimit);
-
-	List<FinishBoard> printAllByValue(String searchOption, String searchValue, int currentPage, int boardLimit);
-
-	FinishBoard printOneByNo(int fBoardNo);
+	int registerComment(FinishComment fComment);
 
 	int modifyBoard(FinishBoard fBoard);
 
-	int registerComment(FinishComment fComment);
+	int modifyComment(Map<String, Object> inputMap);
 
-	void usePoint(String userId, String point);
+	int usePoint(String userId, String point);
 
-	List<FinishComment> printAllComment(int fBoardNo);
+	int addUpDownCount(Integer fBoardNo, String userId, String upOrDown);
 
 	int removeComment(Integer fCommentNo);
-	
-	int addUpDownCount(Integer fBoardNo, String userId, String upOrDown);
+
+	int getTotalCount(String searchOption, String searchValue);
 
 	int getCountUp(int fBoardNo);
 
@@ -36,6 +30,12 @@ public interface FinishBoardService {
 
 	int getUserRecordUpCount(String userId, int fBoardNo);
 
-	void modifyComment(Map<String, Object> inputMap);
+	FinishBoard printOneByNo(int fBoardNo);
+
+	List<FinishBoard> printAllBoard(int currentPage, int boardLimit);
+
+	List<FinishBoard> printAllByValue(String searchOption, String searchValue, int currentPage, int boardLimit);
+
+	List<FinishComment> printAllComment(int fBoardNo);
 
 }

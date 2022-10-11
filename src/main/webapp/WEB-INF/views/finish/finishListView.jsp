@@ -16,7 +16,7 @@
 <body>
   <div id="wrap">
     <jsp:include page="../common/header.jsp"></jsp:include>
-    <h1 align="center">수료후기 게시판</h1>
+    <img src="../../../resources/img/finish-logo.png" alt="">
     <div class="container">
       <div class="row">
         <div class="col-lg-9 offset-lg-1">

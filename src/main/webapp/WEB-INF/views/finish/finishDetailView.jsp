@@ -172,7 +172,7 @@
 			else{
 				return true;
 			}
-		}
+		}'';;''
 		
 		function checkRemove(){
 			if (confirm("댓글을 삭제하시겠습니까?")){

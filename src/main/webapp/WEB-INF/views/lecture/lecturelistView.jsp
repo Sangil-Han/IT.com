@@ -9,11 +9,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>IT.com : 수강후기 게시판</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" />
+<link href="/resources/css/header.css" rel="sytlesheet">
 </head>
 <body>
 	<div id="wrap">
 		<jsp:include page="../common/header.jsp"></jsp:include>
-		<h1 align="center">수강후기 게시판</h1>
+		<center>
+		<img src="../../../resources/img/lecture-logo.png" alt="">
+		</center>
 		<table align="center" border="1">
 			<tr>
 				<th>제목</th>

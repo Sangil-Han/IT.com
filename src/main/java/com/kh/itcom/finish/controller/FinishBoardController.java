@@ -79,6 +79,60 @@ public class FinishBoardController {
 		return mv;
 	}
 
+	// 게시글 수정 폼으로 이동
+	@RequestMapping(value = "/finish/modifyView.do", method = RequestMethod.POST)
+	public ModelAndView modifyView(ModelAndView mv, @RequestParam("fBoardNo") Integer fBoardNo,
+			@RequestParam("page") Integer page) {
+		try {
+			FinishBoard fBoard = fService.printOneByNo(fBoardNo);
+			mv.addObject("fBoard", fBoard);
+			mv.addObject("page", page);
+			mv.setViewName("finish/finishModifyForm");
+		} catch (Exception e) {
+			mv.addObject("msg", e.toString());
+			mv.setViewName("common/errorPage");
+		}
+		return mv;
+	}
+
+	// 게시글 수정
+	@RequestMapping(value = "/finish/modify.do", method = RequestMethod.POST)
+	public ModelAndView boardModify(ModelAndView mv, @ModelAttribute FinishBoard fBoard,
+			@RequestParam("page") Integer page,
+			@RequestParam(value = "reloadFile", required = false) MultipartFile reloadFile,
+			HttpServletRequest request) {
+		try {
+			String fBoardFileName = reloadFile.getOriginalFilename();
+			// 파일을 첨부했을 때
+			if (reloadFile != null && !fBoardFileName.equals("")) {
+				String root = request.getSession().getServletContext().getRealPath("resources");
+				String savedPath = root + "\\files\\fuploadFiles";
+				// 파일이 이미 존재하면 삭제
+				File file = new File(savedPath + "\\" + fBoard.getfBoardFileRename());
+				if (file.exists()) {
+					file.delete();
+				}
+	
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+				String fBoardFileRename = sdf.format(new Date(System.currentTimeMillis())) + "."
+						+ fBoardFileName.substring(fBoardFileName.lastIndexOf(".") + 1);
+				String fBoardFilePath = savedPath + "\\" + fBoardFileRename;
+				reloadFile.transferTo(new File(fBoardFilePath));
+				fBoard.setfBoardFileName(fBoardFileName);
+				fBoard.setfBoardFileRename(fBoardFileRename);
+				fBoard.setfBoardFilePath(fBoardFilePath);
+			}
+			int result = fService.modifyBoard(fBoard);
+	
+			if (result > 0) {
+				mv.setViewName("redirect:/finish/listView.do?page=" + page);
+			}
+		} catch (Exception e) {
+			mv.addObject("msg", e.toString()).setViewName("common/errorPage");
+		}
+		return mv;
+	}
+
 	// 게시글 목록
 	@RequestMapping(value = "/finish/listView.do", method = RequestMethod.GET)
 	public ModelAndView listView(HttpSession session, ModelAndView mv, @RequestParam(value = "page", required = false) Integer page) {
@@ -181,65 +235,11 @@ public class FinishBoardController {
 		}
 		return mv;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value="/finish/usePoint.do", method=RequestMethod.POST)
 	public void userPoint(@RequestBody Map<String, Object> pointMap, HttpSession session) {
 		fService.usePoint(pointMap.get("userId").toString(), pointMap.get("point").toString());
-	}
-
-	// 게시글 수정 폼으로 이동
-	@RequestMapping(value = "/finish/modifyView.do", method = RequestMethod.POST)
-	public ModelAndView modifyView(ModelAndView mv, @RequestParam("fBoardNo") Integer fBoardNo,
-			@RequestParam("page") Integer page) {
-		try {
-			FinishBoard fBoard = fService.printOneByNo(fBoardNo);
-			mv.addObject("fBoard", fBoard);
-			mv.addObject("page", page);
-			mv.setViewName("finish/finishModifyForm");
-		} catch (Exception e) {
-			mv.addObject("msg", e.toString());
-			mv.setViewName("common/errorPage");
-		}
-		return mv;
-	}
-
-	// 게시글 수정
-	@RequestMapping(value = "/finish/modify.do", method = RequestMethod.POST)
-	public ModelAndView boardModify(ModelAndView mv, @ModelAttribute FinishBoard fBoard,
-			@RequestParam("page") Integer page,
-			@RequestParam(value = "reloadFile", required = false) MultipartFile reloadFile,
-			HttpServletRequest request) {
-		try {
-			String fBoardFileName = reloadFile.getOriginalFilename();
-			// 파일을 첨부했을 때
-			if (reloadFile != null && !fBoardFileName.equals("")) {
-				String root = request.getSession().getServletContext().getRealPath("resources");
-				String savedPath = root + "\\files\\fuploadFiles";
-				// 파일이 이미 존재하면 삭제
-				File file = new File(savedPath + "\\" + fBoard.getfBoardFileRename());
-				if (file.exists()) {
-					file.delete();
-				}
-
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-				String fBoardFileRename = sdf.format(new Date(System.currentTimeMillis())) + "."
-						+ fBoardFileName.substring(fBoardFileName.lastIndexOf(".") + 1);
-				String fBoardFilePath = savedPath + "\\" + fBoardFileRename;
-				reloadFile.transferTo(new File(fBoardFilePath));
-				fBoard.setfBoardFileName(fBoardFileName);
-				fBoard.setfBoardFileRename(fBoardFileRename);
-				fBoard.setfBoardFilePath(fBoardFilePath);
-			}
-			int result = fService.modifyBoard(fBoard);
-
-			if (result > 0) {
-				mv.setViewName("redirect:/finish/listView.do?page=" + page);
-			}
-		} catch (Exception e) {
-			mv.addObject("msg", e.toString()).setViewName("common/errorPage");
-		}
-		return mv;
 	}
 
 	@RequestMapping(value = "/finish/addComment.do", method = RequestMethod.POST)
@@ -277,6 +277,17 @@ public class FinishBoardController {
 		}
 	}
 
+	@ResponseBody
+	@RequestMapping(value="/finish/modifyComment.do", method=RequestMethod.POST)
+	public Map<String, Object> modifyComment(@RequestBody Map<String, Object> inputMap) {
+		fService.modifyComment(inputMap);
+		
+		Map<String, Object> returnMap=new HashMap<>();
+		returnMap.put("modifiedComment", inputMap.get("commentText"));
+		
+		return returnMap;
+	}
+
 	@RequestMapping(value = "/finish/addUpCount.do", method = RequestMethod.POST)
 	public String addUpCount(@RequestParam("fBoardNo") Integer fBoardNo, @RequestParam("userId") String userId,
 			@RequestParam("page") Integer page) {
@@ -298,16 +309,5 @@ public class FinishBoardController {
 			else {
 				return "common.errorPage";
 			}
-	}
-	
-	@ResponseBody
-	@RequestMapping(value="/finish/modifyComment.do", method=RequestMethod.POST)
-	public Map<String, Object> modifyComment(@RequestBody Map<String, Object> inputMap) {
-		fService.modifyComment(inputMap);
-		
-		Map<String, Object> returnMap=new HashMap<>();
-		returnMap.put("modifiedComment", inputMap.get("commentText"));
-		
-		return returnMap;
 	}
 }
