@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=wave&color=99CCFF&height=150&section=header&text=IT.%20com&fontSize=90)
+![header](https://capsule-render.vercel.app/api?type=waving&color=99CCFF&height=150&section=header&text=IT.%20com&fontSize=90&fontColor=ffffff&fontAlignY=40)
 #  :computer::speech_balloon: __IT.com__ : 국비지원교육원 후기 공유 사이트
 ### :blue_book: 프로젝트 소개
 IT.com은 서울시 국비지원 교육원에서 수강을 희망하거나 수강 또는 수료를 한 사람들이 후기를 공유할 수 있는 익명 사이트입니다.<br><br>
