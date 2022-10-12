@@ -63,11 +63,11 @@ ___
 ![12_mypage_level](https://user-images.githubusercontent.com/105847748/195414379-c9978084-a304-48ed-be18-09f0522df521.png)
 ___
 <br><br>
-6. 마이페이지 - 포인트조회
+#### 6. 마이페이지 - 포인트조회
 ![13_mypage_point](https://user-images.githubusercontent.com/105847748/195414386-fb1e2e70-8571-4b3f-bbda-bd6acec77eed.png)
 ___
 <br><br>
-7. 마이페이지 - 비밀번호 변경
+#### 7. 마이페이지 - 비밀번호 변경
 ![14_mypage_pw](https://user-images.githubusercontent.com/105847748/195414391-5e2d5b6f-23e0-4b8e-a098-1d6dd03991bf.png)
 ___
 <br><br>
