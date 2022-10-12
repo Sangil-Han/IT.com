@@ -15,7 +15,6 @@
 		<typeAlias type="com.kh.itcom.consult.domain.ConsultViewCount" alias="ConsultViewCount" />
 		<typeAlias type="com.kh.itcom.lecture.domain.LectureBoard" alias="LectureBoard" />
 		<typeAlias type="com.kh.itcom.lecture.domain.LectureBoardComment" alias="LectureBoardComment"/>
-		<typeAlias type="com.kh.itcom.lecture.domain.LectureUpCount" alias="LectureUpCount" />
 		<typeAlias type="com.kh.itcom.finish.domain.FinishBoard" alias="FinishBoard" />
 		<typeAlias type="com.kh.itcom.finish.domain.FinishComment" alias="FinishComment" />
 		<typeAlias type="com.kh.itcom.user.domain.User" alias="User" />

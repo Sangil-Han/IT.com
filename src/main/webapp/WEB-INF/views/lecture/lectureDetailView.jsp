@@ -67,7 +67,7 @@
 	
 		<!-- 댓글 목록 -->
 		<table align="center" width="500" border="1">
-			<c:forEach items="${lcList }" var="lbComment" varStatus="i">
+			<c:forEach items="${lbList }" var="lbComment" varStatus="i">
 				<tr>
 					<td id="lmodify-inactive${i.count}">${lbComment.lCommentContents }</td>
 					<td id="lmodify-active${i.count}" style="display:none">
@@ -76,12 +76,12 @@
 					</td>
 					<td>${lbComment.lCommentRegtime }</td>
 					<td>
-						<c:if test="${lbComment.userId eq sessionScope.loginUser.userId }">
+						<%-- <c:if test="${lbComment.userId eq sessionScope.loginUser.userId }">
+						</c:if> --%>
             <!-- 댓글 수정 -->
 						<button id="lmodify-comment-btn${i.count}">수정</button>
             <!-- 댓글 삭제 -->
           			    <button onclick="removeComment(${lbComment.lCommentNo},${lectureBoard.lBoardNo }, ${page });">삭제</button>
-						</c:if>
 					</td>
 				</tr>
 			</c:forEach>
@@ -114,7 +114,6 @@
 	               var reqJson = new Object();
 	               reqJson.lcommentText = lcommentText;
 	               reqJson.lCommentNo = lCommentNo;
-
 	               httpRequest = new XMLHttpRequest();
 	               httpRequest.onreadystatechange = () => {
 	                 if (httpRequest.readyState === XMLHttpRequest.DONE) {

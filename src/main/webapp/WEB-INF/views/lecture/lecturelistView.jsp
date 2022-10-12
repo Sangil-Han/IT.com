@@ -23,17 +23,15 @@
 				<th>제목</th>
 				<th>등록일</th>
 				<th>조회수</th>
-				<th>추천수</th>
 			</tr>
 			<c:if test="${!empty lbList }">
 				<c:forEach items="${lbList }" var="lectureBoard" varStatus="i">
 					<tr>
 						<td>
-							<a href="#" onclick="lectureDetailView('${userId}', ${lectureBoard.lBoardNo }, ${currentPage });">${lectureBoard.lBoardTitle }</a>
+							<a href="#" onclick="lectureDetailView(${lectureBoard.lBoardNo }, ${currentPage });">${lectureBoard.lBoardTitle }</a>
 						</td>
 						<td>${lectureBoard.lBoardCreateDate }</td>
 						<td>${lectureBoard.lBoardCount }</td>
-						<td>${lectureBoard.lBoardUpCount }</td>
 						<c:if test="${not empty sessionScope.loginAdmin }">
 							<td>삭제</td>
 						</c:if>
@@ -88,15 +86,18 @@
 					</form>
 				</td>
 				<td>
-					<button href="#" onclick="writeForm('${userId}');">글쓰기</button>
+					<button href="#" onclick="location.href='/lecture/writeView.do'">글쓰기</button>
+					<%-- ('${userId}'); --%>
 				</td>
 			</tr>
 		</table>
 	</div>
 	<script>
-		function lectureDetailView(userId, adminId, lBoardNo, currentPage, userLevel, userPoint, viewable) {
-			event.preventDefault();
-			var level = '일반회원';
+		function lectureDetailView(lBoardNo, currentPage) {
+				event.preventDefault();
+ 				location.href='/lecture/detail.do?lBoardNo='+lBoardNo+'&page='+currentPage;
+		}
+			/* 	var level = '일반회원';
 			var viewableNo = 'N';
 			if(userId == "" && adminId == "") {
 				if(confirm("로그인이 필요한 서비스입니다. 로그인하시겠습니까?")){
@@ -112,18 +113,17 @@
  					}
  				}
  			}else{
- 				location.href='/lecture/detail.do?lBoardNo='+lBoardNo+'&page='+currentPage;
  			}
-		}
-		function writeForm(userId) {
+		
+		function writeForm() {
 			if(userId == ""){
 				if(confirm("로그인이 필요한 서비스입니다 로그인하시겠습니까?")){
 					location.href='/user/loginView.do';
 				}
 			}else {
 				location.href='/lecture/writeView.do';
-		}
-		}
+		}	
+	}	*/ 
 	</script>
 </body>
 </html>

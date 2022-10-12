@@ -7,10 +7,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kh.itcom.consult.domain.ConsultBoardComment;
 import com.kh.itcom.lecture.domain.LectureBoard;
 import com.kh.itcom.lecture.domain.LectureBoardComment;
-import com.kh.itcom.lecture.domain.LectureUpCount;
 import com.kh.itcom.lecture.service.LectureBoardService;
 import com.kh.itcom.lecture.store.LectureBoardStore;
 
@@ -34,10 +32,7 @@ public class LectureBoardServiceImpl implements LectureBoardService {
 	@Override
 	public LectureBoard printOneByNo(Integer lBoardNo) {
 		LectureBoard lectureboard = lbStore.selectOneByNo(session, lBoardNo);
-		int result = 0;
-		if(lectureboard != null) {
-			result = lbStore.updateLectureCount(session, lBoardNo);
-		}
+		
 		return lectureboard;
 	}
 	@Override
@@ -78,24 +73,5 @@ public class LectureBoardServiceImpl implements LectureBoardService {
 		List<LectureBoardComment> lcList = lbStore.selectAllComment(session, lBoardNo);
 		return lcList;
 	}
-	@Override
-	public int upCountCheck(LectureUpCount lUpCount) {
-		int result = lbStore.selectUpCount(session, lUpCount);
-		return result;
-	}
-	@Override
-	public int registerUpCount(LectureUpCount lUpCount) {
-		int result = lbStore.insertUpCount(session, lUpCount);
-		return result;
-	}
-	@Override
-	public int registerBoardUp(int lectureBoardNo) {
-		int result = lbStore.updateBoardUp(session, lectureBoardNo);
-		return result;
-	}
-	@Override
-	public int removeUpCount(LectureUpCount lUpCount) {
-		int result = lbStore.deleteUpCount(session, lUpCount);
-		return result;
-	}
+	
 }
