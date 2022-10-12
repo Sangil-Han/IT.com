@@ -13,28 +13,21 @@ public interface FinishBoardStore {
 
 	int insertBoard(SqlSession session, FinishBoard fBoard);
 
-	int selectTotalCount(SqlSessionTemplate session, String searchOption, String searchValue);
+	int insertComment(SqlSessionTemplate session, FinishComment fComment);
 
-	List<FinishBoard> selectAllBoard(SqlSessionTemplate session, int currentPage, int boardLimit);
-
-	List<FinishBoard> selectAllByValue(SqlSessionTemplate session, String searchOption, String searchValue,
-			int currentPage, int boardLimit);
-
-	FinishBoard selectOneByNo(SqlSessionTemplate session, int fBoardNo);
-
-	void updateBoardCount(SqlSessionTemplate session, int fBoardNo);
+	int insertUpDownCount(SqlSessionTemplate session, Integer fBoardNo, String userId, String upOrDown);
 
 	int updateBoard(SqlSessionTemplate session, FinishBoard fBoard);
 
-	int insertComment(SqlSessionTemplate session, FinishComment fComment);
-	
+	int updateBoardCount(SqlSessionTemplate session, int fBoardNo);
+
 	int updateUserPoint(SqlSessionTemplate session, String userId, String point);
 
-	List<FinishComment> selectAllComment(SqlSessionTemplate session, int fBoardNo);
+	int updateComment(SqlSessionTemplate session, Map<String, Object> inputMap);
 
 	int deleteComment(SqlSessionTemplate session, Integer fCommentNo);
 
-	int insertUpDownCount(SqlSessionTemplate session, Integer fBoardNo, String userId, String upOrDown);
+	int selectTotalCount(SqlSessionTemplate session, String searchOption, String searchValue);
 
 	int selectCountUp(SqlSessionTemplate session, int fBoardNo);
 
@@ -42,5 +35,12 @@ public interface FinishBoardStore {
 
 	int selectUserRecordUpDown(SqlSessionTemplate session, String userId, int fBoardNo);
 
-	void updateComment(SqlSessionTemplate session, Map<String, Object> inputMap);
+	FinishBoard selectOneByNo(SqlSessionTemplate session, int fBoardNo);
+
+	List<FinishBoard> selectAllBoard(SqlSessionTemplate session, int currentPage, int boardLimit);
+
+	List<FinishBoard> selectAllByValue(SqlSessionTemplate session, String searchOption, String searchValue,
+			int currentPage, int boardLimit);
+
+	List<FinishComment> selectAllComment(SqlSessionTemplate session, int fBoardNo);
 }

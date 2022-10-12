@@ -28,30 +28,9 @@ public class FinishBoardServiceImpl implements FinishBoardService{
 	}
 
 	@Override
-	public int getTotalCount(String searchOption, String searchValue) {
-		int totalCount=fStore.selectTotalCount(session, searchOption, searchValue);
-		return totalCount;
-	}
-
-	@Override
-	public List<FinishBoard> printAllBoard(int currentPage, int boardLimit) {
-		List<FinishBoard> fList=fStore.selectAllBoard(session, currentPage, boardLimit);
-		return fList;
-	}
-
-	@Override
-	public List<FinishBoard> printAllByValue(String searchOption, String searchValue, int currentPage, int boardLimit) {
-		List<FinishBoard> fList=fStore.selectAllByValue(session, searchOption, searchValue, currentPage, boardLimit);
-		return fList;
-	}
-
-	@Override
-	public FinishBoard printOneByNo(int fBoardNo) {
-		FinishBoard fBoard=fStore.selectOneByNo(session, fBoardNo);
-		if(fBoard!=null) {
-			fStore.updateBoardCount(session, fBoardNo);
-		}
-		return fBoard;
+	public int registerComment(FinishComment fComment) {
+		int result=fStore.insertComment(session, fComment);
+		return result;
 	}
 
 	@Override
@@ -61,20 +40,22 @@ public class FinishBoardServiceImpl implements FinishBoardService{
 	}
 
 	@Override
-	public int registerComment(FinishComment fComment) {
-		int result=fStore.insertComment(session, fComment);
+	public int modifyComment(Map<String, Object> inputMap) {
+		int result=fStore.updateComment(session, inputMap);
 		return result;
 	}
 
 	@Override
-	public void usePoint(String userId, String point) {
-		fStore.updateUserPoint(session, userId, point);
+	public int usePoint(String userId, String point) {
+		int result=fStore.updateUserPoint(session, userId, point);
+		return result;
 	}
 
+	// 게시글 추천/비추천
 	@Override
-	public List<FinishComment> printAllComment(int fBoardNo) {
-		List<FinishComment> cList=fStore.selectAllComment(session, fBoardNo);
-		return cList;
+	public int addUpDownCount(Integer fBoardNo, String userId, String upOrDown) {
+		int result=fStore.insertUpDownCount(session, fBoardNo, userId, upOrDown);
+		return result;
 	}
 
 	// 댓글 삭제
@@ -84,11 +65,10 @@ public class FinishBoardServiceImpl implements FinishBoardService{
 		return result;
 	}
 
-	// 게시글 추천/비추천
 	@Override
-	public int addUpDownCount(Integer fBoardNo, String userId, String upOrDown) {
-		int result=fStore.insertUpDownCount(session, fBoardNo, userId, upOrDown);
-		return result;
+	public int getTotalCount(String searchOption, String searchValue) {
+		int totalCount=fStore.selectTotalCount(session, searchOption, searchValue);
+		return totalCount;
 	}
 
 	@Override
@@ -110,7 +90,29 @@ public class FinishBoardServiceImpl implements FinishBoardService{
 	}
 
 	@Override
-	public void modifyComment(Map<String, Object> inputMap) {
-		fStore.updateComment(session, inputMap);
+	public FinishBoard printOneByNo(int fBoardNo) {
+		FinishBoard fBoard=fStore.selectOneByNo(session, fBoardNo);
+		if(fBoard!=null) {
+			fStore.updateBoardCount(session, fBoardNo);
+		}
+		return fBoard;
+	}
+
+	@Override
+	public List<FinishBoard> printAllBoard(int currentPage, int boardLimit) {
+		List<FinishBoard> fList=fStore.selectAllBoard(session, currentPage, boardLimit);
+		return fList;
+	}
+
+	@Override
+	public List<FinishBoard> printAllByValue(String searchOption, String searchValue, int currentPage, int boardLimit) {
+		List<FinishBoard> fList=fStore.selectAllByValue(session, searchOption, searchValue, currentPage, boardLimit);
+		return fList;
+	}
+
+	@Override
+	public List<FinishComment> printAllComment(int fBoardNo) {
+		List<FinishComment> cList=fStore.selectAllComment(session, fBoardNo);
+		return cList;
 	}
 }

@@ -62,7 +62,7 @@
 		</c:if>
 	</div>
 	<div class="nav-area">
-		<div class="menu" onclick="location.href='https://www.hrd.go.kr/hrdp/ma/pmmao/indexNew.do'">HRD수강평</div>
+		<div class="menu" onclick="location.href='https://www.hrd.go.kr/hrdp/ti/ptiao/PTIAO0100L.do';">HRD수강평</div>
 		<div class="menu" onclick="location.href='/consult/consultList.do'">상담후기 게시판</div>
 		<div class="menu" onclick="location.href='/lecture/list.do'">수강후기 게시판</div>
 		<div class="menu" onclick="location.href='/finish/listView.do'">수료후기 게시판</div>

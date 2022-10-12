@@ -16,7 +16,7 @@
 <body>
 	<div id="wrap" class="col-lg-10 offset-lg-1">
     <jsp:include page="../common/header.jsp"></jsp:include>
-    <img alt="" src="/resources/img/finish-logo.png">
+    <img src="../../../resources/img/finish-logo.png" alt="">
     <div class="container">
       <div class="row">
         <div class="col-lg-9 offset-lg-1">
