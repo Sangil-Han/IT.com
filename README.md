@@ -84,14 +84,16 @@ ___
 ___
 <br><br>
 #### 11. 수강후기 작성 페이지
-![8_finish_list](https://user-images.githubusercontent.com/105847748/195411392-04f0940a-c2ca-4879-9afe-434bd3d38c2b.PNG)
+![7_lecture_write](https://user-images.githubusercontent.com/105847748/195415298-0d989658-3250-4bc1-ac66-5c3f43b1438b.PNG)
 ___
 <br><br>
 #### 12. 수료후기 게시판
-![9_finish_write](https://user-images.githubusercontent.com/105847748/195411395-651e1624-0848-4d1d-a544-d5aff2688a68.PNG)
+![8_finish_list](https://user-images.githubusercontent.com/105847748/195411392-04f0940a-c2ca-4879-9afe-434bd3d38c2b.PNG)
 ___
 <br><br>
 #### 13. 수료후기 작성 페이지
-![10_notice](https://user-images.githubusercontent.com/105847748/195411372-b51b1b39-1537-4596-9212-1dedb7514845.PNG)
+![9_finish_write](https://user-images.githubusercontent.com/105847748/195411395-651e1624-0848-4d1d-a544-d5aff2688a68.PNG)
 ___
 <br><br>
+#### 14. 공지사항 페이지
+![10_notice](https://user-images.githubusercontent.com/105847748/195411372-b51b1b39-1537-4596-9212-1dedb7514845.PNG)
