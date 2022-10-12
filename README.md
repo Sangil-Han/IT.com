@@ -43,3 +43,39 @@ ___
 
 ___
 ### 실행 화면
+#### 1. 메인 페이지
+![1_main](https://user-images.githubusercontent.com/105847748/195411317-388d73f0-451d-4910-8476-bcfa86eb9d5f.PNG)
+___
+<br><br>
+#### 2. 로그인 페이지
+![2_login](https://user-images.githubusercontent.com/105847748/195411336-8b132ac5-b824-4b47-afa0-a974e3b011c5.PNG)
+___
+<br><br>
+#### 3. 회원가입 페이지
+![3_join](https://user-images.githubusercontent.com/105847748/195411377-df31d6d0-9173-4d2b-9cb8-2d7dea8a03f9.PNG)
+___
+<br><br>
+#### 상담후기 작성 페이지
+![4_cunsult_write](https://user-images.githubusercontent.com/105847748/195411382-31a6cb24-5048-4e9d-9bfe-ec9f6f06d12f.PNG)
+___
+<br><br>
+#### 상담후기 게시판
+![5_consult_list](https://user-images.githubusercontent.com/105847748/195411385-fb4797bf-acc2-4182-984f-b034b6a037ae.PNG)
+___
+<br><br>
+#### 상담후기 상세 페이지
+![6_consult_detail](https://user-images.githubusercontent.com/105847748/195411389-b8b5a6ba-c854-4a8d-b07f-82a1404a5b5c.PNG)
+___
+<br><br>
+#### 수강후기 작성 페이지
+![8_finish_list](https://user-images.githubusercontent.com/105847748/195411392-04f0940a-c2ca-4879-9afe-434bd3d38c2b.PNG)
+___
+<br><br>
+#### 수료후기 게시판
+![9_finish_write](https://user-images.githubusercontent.com/105847748/195411395-651e1624-0848-4d1d-a544-d5aff2688a68.PNG)
+___
+<br><br>
+#### 수료후기 작성 페이지
+![10_notice](https://user-images.githubusercontent.com/105847748/195411372-b51b1b39-1537-4596-9212-1dedb7514845.PNG)
+___
+<br><br>
